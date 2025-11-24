@@ -36,56 +36,61 @@ export default function App({ Component, pageProps }: AppProps) {
 
   // Initialiser l'authentification Supabase
   useEffect(() => {
-    // Vérifier la session au démarrage
-    const initAuth = async () => {
-      try {
-        const result = await AuthService.getCurrentUser();
-        if (result && result.profile) {
-          const user = AuthService.profileToUser(result.profile);
-          setUser(user);
-          console.log('✅ Utilisateur Supabase chargé:', user.email);
+    let mounted = true;
+
+    const handleSession = async (session: any) => {
+      if (!mounted) return;
+
+      if (session?.user) {
+        console.log('🔐 Session active trouvée pour:', session.user.email);
+        try {
+          // On récupère le profil complet via le service
+          const result = await AuthService.getCurrentUser();
+          if (mounted && result && result.profile) {
+            const user = AuthService.profileToUser(result.profile);
+            setUser(user);
+            console.log('✅ Utilisateur chargé et défini dans le store');
+          }
+        } catch (error) {
+          console.error('❌ Erreur lors du chargement du profil:', error);
         }
-      } catch (error) {
-        console.error('Erreur lors de l\'initialisation auth:', error);
+      } else {
+        console.log('ℹ️ Aucune session active');
+        // On ne force pas le logout ici pour éviter les clignotements
+        // Le middleware ou les composants protégés géreront la redirection
       }
     };
 
-    initAuth();
-
-    // Écouter les changements d'état d'authentification
+    // 1. Écouter les changements d'état (incluant INITIAL_SESSION)
     const { data: { subscription } } = AuthService.onAuthStateChange(async (event, session) => {
-      console.log('🔐 Auth state changed:', event);
+      console.log('🔄 Auth state changed:', event);
 
-      if (event === 'SIGNED_IN' && session) {
-        try {
-          const result = await AuthService.getCurrentUser();
-          if (result && result.profile) {
-            const user = AuthService.profileToUser(result.profile);
-            setUser(user);
-          }
-        } catch (error) {
-          console.error('❌ Erreur lors de la récupération du profil après SIGNED_IN:', error);
-          // Ne pas bloquer l'app, juste logger l'erreur
-        }
+      if (event === 'INITIAL_SESSION') {
+        // Géré par le listener, mais on peut aussi le traiter ici si besoin
+        await handleSession(session);
+      } else if (event === 'SIGNED_IN' && session) {
+        await handleSession(session);
       } else if (event === 'SIGNED_OUT') {
+        console.log('👋 Déconnexion détectée');
         logout();
       } else if (event === 'TOKEN_REFRESHED') {
-        console.log('✅ Token rafraîchi automatiquement');
+        console.log('✅ Token rafraîchi');
       } else if (event === 'USER_UPDATED') {
         console.log('👤 Utilisateur mis à jour');
-        try {
-          const result = await AuthService.getCurrentUser();
-          if (result && result.profile) {
-            const user = AuthService.profileToUser(result.profile);
-            setUser(user);
-          }
-        } catch (error) {
-          console.error('❌ Erreur lors de la mise à jour du profil:', error);
-        }
+        await handleSession(session);
+      }
+    });
+
+    // 2. Vérification initiale manuelle (au cas où le listener INITIAL_SESSION ne trigger pas assez vite)
+    // C'est une sécurité supplémentaire
+    AuthService.getSession().then(session => {
+      if (mounted && session) {
+        handleSession(session);
       }
     });
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     };
   }, [setUser, logout]);
