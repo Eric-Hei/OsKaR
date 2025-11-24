@@ -46,7 +46,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuToggle, isMobileMenuOpen }) => {
     { name: 'Dashboard', href: '/dashboard', icon: BarChart3 },
     { name: 'Check-in', href: '/check-in', icon: AlarmClock, experimental: true, featureKey: 'checkIn' },
     { name: 'Focus', href: '/focus', icon: AlarmClock, experimental: true, featureKey: 'focus' },
-    { name: 'Canvas', href: '/canvas', icon: FileText },
+    { name: 'Canvas', href: '/canvas', icon: FileText, experimental: true, featureKey: 'canvas' },
     { name: 'Gestion', href: '/management', icon: FolderKanban },
     { name: 'Actions', href: '/actions', icon: CheckSquare },
     { name: 'Suivi', href: '/progress', icon: Calendar },

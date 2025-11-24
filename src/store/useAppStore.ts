@@ -16,6 +16,7 @@ interface AppState {
   experimentalFeatures: {
     checkIn: boolean;
     focus: boolean;
+    canvas: boolean;
   };
 
   // État UI uniquement
@@ -29,7 +30,7 @@ interface AppState {
   logout: () => void;
 
   // Actions fonctionnalités expérimentales
-  toggleExperimentalFeature: (feature: 'checkIn' | 'focus') => void;
+  toggleExperimentalFeature: (feature: 'checkIn' | 'focus' | 'canvas') => void;
 
   // Actions UI
   setLoading: (loading: boolean) => void;
@@ -57,6 +58,7 @@ export const useAppStore = create<AppState>()(
         experimentalFeatures: {
           checkIn: false,
           focus: false,
+          canvas: false,
         },
         isLoading: false,
         error: null,

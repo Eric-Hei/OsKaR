@@ -53,27 +53,12 @@ function fetchWithTimeout(input: RequestInfo | URL, init?: RequestInit): Promise
 }
 
 // Client Supabase avec typage TypeScript
+// Pour isoler le problème CORS, on utilise ici la configuration par défaut
+// de @supabase/supabase-js, sans fetch personnalisé ni en-têtes globaux.
 export const supabase = hasEnv
   ? createClient<Database>(
       supabaseUrl as string,
-      supabaseAnonKey as string,
-      {
-        auth: {
-          persistSession: true,
-          autoRefreshToken: true,
-          detectSessionInUrl: true,
-          storage: typeof window !== 'undefined' ? window.localStorage : undefined,
-        },
-        db: {
-          schema: 'public',
-        },
-        global: {
-          fetch: fetchWithTimeout,
-          headers: {
-            'x-application-name': 'OsKaR',
-          },
-        },
-      }
+      supabaseAnonKey as string
     )
   : ({} as any);
 

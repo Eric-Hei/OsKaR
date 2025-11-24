@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import {
-  LayoutGrid,
-  List,
   Filter,
   Plus,
   Target,
@@ -11,10 +8,8 @@ import {
 } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { HierarchicalTreeView } from '@/components/ui/HierarchicalTreeView';
-import { KanbanBoard } from '@/components/ui/KanbanBoard';
 import { FilterPanel, FilterState } from '@/components/ui/FilterPanel';
 import { ProgressUpdateModal } from '@/components/ui/ProgressUpdateModal';
 import { ProgressHistoryPanel } from '@/components/ui/ProgressHistoryPanel';
@@ -30,11 +25,10 @@ import { useAmbitions, useCreateAmbition, useUpdateAmbition, useDeleteAmbition }
 import { useKeyResultsByUser, useCreateKeyResult, useUpdateKeyResult, useDeleteKeyResult } from '@/hooks/useKeyResults';
 import { useQuarterlyObjectives, useCreateQuarterlyObjective, useUpdateQuarterlyObjective, useDeleteQuarterlyObjective } from '@/hooks/useQuarterlyObjectives';
 import { useQuarterlyKeyResultsByUser, useCreateQuarterlyKeyResult, useUpdateQuarterlyKeyResult, useUpdateQuarterlyKeyResultProgress, useDeleteQuarterlyKeyResult } from '@/hooks/useQuarterlyKeyResults';
-import { useActions, useCreateAction, useUpdateAction, useDeleteAction, useUpdateActionStatus } from '@/hooks/useActions';
+import { useActions, useCreateAction, useUpdateAction, useDeleteAction } from '@/hooks/useActions';
 import { useFilters, useHasActiveFilters, useActiveFiltersDescription } from '@/hooks/useFilters';
 import { geminiService } from '@/services/gemini';
 import { shareService } from '@/services/share';
-import { Share2 } from 'lucide-react';
 import { SubscriptionsService } from '@/services/db/subscriptions';
 import {
   Ambition,
@@ -50,13 +44,10 @@ import {
   ActionFormData
 } from '@/types';
 import { KeyResultFormData } from '@/components/forms/KeyResultForm';
-import { generateId } from '@/utils';
 
-type ViewMode = 'tree' | 'kanban';
 type FormMode = 'ambition' | 'key-result' | 'quarterly-objective' | 'quarterly-key-result' | 'action' | null;
 
 const ManagementPage: React.FC = () => {
-  const [viewMode, setViewMode] = useState<ViewMode>('tree');
   const [showFilters, setShowFilters] = useState(false);
   const [formMode, setFormMode] = useState<FormMode>(null);
   const [selectedObjectiveId, setSelectedObjectiveId] = useState<string | null>(null);
@@ -102,7 +93,6 @@ const ManagementPage: React.FC = () => {
   const createAction = useCreateAction();
   const updateActionMutation = useUpdateAction(user?.id);
   const deleteActionMutation = useDeleteAction(user?.id);
-  const updateActionStatusMutation = useUpdateActionStatus(user?.id);
 
   const [filters, setFilters] = useState<FilterState>({
     ambitionIds: [],
@@ -456,32 +446,6 @@ const ManagementPage: React.FC = () => {
   };
 
 
-  // Handler pour le déplacement d'actions dans le kanban
-  const handleActionMove = async (actionId: string, newStatus: ActionStatus) => {
-    if (!user) return;
-
-    try {
-      await updateActionStatusMutation.mutateAsync({
-        id: actionId,
-        status: newStatus
-      });
-    } catch (error) {
-      console.error('❌ Erreur lors du déplacement de l\'action:', error);
-      alert('Erreur lors du déplacement de l\'action');
-    }
-  };
-
-  // Handler pour voir le kanban d'un objectif spécifique
-  const handleViewKanban = (objectiveId?: string) => {
-    if (objectiveId) {
-      setFilters(prev => ({
-        ...prev,
-        objectiveIds: [objectiveId],
-      }));
-    }
-    setViewMode('kanban');
-  };
-
   // Handler pour mettre à jour la progression d'un KR
   const handleOpenProgressModal = (kr: QuarterlyKeyResult) => {
     setSelectedKR(kr);
@@ -581,17 +545,33 @@ const ManagementPage: React.FC = () => {
         {/* En-tête */}
         <div className="bg-white shadow-sm border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">
                   Gestion des Objectifs
                 </h1>
-                <p className="text-gray-600 mt-1">
-                  Gérez votre hiérarchie OKR et organisez vos actions
-                </p>
+                {/* Statistiques */}
+                <div className="flex items-center space-x-4 text-sm text-gray-600 mt-2">
+                  <div className="flex items-center space-x-1">
+                    <Building2 className="h-4 w-4" />
+                    <span>{filteredAmbitions.length} ambitions</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <Target className="h-4 w-4" />
+                    <span>{filteredQuarterlyObjectives.length} objectifs</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <Zap className="h-4 w-4" />
+                    <span>{filteredActions.length} actions</span>
+                  </div>
+                </div>
               </div>
 
               <div className="flex items-center space-x-3">
+                <Button onClick={() => handleAddAmbition()}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Nouvelle Ambition
+                </Button>
                 <Button
                   variant="outline"
                   onClick={() => setShowFilters(true)}
@@ -605,54 +585,6 @@ const ManagementPage: React.FC = () => {
                     </Badge>
                   )}
                 </Button>
-                <Button onClick={() => handleAddQuarterlyObjective()}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Nouvel Objectif
-                </Button>
-              </div>
-            </div>
-
-            {/* Sélecteur de vue */}
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center bg-gray-100 rounded-lg p-1">
-                <button
-                  onClick={() => setViewMode('tree')}
-                  className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    viewMode === 'tree'
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  <List className="h-4 w-4 mr-2" />
-                  Hiérarchie OKR
-                </button>
-                <button
-                  onClick={() => setViewMode('kanban')}
-                  className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    viewMode === 'kanban'
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  <LayoutGrid className="h-4 w-4 mr-2" />
-                  Kanban Actions
-                </button>
-              </div>
-
-              {/* Statistiques */}
-              <div className="flex items-center space-x-4 text-sm text-gray-600">
-                <div className="flex items-center space-x-1">
-                  <Building2 className="h-4 w-4" />
-                  <span>{filteredAmbitions.length} ambitions</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <Target className="h-4 w-4" />
-                  <span>{filteredQuarterlyObjectives.length} objectifs</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <Zap className="h-4 w-4" />
-                  <span>{filteredActions.length} actions</span>
-                </div>
               </div>
             </div>
 
@@ -669,121 +601,75 @@ const ManagementPage: React.FC = () => {
 
         {/* Contenu principal */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {viewMode === 'tree' ? (
-            <div className="space-y-6">
-              {/* Vue hiérarchique : Ambitions → Objectifs Trimestriels → KR Trimestriels */}
-              <HierarchicalTreeView
-                ambitions={filteredAmbitions}
-                keyResults={keyResults}
-                quarterlyObjectives={filteredQuarterlyObjectives}
-                quarterlyKeyResults={quarterlyKeyResults}
-                actions={filteredActions}
-                onAddAmbition={handleAddAmbition}
-                onEditAmbition={handleEditAmbition}
-                onDeleteAmbition={async (id) => {
-                  if (!user) return;
-                  if (window.confirm('Êtes-vous sûr de vouloir supprimer cette ambition ? Tous les objectifs associés seront également supprimés.')) {
-                    try {
-                      await deleteAmbitionMutation.mutateAsync({ id, userId: user.id });
-                    } catch (error) {
-                      console.error('❌ Erreur lors de la suppression:', error);
-                      alert('Erreur lors de la suppression de l\'ambition');
-                    }
-                  }
-                }}
-                onAddKeyResult={handleAddKeyResult}
-                onEditKeyResult={handleEditKeyResult}
-                onDeleteKeyResult={async (id) => {
+          <div className="space-y-6">
+            <HierarchicalTreeView
+              ambitions={filteredAmbitions}
+              keyResults={keyResults}
+              quarterlyObjectives={filteredQuarterlyObjectives}
+              quarterlyKeyResults={quarterlyKeyResults}
+              actions={filteredActions}
+              onAddAmbition={handleAddAmbition}
+              onEditAmbition={handleEditAmbition}
+              onDeleteAmbition={async (id) => {
+                if (!user) return;
+                if (window.confirm('Êtes-vous sûr de vouloir supprimer cette ambition ? Tous les objectifs associés seront également supprimés.')) {
                   try {
-                    await deleteKeyResultMutation.mutateAsync(id);
+                    await deleteAmbitionMutation.mutateAsync({ id, userId: user.id });
                   } catch (error) {
                     console.error('❌ Erreur lors de la suppression:', error);
-                    alert('Erreur lors de la suppression du résultat clé');
+                    alert('Erreur lors de la suppression de l\'ambition');
                   }
-                }}
-                onAddQuarterlyObjective={handleAddQuarterlyObjective}
-                onEditQuarterlyObjective={handleEditQuarterlyObjective}
-                onDeleteQuarterlyObjective={async (id) => {
-                  if (!user) return;
-                  try {
-                    await deleteObjectiveMutation.mutateAsync({ id, userId: user.id });
-                  } catch (error) {
-                    console.error('❌ Erreur lors de la suppression:', error);
-                    alert('Erreur lors de la suppression de l\'objectif');
-                  }
-                }}
-                onAddQuarterlyKeyResult={handleAddQuarterlyKeyResult}
-                onEditQuarterlyKeyResult={handleEditQuarterlyKeyResult}
-                onDeleteQuarterlyKeyResult={async (id) => {
-                  try {
-                    await deleteQuarterlyKeyResultMutation.mutateAsync(id);
-                  } catch (error) {
-                    console.error('❌ Erreur lors de la suppression:', error);
-                    alert('Erreur lors de la suppression du Key Result');
-                  }
-                }}
-                onAddAction={handleAddAction}
-                onEditAction={handleEditAction}
-                onDeleteAction={async (id) => {
-                  if (!user) return;
-                  try {
-                    await deleteActionMutation.mutateAsync(id);
-                  } catch (error) {
-                    console.error('❌ Erreur lors de la suppression:', error);
-                    alert('Erreur lors de la suppression de l\'action');
-                  }
-                }}
-                onViewKanban={handleViewKanban}
-                onGenerateActionPlan={handleGenerateActionPlan}
-                onShareQuarterlyObjective={handleShareObjective}
-                onShareQuarterlyKeyResult={handleShareKR}
-                onUpdateQuarterlyKeyResultProgress={handleOpenProgressModal}
-                onViewQuarterlyKeyResultHistory={handleOpenHistoryPanel}
-              />
-            </div>
-          ) : (
-            <div className="space-y-6">
-              {/* Kanban unique pour toutes les actions */}
-              <div className="bg-white rounded-lg shadow-sm border p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h2 className="text-xl font-semibold text-gray-900">
-                      Kanban des Actions
-                    </h2>
-                    <p className="text-gray-600 mt-1">
-                      Organisez toutes vos actions par statut
-                    </p>
-                  </div>
-                  <Button onClick={() => handleAddAction()}>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Nouvelle Action
-                  </Button>
-                </div>
-
-                <KanbanBoard
-                  actions={filteredActions}
-                  onActionMove={handleActionMove}
-                  onActionReorder={async () => {}} // TODO: Implémenter le réordre
-                  onActionEdit={handleEditAction}
-                  onActionDelete={async (id) => {
-                    if (!user) return;
-                    try {
-                      await deleteActionMutation.mutateAsync(id);
-                    } catch (error) {
-                      console.error('❌ Erreur lors de la suppression:', error);
-                      alert('Erreur lors de la suppression de l\'action');
-                    }
-                  }}
-                  onAddAction={() => handleAddAction()}
-                  quarterlyKeyResults={quarterlyKeyResults}
-                  quarterlyObjectives={quarterlyObjectives}
-                  selectedAmbition={filters.ambitionIds[0]}
-                  selectedQuarter={filters.quarters[0]}
-                  selectedYear={filters.years[0]}
-                />
-              </div>
-            </div>
-          )}
+                }
+              }}
+              onAddKeyResult={handleAddKeyResult}
+              onEditKeyResult={handleEditKeyResult}
+              onDeleteKeyResult={async (id) => {
+                try {
+                  await deleteKeyResultMutation.mutateAsync(id);
+                } catch (error) {
+                  console.error('❌ Erreur lors de la suppression:', error);
+                  alert('Erreur lors de la suppression du résultat clé');
+                }
+              }}
+              onAddQuarterlyObjective={handleAddQuarterlyObjective}
+              onEditQuarterlyObjective={handleEditQuarterlyObjective}
+              onDeleteQuarterlyObjective={async (id) => {
+                if (!user) return;
+                try {
+                  await deleteObjectiveMutation.mutateAsync({ id, userId: user.id });
+                } catch (error) {
+                  console.error('❌ Erreur lors de la suppression:', error);
+                  alert('Erreur lors de la suppression de l\'objectif');
+                }
+              }}
+              onAddQuarterlyKeyResult={handleAddQuarterlyKeyResult}
+              onEditQuarterlyKeyResult={handleEditQuarterlyKeyResult}
+              onDeleteQuarterlyKeyResult={async (id) => {
+                try {
+                  await deleteQuarterlyKeyResultMutation.mutateAsync(id);
+                } catch (error) {
+                  console.error('❌ Erreur lors de la suppression:', error);
+                  alert('Erreur lors de la suppression du Key Result');
+                }
+              }}
+              onAddAction={handleAddAction}
+              onEditAction={handleEditAction}
+              onDeleteAction={async (id) => {
+                if (!user) return;
+                try {
+                  await deleteActionMutation.mutateAsync(id);
+                } catch (error) {
+                  console.error('❌ Erreur lors de la suppression:', error);
+                  alert('Erreur lors de la suppression de l\'action');
+                }
+              }}
+              onGenerateActionPlan={handleGenerateActionPlan}
+              onShareQuarterlyObjective={handleShareObjective}
+              onShareQuarterlyKeyResult={handleShareKR}
+              onUpdateQuarterlyKeyResultProgress={handleOpenProgressModal}
+              onViewQuarterlyKeyResultHistory={handleOpenHistoryPanel}
+            />
+          </div>
         </div>
 
         {/* Panel de filtres */}

@@ -6,7 +6,6 @@ import {
   Plus,
   Target,
   TrendingUp,
-  Zap,
   Calendar,
   Building2,
   Edit2,
@@ -54,7 +53,6 @@ interface HierarchicalTreeViewProps {
   onAddAction: (keyResultId: string) => void;
   onEditAction: (action: Action) => void;
   onDeleteAction: (actionId: string) => void;
-  onViewKanban: (objectiveId?: string) => void;
   onGenerateActionPlan?: (keyResult: QuarterlyKeyResult) => void;
   onShareQuarterlyObjective?: (objectiveId: string) => void;
   onShareQuarterlyKeyResult?: (keyResultId: string) => void;
@@ -83,7 +81,6 @@ export const HierarchicalTreeView: React.FC<HierarchicalTreeViewProps> = ({
   onAddAction,
   onEditAction,
   onDeleteAction,
-  onViewKanban,
   onGenerateActionPlan,
   onShareQuarterlyObjective,
   onShareQuarterlyKeyResult,
@@ -171,21 +168,6 @@ export const HierarchicalTreeView: React.FC<HierarchicalTreeViewProps> = ({
 
   return (
     <div className="space-y-4">
-      {/* En-tête */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">Structure Hiérarchique</h2>
-        <div className="flex items-center space-x-2">
-          <Button onClick={() => onViewKanban()}>
-            <Zap className="h-4 w-4 mr-2" />
-            Voir le Kanban Global
-          </Button>
-          <Button onClick={onAddAmbition}>
-            <Plus className="h-4 w-4 mr-2" />
-            Nouvelle Ambition
-          </Button>
-        </div>
-      </div>
-
       {/* Arbre hiérarchique */}
       <div className="space-y-3">
         {ambitions.map((ambition) => {
@@ -385,13 +367,6 @@ export const HierarchicalTreeView: React.FC<HierarchicalTreeViewProps> = ({
                                     </Badge>
                                   </div>
                                   <div className="flex items-center space-x-1">
-                                    <Button
-                                      size="sm"
-                                      variant="ghost"
-                                      onClick={() => onViewKanban(objective.id)}
-                                    >
-                                      <Zap className="h-3 w-3" />
-                                    </Button>
                                     <Button
                                       size="sm"
                                       variant="ghost"
