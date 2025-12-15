@@ -132,7 +132,7 @@ const QuarterlyObjectivesStep: React.FC = () => {
 
   const getAmbitionTitle = (ambitionId: string) => {
     const ambition = ambitions.find(a => a.id === ambitionId);
-    return ambition?.title || 'Ambition inconnue';
+    return ambition?.title || 'Objectif annuel inconnu';
   };
 
   if (isEditing || !isEditing && quarterlyObjectivesData.length === 0) {

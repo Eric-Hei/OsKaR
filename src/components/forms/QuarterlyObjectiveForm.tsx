@@ -78,17 +78,17 @@ export const QuarterlyObjectiveForm: React.FC<QuarterlyObjectiveFormProps> = ({
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Sélection de l'ambition */}
+            {/* Sélection de l'objectif annuel */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <Building2 className="inline h-4 w-4 mr-1" />
-                Ambition rattachée *
+                Objectif annuel rattaché *
               </label>
               <select
                 {...register('ambitionId')}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               >
-                <option value="">Sélectionner une ambition</option>
+                <option value="">Sélectionner un objectif annuel</option>
                 {ambitions.map((ambition) => (
                   <option key={ambition.id} value={ambition.id}>
                     {ambition.title}
@@ -183,7 +183,7 @@ export const QuarterlyObjectiveForm: React.FC<QuarterlyObjectiveFormProps> = ({
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h4 className="font-medium text-gray-900 mb-2">Aperçu</h4>
                 <div className="text-sm text-gray-600">
-                  <p><strong>Ambition:</strong> {selectedAmbition.title}</p>
+                  <p><strong>Objectif annuel:</strong> {selectedAmbition.title}</p>
                   <p><strong>Objectif:</strong> {watch('title')}</p>
                   <p><strong>Période:</strong> {quarterLabels[watch('quarter')]} {watch('year')}</p>
                 </div>

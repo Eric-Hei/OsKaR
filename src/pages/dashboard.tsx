@@ -126,7 +126,7 @@ const DashboardPage: React.FC = () => {
 
   const metricCards = [
     {
-      title: 'Ambitions',
+      title: 'Objectifs annuels',
       value: metrics.totalAmbitions,
       icon: Target,
       color: 'text-blue-600',
@@ -295,7 +295,7 @@ const DashboardPage: React.FC = () => {
               </Card>
             </motion.div>
 
-            {/* Ambitions actives */}
+            {/* Objectifs annuels actifs */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -306,14 +306,14 @@ const DashboardPage: React.FC = () => {
                   <div className="flex justify-between items-center">
                     <CardTitle className="flex items-center">
                       <Target className="h-5 w-5 mr-2 text-primary-600" />
-                      Mes Ambitions
+                      Mes Objectifs Annuels
                     </CardTitle>
                     <Button
                       size="sm"
                       onClick={handleCreateAmbition}
                       leftIcon={<Plus className="h-4 w-4" />}
                     >
-                      Nouvelle ambition
+                      Nouvel objectif annuel
                     </Button>
                   </div>
                 </CardHeader>
@@ -351,7 +351,7 @@ const DashboardPage: React.FC = () => {
                           onClick={() => router.push('/ambitions')}
                           className="w-full"
                         >
-                          Voir toutes les ambitions ({ambitions.length})
+                          Voir tous les objectifs annuels ({ambitions.length})
                         </Button>
                       )}
                     </div>
@@ -359,16 +359,16 @@ const DashboardPage: React.FC = () => {
                     <div className="text-center py-8">
                       <Target className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                       <h3 className="text-lg font-medium text-gray-900 mb-2">
-                        Aucune ambition définie
+                        Aucun objectif annuel défini
                       </h3>
                       <p className="text-gray-500 mb-4">
-                        Commencez par définir vos ambitions pour cette année.
+                        Commencez par définir vos objectifs pour cette année.
                       </p>
                       <Button
                         onClick={handleCreateAmbition}
                         leftIcon={<Plus className="h-4 w-4" />}
                       >
-                        Créer ma première ambition
+                        Créer mon premier objectif annuel
                       </Button>
                     </div>
                   )}

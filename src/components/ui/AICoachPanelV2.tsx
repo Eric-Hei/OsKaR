@@ -97,7 +97,7 @@ export const AICoachPanelV2: React.FC<AICoachPanelV2Props> = ({
 
   const getTypeLabel = () => {
     switch (type) {
-      case 'ambition': return 'Ambition';
+      case 'ambition': return 'Objectif annuel';
       case 'keyResult': return 'Résultat Clé';
       case 'okr': return 'OKR';
       case 'action': return 'Action';

@@ -135,7 +135,7 @@ const SettingsPage: React.FC = () => {
     const confirmed = window.confirm(
       '⚠️ ATTENTION : Cette action est irréversible !\n\n' +
       'Toutes vos données seront définitivement supprimées :\n' +
-      '- Ambitions et objectifs\n' +
+      '- Objectifs annuels et objectifs trimestriels\n' +
       '- Key Results et actions\n' +
       '- Équipes et invitations\n' +
       '- Historique de progression\n\n' +

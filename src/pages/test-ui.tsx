@@ -194,11 +194,11 @@ export default function TestUIPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Ambitions */}
+          {/* Objectifs annuels */}
           <Card>
             <CardHeader>
               <div className="flex justify-between items-center">
-                <CardTitle>Ambitions</CardTitle>
+                <CardTitle>Objectifs annuels</CardTitle>
                 <Button
                   size="sm"
                   onClick={handleCreateAmbition}
@@ -221,7 +221,7 @@ export default function TestUIPage() {
                 </div>
               )}
               {ambitions && ambitions.length === 0 && (
-                <p className="text-gray-500 py-4">Aucune ambition</p>
+                <p className="text-gray-500 py-4">Aucun objectif annuel</p>
               )}
               {ambitions && ambitions.length > 0 && (
                 <div className="space-y-2">

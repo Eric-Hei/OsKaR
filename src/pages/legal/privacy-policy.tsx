@@ -82,7 +82,7 @@ const PrivacyPolicyPage: React.FC = () => {
 
             <h3>3. Données d'utilisation</h3>
             <ul>
-              <li>Ambitions et objectifs créés</li>
+              <li>Objectifs annuels et objectifs trimestriels créés</li>
               <li>Résultats clés et actions</li>
               <li>Progression et métriques</li>
               <li>Interactions avec l'IA coach</li>

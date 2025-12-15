@@ -192,7 +192,7 @@ Lancer nouveau produit,Développer une nouvelle gamme,product,critical,2025,Fina
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                 <div className="bg-blue-50 p-3 rounded">
                   <div className="text-2xl font-bold text-blue-600">{result.ambitionsCreated}</div>
-                  <div className="text-xs text-blue-700">Ambitions</div>
+                  <div className="text-xs text-blue-700">Objectifs annuels</div>
                 </div>
                 <div className="bg-green-50 p-3 rounded">
                   <div className="text-2xl font-bold text-green-600">{result.objectivesCreated}</div>

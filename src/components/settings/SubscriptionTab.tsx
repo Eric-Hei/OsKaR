@@ -154,12 +154,12 @@ export const SubscriptionTab: React.FC<SubscriptionTabProps> = ({ userId }) => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Ambitions */}
+            {/* Objectifs annuels */}
             <div>
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center">
                   <Target className="h-5 w-5 text-gray-400 mr-2" />
-                  <span className="font-medium text-gray-900">Ambitions</span>
+                  <span className="font-medium text-gray-900">Objectifs annuels</span>
                 </div>
                 <span className="text-sm text-gray-600">
                   {usage.currentAmbitions} / {usage.maxAmbitions === Infinity ? '∞' : usage.maxAmbitions}
@@ -177,7 +177,7 @@ export const SubscriptionTab: React.FC<SubscriptionTabProps> = ({ userId }) => {
               )}
               {!usage.canCreateAmbition && (
                 <p className="text-sm text-orange-600 mt-2">
-                  ⚠️ Limite atteinte. Passez à un plan supérieur pour créer plus d'ambitions.
+                  ⚠️ Limite atteinte. Passez à un plan supérieur pour créer plus d'objectifs annuels.
                 </p>
               )}
             </div>
@@ -264,7 +264,7 @@ export const SubscriptionTab: React.FC<SubscriptionTabProps> = ({ userId }) => {
                   <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  Ambitions illimitées
+                  Objectifs annuels illimités
                 </li>
                 <li className="flex items-center">
                   <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">

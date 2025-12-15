@@ -36,10 +36,10 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
       case 'ambitions':
         return {
           icon: <Target className="h-12 w-12 text-orange-500" />,
-          title: 'Limite d\'ambitions atteinte',
-          description: 'Vous avez atteint le nombre maximum d\'ambitions pour votre plan actuel.',
+          title: 'Limite d\'objectifs annuels atteinte',
+          description: 'Vous avez atteint le nombre maximum d\'objectifs annuels pour votre plan actuel.',
           benefits: [
-            'Ambitions illimitées',
+            'Objectifs annuels illimités',
             'IA coach illimitée',
             'Exports avancés',
             'Analytics détaillés',

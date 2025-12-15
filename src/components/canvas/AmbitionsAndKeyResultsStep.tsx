@@ -206,13 +206,13 @@ const AmbitionsAndKeyResultsStep: React.FC = () => {
       {/* En-tête */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Ambitions & Résultats Clés</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Objectifs Annuels & Résultats Clés</h2>
           <p className="text-gray-600 mt-1">
-            Définissez vos ambitions annuelles et leurs résultats clés mesurables
+            Définissez vos objectifs annuels et leurs résultats clés mesurables
           </p>
         </div>
         <Button onClick={handleAddAmbition} leftIcon={<Plus className="h-4 w-4" />}>
-          Nouvelle Ambition
+          Nouvel Objectif Annuel
         </Button>
       </div>
 
@@ -222,13 +222,13 @@ const AmbitionsAndKeyResultsStep: React.FC = () => {
           <CardContent className="py-12 text-center">
             <Target className="h-12 w-12 text-gray-300 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Aucune ambition définie
+              Aucun objectif annuel défini
             </h3>
             <p className="text-gray-500 mb-4">
-              Commencez par définir vos ambitions pour cette année
+              Commencez par définir vos objectifs pour cette année
             </p>
             <Button onClick={handleAddAmbition} leftIcon={<Plus className="h-4 w-4" />}>
-              Créer ma première ambition
+              Créer mon premier objectif annuel
             </Button>
           </CardContent>
         </Card>

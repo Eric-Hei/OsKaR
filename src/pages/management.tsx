@@ -214,8 +214,8 @@ const ManagementPage: React.FC = () => {
       setFormMode(null);
       setEditingItem(null);
     } catch (error) {
-      console.error('❌ Erreur lors de la sauvegarde de l\'ambition:', error);
-      alert('Erreur lors de la sauvegarde de l\'ambition');
+      console.error('❌ Erreur lors de la sauvegarde de l\'objectif annuel:', error);
+      alert('Erreur lors de la sauvegarde de l\'objectif annuel');
     }
   };
 
@@ -554,7 +554,7 @@ const ManagementPage: React.FC = () => {
                 <div className="flex items-center space-x-4 text-sm text-gray-600 mt-2">
                   <div className="flex items-center space-x-1">
                     <Building2 className="h-4 w-4" />
-                    <span>{filteredAmbitions.length} ambitions</span>
+                    <span>{filteredAmbitions.length} objectifs annuels</span>
                   </div>
                   <div className="flex items-center space-x-1">
                     <Target className="h-4 w-4" />
@@ -570,7 +570,7 @@ const ManagementPage: React.FC = () => {
               <div className="flex items-center space-x-3">
                 <Button onClick={() => handleAddAmbition()}>
                   <Plus className="h-4 w-4 mr-2" />
-                  Nouvelle Ambition
+                  Nouvel Objectif Annuel
                 </Button>
                 <Button
                   variant="outline"
@@ -612,12 +612,12 @@ const ManagementPage: React.FC = () => {
               onEditAmbition={handleEditAmbition}
               onDeleteAmbition={async (id) => {
                 if (!user) return;
-                if (window.confirm('Êtes-vous sûr de vouloir supprimer cette ambition ? Tous les objectifs associés seront également supprimés.')) {
+                if (window.confirm('Êtes-vous sûr de vouloir supprimer cet objectif annuel ? Tous les objectifs trimestriels associés seront également supprimés.')) {
                   try {
                     await deleteAmbitionMutation.mutateAsync({ id, userId: user.id });
                   } catch (error) {
                     console.error('❌ Erreur lors de la suppression:', error);
-                    alert('Erreur lors de la suppression de l\'ambition');
+                    alert('Erreur lors de la suppression de l\'objectif annuel');
                   }
                 }
               }}

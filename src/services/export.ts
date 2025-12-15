@@ -93,7 +93,7 @@ export class ExportService {
     const cardWidth = (pageWidth - 2 * margin - 10) / 2;
     const cardHeight = 22;
     const metricsData = [
-      { label: 'Ambitions', value: metrics.totalAmbitions, icon: '🎯' },
+      { label: 'Objectifs annuels', value: metrics.totalAmbitions, icon: '🎯' },
       { label: 'OKRs actifs', value: metrics.activeOKRs, icon: '📊' },
       { label: 'Actions complétées', value: metrics.completedActions, icon: '✅' },
       { label: 'Échéances à venir', value: metrics.upcomingDeadlines, icon: '⏰' },
@@ -156,7 +156,7 @@ export class ExportService {
     doc.setTextColor(0, 0, 0);
     yPosition += 20;
 
-    // Ambitions
+    // Objectifs annuels
     if (ambitions.length > 0) {
       // Titre de section
       doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
@@ -164,7 +164,7 @@ export class ExportService {
       doc.setFontSize(16);
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('🎯 Ambitions', margin + 8, yPosition + 7);
+      doc.text('🎯 Objectifs Annuels', margin + 8, yPosition + 7);
       doc.setTextColor(0, 0, 0);
       yPosition += 18;
 
@@ -360,7 +360,7 @@ export class ExportService {
     const metrics = analyticsService.getDashboardMetrics(ambitions, okrs, actions, quarterlyObjectives, quarterlyKeyResults);
     const metricsData = [
       ['Métrique', 'Valeur'],
-      ['Ambitions totales', metrics.totalAmbitions],
+      ['Objectifs annuels totaux', metrics.totalAmbitions],
       ['OKRs actifs', metrics.activeOKRs],
       ['Actions complétées', metrics.completedActions],
       ['Progrès global (%)', metrics.overallProgress],
@@ -377,7 +377,7 @@ export class ExportService {
       { width: 15 }
     ];
 
-    // Feuille 2: Ambitions
+    // Feuille 2: Objectifs annuels
     const ambitionsData = [
       ['Titre', 'Description', 'Catégorie', 'Priorité', 'Statut', 'Progrès (%)', 'Créé le']
     ];
@@ -395,7 +395,7 @@ export class ExportService {
       ]);
     });
 
-    const ambitionsSheet = workbook.addWorksheet('Ambitions');
+    const ambitionsSheet = workbook.addWorksheet('Objectifs annuels');
     ambitionsSheet.addRows(ambitionsData);
 
     // Formatage de l'en-tête

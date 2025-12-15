@@ -232,10 +232,10 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
               </CardHeader>
 
               <CardContent className="p-0">
-                {/* Ambitions */}
+                {/* Objectifs annuels */}
                 <FilterSection
                   id="ambitions"
-                  title="Ambitions"
+                  title="Objectifs annuels"
                   icon={<Building2 className="h-4 w-4 text-purple-600" />}
                 >
                   <div className="space-y-2">

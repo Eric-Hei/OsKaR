@@ -63,8 +63,9 @@ const Header: React.FC<HeaderProps> = ({ onMenuToggle, isMobileMenuOpen }) => {
   });
 
   // Navigation pour utilisateurs non connectés
-  const publicNavigation = [
-    { name: 'Tarifs', href: '/pricing', icon: Crown },
+  const publicNavigation: typeof authenticatedNavigation = [
+    // Tarifs masqués pour l'instant
+    // { name: 'Tarifs', href: '/pricing', icon: Crown },
   ];
 
   const navigation = user ? authenticatedNavigation : publicNavigation;

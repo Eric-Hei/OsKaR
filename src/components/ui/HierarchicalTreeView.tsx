@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronDown,
@@ -92,6 +92,22 @@ export const HierarchicalTreeView: React.FC<HierarchicalTreeViewProps> = ({
   const [expandedKeyResults, setExpandedKeyResults] = useState<Set<string>>(new Set());
   const [openObjectiveComments, setOpenObjectiveComments] = useState<Set<string>>(new Set());
   const [openKRComments, setOpenKRComments] = useState<Set<string>>(new Set());
+  const [hasInitialized, setHasInitialized] = useState(false);
+
+  // Déplier automatiquement les deux premiers niveaux au chargement
+  useEffect(() => {
+    if (!hasInitialized && ambitions.length > 0) {
+      // Niveau 1 : Toutes les ambitions (objectifs annuels)
+      const allAmbitionIds = new Set(ambitions.map(a => a.id));
+      setExpandedAmbitions(allAmbitionIds);
+
+      // Niveau 2 : Tous les objectifs trimestriels
+      const allObjectiveIds = new Set(quarterlyObjectives.map(o => o.id));
+      setExpandedObjectives(allObjectiveIds);
+
+      setHasInitialized(true);
+    }
+  }, [ambitions, quarterlyObjectives, hasInitialized]);
 
   const toggleAmbition = (ambitionId: string) => {
     const newExpanded = new Set(expandedAmbitions);
@@ -196,7 +212,7 @@ export const HierarchicalTreeView: React.FC<HierarchicalTreeViewProps> = ({
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <h3 className="font-semibold text-purple-900">{ambition.title}</h3>
-                          <span className="text-xs text-purple-400 font-normal">Ambition</span>
+                          <span className="text-xs text-purple-400 font-normal">Objectif annuel</span>
                         </div>
                         <p className="text-sm text-purple-700">{ambition.description}</p>
                       </div>
@@ -647,14 +663,14 @@ export const HierarchicalTreeView: React.FC<HierarchicalTreeViewProps> = ({
             <CardContent className="text-center py-12">
               <Building2 className="h-12 w-12 mx-auto text-gray-400 mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Aucune ambition définie
+                Aucun objectif annuel défini
               </h3>
               <p className="text-gray-600 mb-4">
-                Commencez par créer votre première ambition pour structurer vos objectifs.
+                Commencez par créer votre premier objectif annuel pour structurer vos objectifs.
               </p>
               <Button onClick={onAddAmbition}>
                 <Plus className="h-4 w-4 mr-2" />
-                Créer ma première ambition
+                Créer mon premier objectif annuel
               </Button>
             </CardContent>
           </Card>

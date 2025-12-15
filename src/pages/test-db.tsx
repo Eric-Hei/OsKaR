@@ -192,7 +192,7 @@ export default function TestDBPage() {
               disabled={loading}
               className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? '⏳ Chargement...' : '📋 Lister les Ambitions'}
+              {loading ? '⏳ Chargement...' : '📋 Lister les Objectifs Annuels'}
             </button>
 
             <button

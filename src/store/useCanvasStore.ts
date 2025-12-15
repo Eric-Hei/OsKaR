@@ -72,8 +72,8 @@ interface CanvasState {
 const initialSteps: CanvasStep[] = [
   {
     id: 1,
-    title: 'Ambitions & Résultats Clés',
-    description: 'Définissez vos ambitions annuelles et leurs résultats clés mesurables',
+    title: 'Objectifs Annuels & Résultats Clés',
+    description: 'Définissez vos objectifs annuels et leurs résultats clés mesurables',
     component: 'AmbitionsAndKeyResultsStep',
     isCompleted: false,
     isActive: true,

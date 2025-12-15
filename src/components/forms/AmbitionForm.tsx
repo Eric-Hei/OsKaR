@@ -81,7 +81,7 @@ export const AmbitionForm: React.FC<AmbitionFormProps> = ({
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center">
                 <Target className="h-5 w-5 mr-2 text-purple-600" />
-                {initialData ? 'Modifier l\'Ambition' : 'Nouvelle Ambition'}
+                {initialData ? 'Modifier l\'Objectif Annuel' : 'Nouvel Objectif Annuel'}
               </CardTitle>
               <button
                 onClick={onCancel}

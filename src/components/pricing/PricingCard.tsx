@@ -31,8 +31,8 @@ export const PricingCard: React.FC<PricingCardProps> = ({
       value: plan.maxUsers === -1 ? 'Illimité' : `${plan.maxUsers} utilisateur${plan.maxUsers > 1 ? 's' : ''}`,
     },
     {
-      label: 'Ambitions',
-      value: plan.maxAmbitions === -1 ? 'Illimitées' : `${plan.maxAmbitions} max`,
+      label: 'Objectifs annuels',
+      value: plan.maxAmbitions === -1 ? 'Illimités' : `${plan.maxAmbitions} max`,
     },
     {
       label: 'Export PDF',

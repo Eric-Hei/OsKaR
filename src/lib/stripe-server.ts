@@ -34,7 +34,7 @@ export const isStripeServerConfigured = (): boolean => {
 export const STRIPE_PRODUCTS = {
   pro: {
     name: 'OsKaR Pro',
-    description: '5 utilisateurs, ambitions illimitées, IA coach illimitée',
+    description: '5 utilisateurs, objectifs annuels illimités, IA coach illimitée',
     prices: {
       monthly: {
         amount: 1900, // en centimes (19€)

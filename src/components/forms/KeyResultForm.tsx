@@ -67,7 +67,7 @@ export const KeyResultForm: React.FC<KeyResultFormProps> = ({
 
     if (!formData.ambitionId) {
       console.error('❌ Erreur de validation : ambitionId manquant');
-      alert('Erreur : Aucune ambition sélectionnée. Veuillez réessayer.');
+      alert('Erreur : Aucun objectif annuel sélectionné. Veuillez réessayer.');
       return false;
     }
 

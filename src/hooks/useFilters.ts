@@ -242,7 +242,7 @@ export const useActiveFiltersDescription = (
       const ambitionNames = filters.ambitionIds
         .map(id => ambitions.find(a => a.id === id)?.title)
         .filter(Boolean);
-      descriptions.push(`Ambitions: ${ambitionNames.join(', ')}`);
+      descriptions.push(`Objectifs annuels: ${ambitionNames.join(', ')}`);
     }
 
     if (filters.quarters.length > 0) {
