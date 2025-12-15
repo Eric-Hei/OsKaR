@@ -17,35 +17,17 @@ const OnboardingPage: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Rediriger si l'utilisateur a déjà un profil d'entreprise
+  // Rediriger vers l'inscription si l'utilisateur n'est pas connecté
   useEffect(() => {
-    if (user?.companyProfile) {
+    if (!user) {
+      router.push('/auth/register');
+      return;
+    }
+    // Rediriger vers le dashboard si l'utilisateur a déjà un profil d'entreprise
+    if (user.companyProfile) {
       router.push('/dashboard');
     }
   }, [user, router]);
-
-  // Créer un utilisateur démo uniquement si aucun utilisateur n'est déjà persistant
-  useEffect(() => {
-    // TODO: Vérifier si nécessaire avec Supabase
-
-    try {
-      const persisted = typeof window !== 'undefined' ? localStorage.getItem('oskar-app-store') : null;
-      const hasPersistedUser = !!persisted && (() => {
-        try { const parsed = JSON.parse(persisted); return !!parsed?.state?.user; } catch { return false; }
-      })();
-      if (!user && !hasPersistedUser) {
-        console.log('📝 Onboarding - Création utilisateur démo (aucun utilisateur persistant)');
-        const defaultUser = {
-          id: 'demo-user',
-          name: 'Utilisateur Demo',
-          email: 'demo@oskar.com',
-          createdAt: new Date(),
-          lastLoginAt: new Date(),
-        };
-        setUser(defaultUser);
-      }
-    } catch {}
-  }, [user, setUser]);
 
   const handleCompanyProfileSubmit = async (companyProfile: CompanyProfile) => {
     setIsSaving(true);
