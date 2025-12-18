@@ -43,7 +43,7 @@ const QuarterlyObjectivesStep: React.FC = () => {
 
   const quarterLabels = {
     Q1: 'T1 (Jan-Mar)',
-    Q2: 'T2 (Avr-Juin)', 
+    Q2: 'T2 (Avr-Juin)',
     Q3: 'T3 (Juil-Sep)',
     Q4: 'T4 (Oct-Déc)',
   };
@@ -131,7 +131,7 @@ const QuarterlyObjectivesStep: React.FC = () => {
   };
 
   const getAmbitionTitle = (ambitionId: string) => {
-    const ambition = ambitions.find(a => a.id === ambitionId);
+    const ambition = ambitions.find((a: { id: string }) => a.id === ambitionId);
     return ambition?.title || 'Objectif annuel inconnu';
   };
 
@@ -214,7 +214,7 @@ const QuarterlyObjectivesStep: React.FC = () => {
         <div className="space-y-6">
           {quarterlyObjectivesData.map((objective, index) => {
             const keyResults = quarterlyKeyResultsData[index] || [];
-            
+
             return (
               <motion.div
                 key={index}
@@ -231,7 +231,7 @@ const QuarterlyObjectivesStep: React.FC = () => {
                           <span>{objective.title}</span>
                         </CardTitle>
                         <p className="text-gray-600 mb-3">{objective.description}</p>
-                        
+
                         <div className="flex items-center space-x-3">
                           <Badge variant="info" size="sm">
                             <Building2 className="h-3 w-3 mr-1" />
@@ -246,7 +246,7 @@ const QuarterlyObjectivesStep: React.FC = () => {
                           </Badge>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center space-x-2">
                         <Button
                           size="sm"
@@ -274,7 +274,7 @@ const QuarterlyObjectivesStep: React.FC = () => {
                       </div>
                     </div>
                   </CardHeader>
-                  
+
                   {keyResults.length > 0 && (
                     <CardContent>
                       <h4 className="font-medium text-gray-900 mb-3">Résultats clés trimestriels :</h4>
@@ -322,7 +322,7 @@ const QuarterlyObjectivesStep: React.FC = () => {
             <Plus className="h-4 w-4 mr-2" />
             Ajouter un objectif trimestriel
           </Button>
-          
+
           <Button
             onClick={handleComplete}
             disabled={quarterlyObjectivesData.length === 0}

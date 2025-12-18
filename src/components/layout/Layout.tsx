@@ -27,17 +27,33 @@ const Layout: React.FC<LayoutProps> = ({
   const router = useRouter();
   const { user } = useAppStore();
 
-  // Note: L'authentification est gérée par ProtectedRoute
-  // Ici on gère SEULEMENT la redirection vers onboarding si pas de companyProfile
+  // Note: L'authentification est gérée ici quand requireAuth est activé
+  // Si après un délai il n'y a toujours pas d'utilisateur, rediriger vers login
   useEffect(() => {
-    // Ne rien faire si requireAuth n'est pas activé ou pas d'utilisateur
-    if (!requireAuth || !user) return;
+    // Ne rien faire si requireAuth n'est pas activé
+    if (!requireAuth) return;
 
-    // Si utilisateur connecté mais pas de profil d'entreprise → rediriger vers onboarding
-    if (!user.companyProfile && !skipOnboarding && router.pathname !== '/onboarding') {
-      router.push('/onboarding');
+    // Si l'utilisateur est connecté
+    if (user) {
+      // Vérifier l'onboarding
+      if (!user.companyProfile && !skipOnboarding && router.pathname !== '/onboarding') {
+        router.push('/onboarding');
+      }
+      return;
     }
+
+    // Si pas d'utilisateur, attendre un peu pour l'initialisation de l'auth
+    // puis rediriger vers login
+    const timeoutId = setTimeout(() => {
+      if (!user && requireAuth) {
+        console.log('🔄 Redirection vers login (pas de session après timeout)');
+        router.push('/auth/login');
+      }
+    }, 2000); // 2 secondes de grâce pour l'initialisation
+
+    return () => clearTimeout(timeoutId);
   }, [requireAuth, user, skipOnboarding, router]);
+
 
   const pageTitle = title ? `${title} - ${APP_CONFIG.name}` : APP_CONFIG.name;
 

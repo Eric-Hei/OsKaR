@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useAppStore } from '@/store/useAppStore';
 import { AuthService } from '@/services/auth';
+import { isSupabaseConfigured } from '@/lib/supabaseClient';
 import { QueryProvider } from '@/providers/QueryProvider';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { ToastContainer } from '@/components/ui/Toast';
@@ -36,6 +37,12 @@ export default function App({ Component, pageProps }: AppProps) {
 
   // Initialiser l'authentification Supabase
   useEffect(() => {
+    // Ne pas initialiser l'auth si Supabase n'est pas configuré
+    if (!isSupabaseConfigured()) {
+      console.log('⚠️ Supabase non configuré, authentification désactivée');
+      return;
+    }
+
     let mounted = true;
 
     const handleSession = async (session: any) => {
@@ -56,10 +63,18 @@ export default function App({ Component, pageProps }: AppProps) {
         }
       } else {
         console.log('ℹ️ Aucune session active');
-        // On ne force pas le logout ici pour éviter les clignotements
-        // Le middleware ou les composants protégés géreront la redirection
+        // IMPORTANT: Nettoyer l'état utilisateur s'il y a des données périmées
+        // Cela évite que le loader tourne indéfiniment sur les pages protégées
+        // On utilise getState() pour éviter le problème de stale closure
+        const currentUser = useAppStore.getState().user;
+        if (currentUser) {
+          console.log('🧹 Nettoyage de l\'état utilisateur périmé');
+          logout();
+        }
       }
     };
+
+
 
     // 1. Écouter les changements d'état (incluant INITIAL_SESSION)
     const { data: { subscription } } = AuthService.onAuthStateChange(async (event, session) => {
@@ -84,10 +99,13 @@ export default function App({ Component, pageProps }: AppProps) {
     // 2. Vérification initiale manuelle (au cas où le listener INITIAL_SESSION ne trigger pas assez vite)
     // C'est une sécurité supplémentaire
     AuthService.getSession().then(session => {
-      if (mounted && session) {
+      if (mounted) {
+        // Toujours appeler handleSession, même si session est null
+        // Cela permet de nettoyer l'état utilisateur périmé
         handleSession(session);
       }
     });
+
 
     return () => {
       mounted = false;

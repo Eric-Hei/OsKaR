@@ -55,12 +55,45 @@ function fetchWithTimeout(input: RequestInfo | URL, init?: RequestInit): Promise
 // Client Supabase avec typage TypeScript
 // Pour isoler le problème CORS, on utilise ici la configuration par défaut
 // de @supabase/supabase-js, sans fetch personnalisé ni en-têtes globaux.
+
+// Mock pour quand Supabase n'est pas configuré
+const createMockSupabase = () => {
+  const notConfiguredError = { message: 'Supabase non configuré', code: 'NOT_CONFIGURED' };
+  const mockAuthResponse = { data: { user: null, session: null }, error: notConfiguredError };
+
+  return {
+    auth: {
+      signUp: async () => mockAuthResponse,
+      signInWithPassword: async () => mockAuthResponse,
+      signInWithOAuth: async () => ({ data: { url: null, provider: null }, error: notConfiguredError }),
+      signOut: async () => ({ error: null }),
+      getSession: async () => ({ data: { session: null }, error: null }),
+      getUser: async () => ({ data: { user: null }, error: null }),
+      resetPasswordForEmail: async () => ({ error: notConfiguredError }),
+      updateUser: async () => ({ data: { user: null }, error: notConfiguredError }),
+      refreshSession: async () => ({ data: { session: null }, error: notConfiguredError }),
+      onAuthStateChange: (callback: any) => {
+        // Appeler le callback avec INITIAL_SESSION et pas de session
+        setTimeout(() => callback('INITIAL_SESSION', null), 0);
+        return { data: { subscription: { unsubscribe: () => { } } } };
+      },
+    },
+    from: () => ({
+      select: () => ({ data: [], error: null, single: () => ({ data: null, error: notConfiguredError }) }),
+      insert: () => ({ data: null, error: notConfiguredError, select: () => ({ single: () => ({ data: null, error: notConfiguredError }) }) }),
+      update: () => ({ data: null, error: notConfiguredError, eq: () => ({ select: () => ({ single: () => ({ data: null, error: notConfiguredError }) }) }) }),
+      delete: () => ({ error: notConfiguredError, eq: () => ({ error: notConfiguredError }) }),
+    }),
+    rpc: async () => ({ data: null, error: notConfiguredError }),
+  } as any;
+};
+
 export const supabase = hasEnv
   ? createClient<Database>(
-      supabaseUrl as string,
-      supabaseAnonKey as string
-    )
-  : ({} as any);
+    supabaseUrl as string,
+    supabaseAnonKey as string
+  )
+  : createMockSupabase();
 
 // Helper pour vérifier si Supabase est configuré
 export const isSupabaseConfigured = (): boolean => hasEnv;

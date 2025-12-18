@@ -234,7 +234,7 @@ const AmbitionsAndKeyResultsStep: React.FC = () => {
         </Card>
       ) : (
         <div className="space-y-4">
-          {ambitions.map((ambition) => {
+          {ambitions.map((ambition: Ambition) => {
             const isExpanded = expandedAmbitions.has(ambition.id);
             const ambitionKRs = getKeyResultsForAmbition(ambition.id);
 
