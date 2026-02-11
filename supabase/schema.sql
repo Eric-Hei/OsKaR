@@ -91,11 +91,30 @@ create trigger update_teams_updated_at
   for each row
   execute function update_updated_at_column();
 
--- ============================================================================
--- 3. TEAM_MEMBERS (Membres d'équipe)
--- ============================================================================
+-- Fonction pour vérifier l'appartenance à une équipe (Security Definer pour éviter la récursion)
+create or replace function public.check_is_team_member(t_id uuid)
+returns boolean as $$
+begin
+  return exists (
+    select 1 from public.team_members
+    where team_id = t_id
+    and user_id = auth.uid()
+  );
+end;
+$$ language plpgsql security definer set search_path = public;
 
-create type team_role as enum ('OWNER', 'ADMIN', 'MEMBER', 'VIEWER');
+-- Fonction pour vérifier le rôle admin dans une équipe
+create or replace function public.check_is_team_admin(t_id uuid)
+returns boolean as $$
+begin
+  return exists (
+    select 1 from public.team_members
+    where team_id = t_id
+    and user_id = auth.uid()
+    and role in ('OWNER', 'ADMIN')
+  );
+end;
+$$ language plpgsql security definer set search_path = public;
 
 create table team_members (
   id uuid primary key default uuid_generate_v4(),
@@ -113,24 +132,15 @@ alter table team_members enable row level security;
 
 create policy "Team members can view team members"
   on team_members for select
-  using (
-    exists (
-      select 1 from team_members tm
-      where tm.team_id = team_members.team_id
-      and tm.user_id = auth.uid()
-    )
-  );
+  using (public.check_is_team_member(team_id));
 
 create policy "Team admins can manage members"
   on team_members for all
-  using (
-    exists (
-      select 1 from team_members tm
-      where tm.team_id = team_members.team_id
-      and tm.user_id = auth.uid()
-      and tm.role in ('OWNER', 'ADMIN')
-    )
-  );
+  using (public.check_is_team_admin(team_id));
+
+create policy "Users can delete own team memberships"
+  on team_members for delete
+  using (user_id = auth.uid());
 
 -- ============================================================================
 -- RLS POLICIES FOR TEAMS (après création de team_members)
@@ -662,7 +672,8 @@ $$ language plpgsql immutable;
 -- ============================================================================
 
 -- Vue pour les ambitions avec progression calculée
-create or replace view ambitions_with_progress as
+create or replace view ambitions_with_progress 
+with (security_invoker = true) as
 select
   a.*,
   calculate_progress_percentage(a.current_value, a.target_value) as progress_percentage,
@@ -673,7 +684,8 @@ left join key_results kr on kr.ambition_id = a.id
 group by a.id;
 
 -- Vue pour les objectifs trimestriels avec progression
-create or replace view quarterly_objectives_with_progress as
+create or replace view quarterly_objectives_with_progress
+with (security_invoker = true) as
 select
   qo.*,
   count(qkr.id) as key_results_count,
