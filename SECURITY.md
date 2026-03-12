@@ -2,86 +2,85 @@
 
 ## Variables d'Environnement
 
-### ⚠️ RÈGLES IMPORTANTES
+### ⚠️ Règles importantes
 
-1. **JAMAIS de clés API dans le code source**
-   - Toujours utiliser des variables d'environnement
-   - Préfixer avec `NEXT_PUBLIC_` pour l'accès côté client
-   - Vérifier que `.env` est dans `.gitignore`
+1. **Aucun secret dans le code source ni côté navigateur**
+   - Utiliser des variables d'environnement pour tous les secrets.
+   - Réserver `NEXT_PUBLIC_*` aux valeurs explicitement non sensibles.
+   - Les clés Gemini doivent rester **strictement côté serveur**.
 
-2. **Fichiers à ne JAMAIS commiter**
-   - `.env` (contient les vraies clés)
+2. **Fichiers à ne jamais commiter**
+   - `.env`
    - `.env.local`
    - `.env.production.local`
-   - Tout fichier contenant des secrets
+   - tout export ou artefact contenant des valeurs injectées
 
 3. **Fichiers à commiter**
-   - `.env.example` (avec des valeurs d'exemple)
-   - `.gitignore` (doit inclure `.env`)
+   - `.env.example`
+   - `.env.exemple`
+   - `.gitignore`
 
-### Configuration Actuelle
+### Configuration actuelle
 
 ```bash
-# ✅ Correct - Dans .env (non commité)
-NEXT_PUBLIC_GEMINI_API_KEY=votre_vraie_clé_ici
+# ✅ Correct - variables privées côté serveur
+GEMINI_API_KEY=votre_vraie_cle_ici
+GEMINI_MODEL=gemini-2.0-flash-exp
 
-# ✅ Correct - Dans .env.example (commité)
-NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key_here
-
-# ❌ INTERDIT - Dans le code source
-const apiKey = 'AIzaSyD5zwI-BB8C6dXbC2SJoODqzjX0eKozoSo';
+# ✅ Correct - variables publiques non sensibles
+NEXT_PUBLIC_SUPABASE_URL=https://votre-projet.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=votre_cle_anon
 ```
 
-### Utilisation dans le Code
+### Utilisation dans le code
 
 ```typescript
-// ✅ Correct
-const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+// ✅ Correct - uniquement dans src/pages/api/gemini.ts
+const apiKey = process.env.GEMINI_API_KEY;
 
-// ❌ INTERDIT
-const apiKey = 'AIzaSyD5zwI-BB8C6dXbC2SJoODqzjX0eKozoSo';
+// ❌ Interdit - secret en dur
+const apiKey = 'your-secret-key';
 ```
 
-## Clés API Utilisées
+## Clés API utilisées
 
 ### Google Gemini AI
-- **Variable** : `NEXT_PUBLIC_GEMINI_API_KEY`
-- **Obtention** : [Google AI Studio](https://makersuite.google.com/app/apikey)
-- **Usage** : Conseils IA personnalisés
-- **Optionnel** : Oui (fallback vers conseils statiques)
+- **Variables** : `GEMINI_API_KEY`, `GEMINI_MODEL`
+- **Usage** : appel serveur via `POST /api/gemini`
+- **Exposition navigateur** : interdite
+- **Optionnel** : oui, avec fallback applicatif
 
-## Checklist Sécurité
+## Checklist sécurité
 
 Avant chaque commit :
 
-- [ ] Aucune clé API dans le code source
-- [ ] Variables d'environnement utilisées correctement
-- [ ] `.env` dans `.gitignore`
+- [ ] aucun secret dans le code source
+- [ ] aucun secret dans les variables `NEXT_PUBLIC_*`
+- [ ] `.env.local` ignoré par Git
 - [ ] `.env.example` à jour
-- [ ] Documentation mise à jour
+- [ ] aucune route de test exposée en production
+- [ ] documentation alignée avec l'architecture serveur
 
-## En cas d'Exposition Accidentelle
+## En cas d'exposition accidentelle
 
-Si une clé API est accidentellement commitée :
-
-1. **Révoquer immédiatement** la clé exposée
-2. **Générer une nouvelle clé**
-3. **Mettre à jour** le fichier `.env`
-4. **Commiter le fix** avec un message explicite
-5. **Informer l'équipe** si nécessaire
+1. **Révoquer / rotater immédiatement** la clé exposée
+2. **Mettre à jour** les variables locales et Netlify
+3. **Purger** les artefacts générés localement (`out/`, `.netlify/`, etc.)
+4. **Vérifier** qu'aucune variable publique sensible ne subsiste
+5. **Documenter** l'incident et la remédiation
 
 ## Déploiement
 
 ### Netlify
-```bash
-# Variables d'environnement à configurer dans Netlify
-NEXT_PUBLIC_GEMINI_API_KEY=votre_clé_production
-```
+Configurer dans Netlify :
 
-### Autres Plateformes
-- Vercel : Variables d'environnement dans le dashboard
-- Heroku : `heroku config:set NEXT_PUBLIC_GEMINI_API_KEY=...`
+```bash
+GEMINI_API_KEY=votre_cle_production
+GEMINI_MODEL=gemini-2.0-flash-exp
+NEXT_PUBLIC_SUPABASE_URL=https://votre-projet.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=votre_cle_anon
+```
 
 ## Contact
 
-En cas de problème de sécurité, contactez immédiatement l'équipe de développement.
+En cas de problème de sécurité, traiter en priorité la rotation des secrets puis la purge des artefacts concernés.

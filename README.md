@@ -79,8 +79,8 @@ Ambitions (multiples)
 - **Icons** : Lucide React
 - **Charts** : Recharts
 - **Export** : jsPDF, SheetJS
-- **IA** : Google Generative AI (Gemini)
-- **Déploiement** : Netlify avec export statique
+- **IA** : Gemini via API interne Next.js sécurisée
+- **Déploiement** : Netlify en mode serveur
 - **Testing** : Jest, React Testing Library
 
 ## 📦 Installation
@@ -107,11 +107,12 @@ yarn install
 
 3. **Configuration des variables d'environnement**
 ```bash
-# Créer le fichier .env à la racine du projet
-touch .env
+# Copier l'exemple fourni
+cp .env.example .env.local
 
-# Ajouter votre clé API Gemini
-echo "NEXT_PUBLIC_GEMINI_API_KEY=votre_clé_api_ici" > .env
+# Puis renseigner vos variables privées dans .env.local
+GEMINI_API_KEY=votre_clé_api_ici
+GEMINI_MODEL=gemini-2.0-flash-exp
 ```
 
 **Pour obtenir une clé API Gemini :**
@@ -192,14 +193,14 @@ src/
 │   ├── canvas.tsx      # Canvas guidé multi-étapes
 │   ├── management.tsx  # Gestion OKR + Kanban
 │   ├── dashboard.tsx   # Tableau de bord
-│   └── company-profile.tsx # Profil d'entreprise pour l'IA
+│   ├── company-profile.tsx # Profil d'entreprise pour l'IA
+│   └── api/gemini.ts      # API interne sécurisée pour Gemini
 ├── services/           # Services métier
-│   ├── storage.ts      # Gestion du localStorage
 │   ├── ai-coach.ts     # Service IA coach contextuel
-│   ├── gemini.ts       # Intégration Google Gemini AI
+│   ├── gemini.ts       # Client HTTP vers /api/gemini
 │   ├── analytics.ts    # Calculs et métriques avancées
 │   └── export.ts       # Export PDF/Excel/JSON
-├── store/              # Stores Zustand avec persistance
+├── store/              # Stores Zustand en mémoire pour l'UI
 │   ├── useAppStore.ts  # Store principal de l'application
 │   └── useCanvasStore.ts # Store du canvas guidé
 ├── types/              # Types TypeScript complets
@@ -283,16 +284,14 @@ yarn start
 
 **🌐 Application en ligne :** [https://recette-okarina.netlify.app](https://recette-okarina.netlify.app)
 
-Le projet est optimisé pour le déploiement statique sur :
+Le projet est optimisé pour un déploiement serveur sur :
 - **Netlify** (actuellement déployé)
-- **Vercel** (recommandé pour Next.js)
+- **Vercel**
 - **AWS Amplify**
-- **GitHub Pages**
 
 ```bash
 # Déploiement sur Netlify
-npm run build
-netlify deploy --prod --dir=out
+npx netlify deploy --build --prod
 ```
 
 ## 🎨 Personnalisation
@@ -340,7 +339,7 @@ Modifiez `src/constants/index.ts` pour :
 - [x] Kanban des actions avec drag & drop
 - [x] Vue hiérarchique et pyramidale
 - [x] Export PDF/Excel/JSON complet
-- [x] Déploiement Netlify avec export statique
+- [x] Déploiement Netlify en mode serveur
 
 ### Version 1.1
 - [ ] Authentification réelle (Auth0/Firebase)

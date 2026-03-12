@@ -46,7 +46,7 @@ function loadEnvFile() {
     }
   }
   
-  return process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+  return process.env.GEMINI_API_KEY;
 }
 
 async function testGeminiAPI() {
@@ -59,7 +59,7 @@ async function testGeminiAPI() {
   
   if (!apiKey) {
     log('❌ Clé API Gemini non trouvée dans .env', 'red');
-    log('💡 Ajoutez NEXT_PUBLIC_GEMINI_API_KEY=votre_clé dans le fichier .env', 'yellow');
+    log('💡 Ajoutez GEMINI_API_KEY=votre_clé dans le fichier .env', 'yellow');
     process.exit(1);
   }
   
@@ -80,8 +80,9 @@ async function testGeminiAPI() {
   
   try {
     genAI = new GoogleGenerativeAI(apiKey);
-    model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
-    log('✅ Client Gemini initialisé avec le modèle gemini-2.5-flash', 'green');
+    const modelName = process.env.GEMINI_MODEL || 'gemini-2.0-flash-exp';
+    model = genAI.getGenerativeModel({ model: modelName });
+    log(`✅ Client Gemini initialisé avec le modèle ${modelName}`, 'green');
   } catch (error) {
     log(`❌ Erreur lors de l'initialisation: ${error.message}`, 'red');
     process.exit(1);
@@ -132,7 +133,7 @@ Répondez sous forme de liste numérotée avec des conseils concrets et actionna
     
     if (error.message.includes('404')) {
       log('\n💡 Suggestions:', 'yellow');
-      log('  • Le modèle "gemini-2.5-flash" n\'est peut-être pas disponible', 'yellow');
+      log('  • Le modèle configuré dans GEMINI_MODEL n\'est peut-être pas disponible', 'yellow');
       log('  • Vérifiez que votre clé API a accès à ce modèle', 'yellow');
       log('  • Consultez https://ai.google.dev/gemini-api/docs/models', 'yellow');
     } else if (error.message.includes('API key')) {
@@ -183,7 +184,7 @@ Répondez de manière concise.`;
   log('\n✅ Test terminé avec succès!', 'green');
   log('\n📊 Résumé:', 'bright');
   log('  ✅ Clé API valide et fonctionnelle', 'green');
-  log('  ✅ Modèle gemini-2.5-flash accessible', 'green');
+  log('  ✅ Modèle Gemini accessible', 'green');
   log('  ✅ Génération de contenu opérationnelle', 'green');
   log('  ✅ L\'API Gemini est prête à être utilisée dans OKaRina', 'green');
   

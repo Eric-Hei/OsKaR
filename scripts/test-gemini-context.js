@@ -47,7 +47,7 @@ function loadEnvFile() {
     }
   }
   
-  return process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+  return process.env.GEMINI_API_KEY;
 }
 
 async function testContextAwareness() {
@@ -66,7 +66,7 @@ async function testContextAwareness() {
   
   // Initialiser Gemini
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+  const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-2.0-flash-exp' });
   
   // Définir deux contextes d'entreprise très différents
   const contexts = [

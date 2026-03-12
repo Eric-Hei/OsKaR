@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { AlarmClock, Target, Sparkles, CheckCircle2, RefreshCw, History } from 'lucide-react';
+import { AlarmClock, Target, Sparkles, RefreshCw, History } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -10,8 +10,8 @@ import { ProgressHistoryPanel } from '@/components/ui/ProgressHistoryPanel';
 import { useAppStore } from '@/store/useAppStore';
 import { geminiService } from '@/services/gemini';
 import { AISuggestionsPanel } from '@/components/canvas/AISuggestionsPanel';
-import { generateId, getDaysUntilDeadline, formatDate } from '@/utils';
-import type { Action, QuarterlyKeyResult } from '@/types';
+import { getDaysUntilDeadline, formatDate } from '@/utils';
+import type { QuarterlyKeyResult } from '@/types';
 import { ActionStatus, Priority } from '@/types';
 import { useQuarterlyKeyResultsByUser } from '@/hooks/useQuarterlyKeyResults';
 import { useCreateAction } from '@/hooks/useActions';
@@ -47,13 +47,12 @@ export default function CheckInPage() {
   const [isHistoryPanelOpen, setIsHistoryPanelOpen] = useState(false);
   const [historyKR, setHistoryKR] = useState<QuarterlyKeyResult | null>(null);
 
-  const rankedKRs = useMemo(() => {
-    console.log('📊 Check-in - Nombre de KRs:', quarterlyKeyResults?.length || 0);
-    console.log('📊 Check-in - KRs:', quarterlyKeyResults);
-    return [...(quarterlyKeyResults || [])]
+  const rankedKRs = useMemo(
+    () => [...(quarterlyKeyResults || [])]
       .sort((a, b) => computeKRScore(b) - computeKRScore(a))
-      .slice(0, 5);
-  }, [quarterlyKeyResults]);
+      .slice(0, 5),
+    [quarterlyKeyResults]
+  );
 
   const proposeNextActions = async (kr: QuarterlyKeyResult) => {
     setLoadingKrId(kr.id);
@@ -64,7 +63,7 @@ export default function CheckInPage() {
         .filter(Boolean)
         .slice(0, MAX_SUGGESTIONS);
       setSuggestionsByKr((prev) => ({ ...prev, [kr.id]: cleaned.length ? cleaned : fallbackActionIdeas(kr) }));
-    } catch (e) {
+    } catch {
       setSuggestionsByKr((prev) => ({ ...prev, [kr.id]: fallbackActionIdeas(kr) }));
     } finally {
       setLoadingKrId(null);
@@ -154,9 +153,6 @@ export default function CheckInPage() {
                   <Target className="h-16 w-16 mx-auto mb-4 text-gray-300" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">Aucun Key Result trouvé</h3>
                   <p className="mb-2">Créez des objectifs trimestriels et des Key Results dans la page Gestion</p>
-                  <p className="text-sm text-gray-400 mb-4">
-                    Debug: {quarterlyKeyResults?.length || 0} KRs chargés, User ID: {user?.id || 'non connecté'}
-                  </p>
                   <Button onClick={() => window.location.href = '/management'}>
                     Aller à la Gestion
                   </Button>

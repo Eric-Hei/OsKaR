@@ -10,12 +10,12 @@ Guide technique complet pour les développeurs travaillant sur OsKaR.
 ```
 Frontend: Next.js 15.5.3 + React 19 + TypeScript
 Styling: Tailwind CSS + Framer Motion
-State: Zustand avec persistance localStorage
+State: React Query + Zustand en mémoire (sans persistance auth)
 Forms: React Hook Form + Zod validation
 DnD: @dnd-kit (compatible React 19)
-IA: Google Generative AI (Gemini 1.5 Flash)
+IA: Gemini via API interne Next.js
 Export: jsPDF + SheetJS
-Deploy: Netlify (export statique)
+Deploy: Netlify (mode serveur)
 ```
 
 ### Architecture des Données
@@ -61,15 +61,14 @@ src/
 
 ## 🔧 Services Principaux
 
-### 1. Storage Service (`src/services/storage.ts`)
-Gestion de la persistance localStorage avec fallback.
+### 1. App Store (`src/store/useAppStore.ts`)
+État applicatif en mémoire pour l'UI et l'état de session courant.
 
 ```typescript
-class StorageService {
-  getItem<T>(key: string): T | null
-  setItem<T>(key: string, value: T): void
-  removeItem(key: string): void
-  clear(): void
+type AppStore = {
+  user: User | null
+  isAuthenticated: boolean
+  setUser(user: User | null): void
 }
 ```
 
@@ -85,12 +84,15 @@ class AICoachService {
 ```
 
 ### 3. Gemini Service (`src/services/gemini.ts`)
-Intégration avec Google Generative AI.
+Client frontend vers l'API interne sécurisée.
 
 ```typescript
 class GeminiService {
-  generateAmbitionAdvice(ambition: Partial<Ambition>, companyProfile?: CompanyProfile): Promise<string>
-  generateKeyResultAdvice(keyResult: Partial<KeyResult>, companyProfile?: CompanyProfile): Promise<string>
+  isAvailable(): boolean
+  generateAmbitionAdvice(ambition: Partial<Ambition>, companyProfile?: CompanyProfile): Promise<string[]>
+  generateKeyResultAdvice(keyResult: Partial<KeyResult>, companyProfile?: CompanyProfile): Promise<string[]>
+  generateCompanyQuestions(existingProfile?: Partial<CompanyProfile>): Promise<string[]>
+  generateQuarterRetrospective(input: QuarterRetrospectiveInput): Promise<string>
 }
 ```
 
@@ -268,39 +270,45 @@ const [quarterlyObjectivesData, setQuarterlyObjectivesData] = useState<Quarterly
 
 ### Configuration Gemini AI
 ```typescript
-// .env
-NEXT_PUBLIC_GEMINI_API_KEY=your_api_key_here
+// .env.local
+GEMINI_API_KEY=your_api_key_here
+GEMINI_MODEL=gemini-2.0-flash-exp
 
-// Service Gemini
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!)
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
+// Frontend -> API interne
+await fetch('/api/gemini', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ action, payload }),
+})
 ```
 
 ### Profil d'Entreprise pour Contexte
 ```typescript
 interface CompanyProfile {
   name: string
-  sector: string
+  industry: string
   size: CompanySize
-  mainGoals: string[]
-  challenges: string[]
-  market: string
+  stage: CompanyStage
+  mainChallenges: string[]
+  currentGoals: string[]
+  marketPosition: string
+  targetMarket: string
+  businessModel: string
 }
 
 // Utilisation dans les prompts IA
 const buildContextualPrompt = (objective: any, profile: CompanyProfile) => {
-  return `En tant qu'expert pour une ${profile.size} dans le secteur ${profile.sector}...`
+  return `En tant qu'expert pour une ${profile.size} du secteur ${profile.industry}...`
 }
 ```
 
 ### Fallback Gracieux
 ```typescript
-const validateWithAI = async (data: any) => {
+const generateAdvice = async (ambition: Partial<Ambition>) => {
   try {
-    return await geminiService.validate(data)
+    return await geminiService.generateAmbitionAdvice(ambition)
   } catch (error) {
-    console.warn('IA indisponible, utilisation du fallback')
-    return localValidation(data)
+    return ['Clarifier la cible', 'Définir une métrique de succès']
   }
 }
 ```
@@ -364,30 +372,19 @@ interface Action {
 }
 ```
 
-### Persistance localStorage
+### État applicatif et session
 ```typescript
-// Clés de stockage
-const STORAGE_KEYS = {
-  USER: 'oskar_user',
-  AMBITIONS: 'oskar_ambitions',
-  KEY_RESULTS: 'oskar_key_results',
-  QUARTERLY_OBJECTIVES: 'oskar_quarterly_objectives',
-  QUARTERLY_KEY_RESULTS: 'oskar_quarterly_key_results',
-  ACTIONS: 'oskar_actions',
-  CANVAS_STATE: 'oskar_canvas_state',
-}
+// Source de vérité session : Supabase Auth
+supabase.auth.onAuthStateChange((_event, session) => {
+  useAppStore.getState().setUser(session?.user ?? null)
+})
 
-// Persistance automatique avec Zustand
+// Store UI en mémoire uniquement
 const useAppStore = create<AppStore>()(
-  persist(
-    (set, get) => ({
-      // Store implementation
-    }),
-    {
-      name: 'oskar-store',
-      storage: createJSONStorage(() => localStorage),
-    }
-  )
+  devtools((set) => ({
+    user: null,
+    isAuthenticated: false,
+  }))
 )
 ```
 
@@ -400,7 +397,6 @@ const useAppStore = create<AppStore>()(
 // next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
   trailingSlash: true,
   images: {
     unoptimized: true

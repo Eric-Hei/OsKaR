@@ -18,6 +18,9 @@ const sessionStorageMock = {
 }
 global.sessionStorage = sessionStorageMock
 
+// Mock fetch
+global.fetch = jest.fn()
+
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

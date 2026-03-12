@@ -124,21 +124,22 @@ export const useAppStore = create<AppState>()(
 
 ---
 
-## 🧪 Pages de test
+## 🧪 Validation recommandée
 
-Deux pages de test sont disponibles pour vérifier le bon fonctionnement :
+Les anciennes pages `/test-db` et `/test-collaboration` ont été retirées de la production.
 
-1. **`/test-db`** - Test des services OKR
-   - Créer/Lister ambitions
-   - Créer/Lister objectifs trimestriels
-   - Créer/Lister actions
+La vérification se fait maintenant via les parcours métier :
 
-2. **`/test-collaboration`** - Test des services de collaboration
-   - Créer/Lister équipes
-   - Ajouter/Lister membres
-   - Créer/Lister invitations
-   - Créer/Lister commentaires
-   - Créer/Lister notifications
+1. **`/canvas`** et **`/management`** pour les services OKR
+   - créer / lister les ambitions
+   - créer / lister les objectifs trimestriels
+   - créer / lister les actions
+
+2. **`/teams`** pour les services de collaboration
+   - créer / lister les équipes
+   - ajouter / lister les membres
+   - créer / lister les invitations
+   - vérifier les notifications associées
 
 ---
 

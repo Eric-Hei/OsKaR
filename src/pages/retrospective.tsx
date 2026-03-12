@@ -87,9 +87,8 @@ const RetrospectivePage: React.FC = () => {
       });
 
       setRetrospective(retrospectiveText);
-    } catch (error) {
-      console.error('Erreur lors de la génération de la rétrospective:', error);
-      alert('Erreur lors de la génération de la rétrospective. Vérifiez que votre clé API Gemini est configurée.');
+    } catch {
+      alert("Erreur lors de la génération de la rétrospective. Réessayez dans quelques instants.");
     } finally {
       setIsGenerating(false);
     }

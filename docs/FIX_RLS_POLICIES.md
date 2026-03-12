@@ -2,7 +2,7 @@
 
 ## 🔴 Problème Rencontré
 
-Lors des tests de la page `/test-new-services`, les erreurs suivantes sont apparues :
+Lors des tests fonctionnels des nouveaux services de collaboration, les erreurs suivantes sont apparues :
 
 ```
 POST https://tgtgrnuekgsczszdjxqr.supabase.co/rest/v1/invitations 403 (Forbidden)
@@ -194,9 +194,9 @@ const share = await createShare.mutateAsync({
 
 ---
 
-## 📊 Page de Test Mise à Jour
+## 📊 Validation Fonctionnelle
 
-La page `/test-new-services` a été mise à jour pour :
+Le scénario de validation a été ajusté pour :
 
 1. **Notifications** : ✅ Test fonctionnel (pas de prérequis)
 2. **Invitations** : ⚠️ Skip avec message explicatif (nécessite une équipe)
@@ -216,7 +216,7 @@ La page `/test-new-services` a été mise à jour pour :
 ## 🎯 Prochaines Étapes
 
 1. ✅ **Exécuter la migration SQL** `fix_rls_policies.sql`
-2. ✅ **Tester les notifications** sur `/test-new-services` (devrait fonctionner)
+2. ✅ **Tester les notifications** via le parcours réel de l'application (devrait fonctionner)
 3. ⏳ **Créer une équipe** via l'interface ou le code
 4. ⏳ **Tester les invitations** avec l'ID de l'équipe créée
 5. ⏳ **Créer un objectif trimestriel** via l'interface ou le code

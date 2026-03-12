@@ -1,247 +1,185 @@
 import { geminiService } from '@/services/gemini';
-import type { Ambition, KeyResult, CompanyProfile } from '@/types';
+import type { Ambition, CompanyProfile, KeyResult } from '@/types';
+import type { QuarterRetrospectiveInput } from '@/lib/gemini-shared';
 import { AmbitionCategory, CompanySize, CompanyStage } from '@/types';
 
 describe('GeminiService', () => {
-  // Test de disponibilité de l'API
-  describe('API Availability', () => {
-    it('should check if Gemini API is available', () => {
-      const isAvailable = geminiService.isAvailable();
-      
-      // Si la clé API est configurée, le service devrait être disponible
-      if (process.env.NEXT_PUBLIC_GEMINI_API_KEY) {
-        expect(isAvailable).toBe(true);
-      } else {
-        expect(isAvailable).toBe(false);
-      }
+  const fetchMock = global.fetch as jest.Mock;
+  const originalFetch = global.fetch;
+
+  const ambition: Partial<Ambition> = {
+    title: "Doubler le chiffre d'affaires",
+    description: 'Passer de 500K€ à 1M€ de CA annuel',
+    category: AmbitionCategory.GROWTH,
+  };
+
+  const companyProfile: CompanyProfile = {
+    name: 'Test Company',
+    industry: 'Technology',
+    size: CompanySize.SMALL,
+    stage: CompanyStage.GROWTH,
+    mainChallenges: ['Recrutement', 'Financement'],
+    currentGoals: ['Croissance', 'Innovation'],
+    marketPosition: 'Challenger B2B',
+    targetMarket: 'PME SaaS',
+    businessModel: 'Abonnement mensuel',
+  };
+
+  const keyResult: Partial<KeyResult> = {
+    title: 'Acquérir 100 nouveaux clients',
+    description: "Atteindre 100 nouveaux clients B2B d'ici la fin du trimestre",
+    target: 100,
+    current: 25,
+    unit: 'clients',
+    deadline: new Date('2026-03-31T00:00:00.000Z'),
+  };
+
+  const retrospectiveInput: QuarterRetrospectiveInput = {
+    quarterName: 'Q1',
+    year: 2026,
+    keyResults: [keyResult],
+    actionsDone: 7,
+    actionsTotal: 10,
+    companyProfile,
+  };
+
+  const setGlobalFetch = (value: typeof fetch | undefined) => {
+    Object.defineProperty(global, 'fetch', {
+      value,
+      writable: true,
+      configurable: true,
+    });
+  };
+
+  const mockJsonResponse = (body: unknown, ok = true) => {
+    fetchMock.mockResolvedValue({
+      ok,
+      json: jest.fn().mockResolvedValue(body),
+    } as unknown as Response);
+  };
+
+  const getRequestPayload = () => {
+    const [, options] = fetchMock.mock.calls[0];
+    return JSON.parse((options as RequestInit).body as string);
+  };
+
+  const serializedKeyResult = {
+    ...keyResult,
+    deadline: keyResult.deadline?.toISOString(),
+  };
+
+  const serializedRetrospectiveInput = {
+    ...retrospectiveInput,
+    keyResults: [serializedKeyResult],
+  };
+
+  beforeEach(() => {
+    setGlobalFetch(originalFetch);
+    fetchMock.mockReset();
+  });
+
+  afterAll(() => {
+    setGlobalFetch(originalFetch);
+  });
+
+  describe('API availability', () => {
+    it('returns true when fetch is available', () => {
+      expect(geminiService.isAvailable()).toBe(true);
     });
 
-    it('should have a valid API key format if configured', () => {
-      const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-      
-      if (apiKey) {
-        // Les clés API Gemini commencent généralement par "AIza"
-        expect(apiKey).toMatch(/^AIza/);
-        expect(apiKey.length).toBeGreaterThan(30);
-      }
+    it('returns false when fetch is unavailable', () => {
+      setGlobalFetch(undefined);
+
+      expect(geminiService.isAvailable()).toBe(false);
     });
   });
 
-  // Test de génération de conseils pour les ambitions
-  describe('generateAmbitionAdvice', () => {
-    const testAmbition: Partial<Ambition> = {
-      title: 'Doubler le chiffre d\'affaires',
-      description: 'Passer de 500K€ à 1M€ de CA annuel',
-      category: AmbitionCategory.GROWTH,
-    };
+  describe('request contract', () => {
+    it('posts ambition advice requests to the internal API', async () => {
+      mockJsonResponse({ result: ['Clarifier la cible', 'Définir une métrique phare'] });
 
-    const testCompanyProfile: CompanyProfile = {
-      name: 'Test Company',
-      sector: 'Technology',
-      size: CompanySize.SMALL,
-      stage: CompanyStage.GROWTH,
-      mainGoals: ['Croissance', 'Innovation'],
-      challenges: ['Recrutement', 'Financement'],
-      market: 'B2B SaaS',
-    };
+      await expect(geminiService.generateAmbitionAdvice(ambition, companyProfile)).resolves.toEqual([
+        'Clarifier la cible',
+        'Définir une métrique phare',
+      ]);
 
-    it('should generate advice for an ambition', async () => {
-      const advice = await geminiService.generateAmbitionAdvice(testAmbition, testCompanyProfile);
-      
-      expect(advice).toBeDefined();
-      expect(Array.isArray(advice)).toBe(true);
-      expect(advice.length).toBeGreaterThan(0);
-      
-      // Chaque conseil devrait être une chaîne non vide
-      advice.forEach(item => {
-        expect(typeof item).toBe('string');
-        expect(item.length).toBeGreaterThan(0);
+      expect(fetchMock).toHaveBeenCalledWith(
+        '/api/gemini',
+        expect.objectContaining({
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        })
+      );
+      expect(getRequestPayload()).toEqual({
+        action: 'generate-ambition-advice',
+        payload: { ambition, companyProfile },
       });
-    }, 30000); // Timeout de 30 secondes pour l'appel API
-
-    it('should return fallback advice when API is not available', async () => {
-      // Créer une instance temporaire sans clé API
-      const originalEnv = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-      delete process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-      
-      const advice = await geminiService.generateAmbitionAdvice(testAmbition);
-      
-      // Restaurer la clé API
-      if (originalEnv) {
-        process.env.NEXT_PUBLIC_GEMINI_API_KEY = originalEnv;
-      }
-      
-      expect(advice).toBeDefined();
-      expect(Array.isArray(advice)).toBe(true);
-      expect(advice.length).toBeGreaterThan(0);
     });
 
-    it('should handle ambition without company profile', async () => {
-      const advice = await geminiService.generateAmbitionAdvice(testAmbition);
-      
-      expect(advice).toBeDefined();
-      expect(Array.isArray(advice)).toBe(true);
-      expect(advice.length).toBeGreaterThan(0);
-    }, 30000);
-  });
+    it('posts key result advice requests to the internal API', async () => {
+      mockJsonResponse({ result: ['Rendre le KR plus SMART'] });
 
-  // Test de génération de conseils pour les résultats clés
-  describe('generateKeyResultAdvice', () => {
-    const testKeyResult: Partial<KeyResult> = {
-      title: 'Acquérir 100 nouveaux clients',
-      description: 'Atteindre 100 nouveaux clients B2B d\'ici la fin du trimestre',
-      targetValue: 100,
-      currentValue: 25,
-      unit: 'clients',
-    };
-
-    const testCompanyProfile: CompanyProfile = {
-      name: 'Test Company',
-      sector: 'Technology',
-      size: CompanySize.SMALL,
-      stage: CompanyStage.GROWTH,
-      mainGoals: ['Croissance', 'Innovation'],
-      challenges: ['Recrutement', 'Financement'],
-      market: 'B2B SaaS',
-    };
-
-    it('should generate advice for a key result', async () => {
-      const advice = await geminiService.generateKeyResultAdvice(testKeyResult, testCompanyProfile);
-      
-      expect(advice).toBeDefined();
-      expect(Array.isArray(advice)).toBe(true);
-      expect(advice.length).toBeGreaterThan(0);
-      
-      advice.forEach(item => {
-        expect(typeof item).toBe('string');
-        expect(item.length).toBeGreaterThan(0);
+      await expect(geminiService.generateKeyResultAdvice(keyResult, companyProfile)).resolves.toEqual([
+        'Rendre le KR plus SMART',
+      ]);
+      expect(getRequestPayload()).toEqual({
+        action: 'generate-key-result-advice',
+        payload: { keyResult: serializedKeyResult, companyProfile },
       });
-    }, 30000);
+    });
 
-    it('should return fallback advice for key result when API is not available', async () => {
-      const originalEnv = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-      delete process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-      
-      const advice = await geminiService.generateKeyResultAdvice(testKeyResult);
-      
-      if (originalEnv) {
-        process.env.NEXT_PUBLIC_GEMINI_API_KEY = originalEnv;
-      }
-      
-      expect(advice).toBeDefined();
-      expect(Array.isArray(advice)).toBe(true);
-      expect(advice.length).toBeGreaterThan(0);
+    it('posts company questions requests to the internal API', async () => {
+      mockJsonResponse({ result: ['Quel est votre cycle de vente moyen ?'] });
+
+      await expect(geminiService.generateCompanyQuestions({ name: companyProfile.name })).resolves.toEqual([
+        'Quel est votre cycle de vente moyen ?',
+      ]);
+      expect(getRequestPayload()).toEqual({
+        action: 'generate-company-questions',
+        payload: { existingProfile: { name: companyProfile.name } },
+      });
+    });
+
+    it('posts quarter retrospective requests to the internal API', async () => {
+      mockJsonResponse({ result: 'Résumé exécutif\n- Bonne progression' });
+
+      await expect(geminiService.generateQuarterRetrospective(retrospectiveInput)).resolves.toBe(
+        'Résumé exécutif\n- Bonne progression'
+      );
+      expect(getRequestPayload()).toEqual({
+        action: 'generate-quarter-retrospective',
+        payload: serializedRetrospectiveInput,
+      });
     });
   });
 
-  // Test de génération de questions sur l'entreprise
-  describe('generateCompanyQuestions', () => {
-    const testProfile: Partial<CompanyProfile> = {
-      name: 'Test Company',
-      sector: 'Technology',
-      size: CompanySize.SMALL,
-    };
+  describe('error handling', () => {
+    it('propagates API error messages returned by the internal route', async () => {
+      mockJsonResponse({ error: 'Le service IA est indisponible.' }, false);
 
-    it('should generate company questions', async () => {
-      const questions = await geminiService.generateCompanyQuestions(testProfile);
-      
-      expect(questions).toBeDefined();
-      expect(Array.isArray(questions)).toBe(true);
-      expect(questions.length).toBeGreaterThan(0);
-      
-      questions.forEach(question => {
-        expect(typeof question).toBe('string');
-        expect(question.length).toBeGreaterThan(0);
-        // Les questions devraient se terminer par un point d'interrogation
-        expect(question).toMatch(/\?$/);
-      });
-    }, 30000);
-
-    it('should return fallback questions when API is not available', async () => {
-      const originalEnv = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-      delete process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-      
-      const questions = await geminiService.generateCompanyQuestions(testProfile);
-      
-      if (originalEnv) {
-        process.env.NEXT_PUBLIC_GEMINI_API_KEY = originalEnv;
-      }
-      
-      expect(questions).toBeDefined();
-      expect(Array.isArray(questions)).toBe(true);
-      expect(questions.length).toBeGreaterThan(0);
+      await expect(geminiService.generateAmbitionAdvice(ambition)).rejects.toThrow(
+        'Le service IA est indisponible.'
+      );
     });
 
-    it('should generate questions without existing profile', async () => {
-      const questions = await geminiService.generateCompanyQuestions();
-      
-      expect(questions).toBeDefined();
-      expect(Array.isArray(questions)).toBe(true);
-      expect(questions.length).toBeGreaterThan(0);
-    }, 30000);
-  });
+    it('falls back to the default message when the response body is invalid', async () => {
+      fetchMock.mockResolvedValue({
+        ok: true,
+        json: jest.fn().mockRejectedValue(new Error('invalid json')),
+      } as unknown as Response);
 
-  // Test de gestion des erreurs
-  describe('Error Handling', () => {
-    it('should handle invalid API responses gracefully', async () => {
-      const invalidAmbition: Partial<Ambition> = {
-        title: '',
-        description: '',
-      };
-      
-      const advice = await geminiService.generateAmbitionAdvice(invalidAmbition);
-      
-      // Même avec des données invalides, le service devrait retourner des conseils (fallback)
-      expect(advice).toBeDefined();
-      expect(Array.isArray(advice)).toBe(true);
-    }, 30000);
-  });
+      await expect(geminiService.generateAmbitionAdvice(ambition)).rejects.toThrow(
+        "Le service d'assistance IA est temporairement indisponible."
+      );
+    });
 
-  // Test d'intégration réel avec l'API (optionnel, à exécuter manuellement)
-  describe('Real API Integration (manual test)', () => {
-    // Ce test est marqué comme skip par défaut pour ne pas consommer de quota API
-    // Pour l'exécuter, changez it.skip en it
-    it.skip('should successfully call Gemini API with real request', async () => {
-      if (!process.env.NEXT_PUBLIC_GEMINI_API_KEY) {
-        console.warn('⚠️  Clé API Gemini non configurée - test ignoré');
-        return;
-      }
+    it('falls back to the default message when the response has no result payload', async () => {
+      mockJsonResponse({});
 
-      const testAmbition: Partial<Ambition> = {
-        title: 'Lancer un nouveau produit innovant',
-        description: 'Développer et lancer un produit SaaS innovant dans les 6 prochains mois',
-        category: AmbitionCategory.INNOVATION,
-      };
-
-      const testProfile: CompanyProfile = {
-        name: 'Startup Tech',
-        sector: 'Software',
-        size: CompanySize.SMALL,
-        stage: CompanyStage.STARTUP,
-        mainGoals: ['Innovation', 'Croissance rapide'],
-        challenges: ['Financement', 'Recrutement'],
-        market: 'B2B SaaS',
-      };
-
-      console.log('🚀 Test de l\'API Gemini en cours...');
-      
-      const advice = await geminiService.generateAmbitionAdvice(testAmbition, testProfile);
-      
-      console.log('✅ Réponse de l\'API Gemini reçue:');
-      console.log(advice);
-      
-      expect(advice).toBeDefined();
-      expect(Array.isArray(advice)).toBe(true);
-      expect(advice.length).toBeGreaterThanOrEqual(3);
-      expect(advice.length).toBeLessThanOrEqual(5);
-      
-      // Vérifier que les conseils sont pertinents et non vides
-      advice.forEach((item, index) => {
-        expect(typeof item).toBe('string');
-        expect(item.length).toBeGreaterThan(10);
-        console.log(`  ${index + 1}. ${item}`);
-      });
-    }, 60000); // Timeout de 60 secondes pour ce test
+      await expect(geminiService.generateCompanyQuestions()).rejects.toThrow(
+        "Le service d'assistance IA est temporairement indisponible."
+      );
+    });
   });
 });
 

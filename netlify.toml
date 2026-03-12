@@ -28,7 +28,7 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     # Empêcher la mise en cache agressive des pages HTML pour éviter les références vers d'anciens bundles
     Cache-Control = "public, max-age=0, must-revalidate"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://generativelanguage.googleapis.com https://tgtgrnuekgsczszdjxqr.supabase.co;"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://tgtgrnuekgsczszdjxqr.supabase.co;"
 
 
 # Cache des assets statiques

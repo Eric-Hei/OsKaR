@@ -67,8 +67,8 @@ export class AICoachService {
       const aiSuggestions = await geminiService.generateAmbitionAdvice(ambition, companyProfile);
       suggestions.push(...aiSuggestions.map(s => `🤖 ${s}`));
       confidence += 10; // Bonus pour les conseils IA
-    } catch (error) {
-      console.warn('Erreur lors de la génération des conseils IA:', error);
+    } catch {
+      console.warn('Conseils IA indisponibles pour cette ambition, utilisation du fallback.');
       // Fallback vers les suggestions contextuelles
       if (companyProfile) {
         const contextualSuggestions = this.getContextualSuggestions(ambition, companyProfile);
@@ -184,8 +184,8 @@ export class AICoachService {
       const aiSuggestions = await geminiService.generateKeyResultAdvice(keyResult, companyProfile);
       suggestions.push(...aiSuggestions.map(s => `🤖 ${s}`));
       confidence += 5; // Petit bonus pour les conseils IA
-    } catch (error) {
-      console.warn('Erreur lors de la génération des conseils IA pour le résultat clé:', error);
+    } catch {
+      console.warn('Conseils IA indisponibles pour ce résultat clé.');
     }
 
     const isValid = confidence >= 70 && smartAnalysis.score >= 60;
@@ -630,8 +630,8 @@ export class AICoachService {
     try {
       const aiQuestions = await geminiService.generateCompanyQuestions(user.companyProfile);
       return aiQuestions;
-    } catch (error) {
-      console.warn('Erreur lors de la génération des questions IA:', error);
+    } catch {
+      console.warn('Questions IA indisponibles, utilisation des questions statiques.');
       // Fallback vers les questions statiques
       return this.getFallbackCompanyQuestions(user);
     }

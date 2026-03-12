@@ -1,5 +1,6 @@
 import { aiCoachService } from '@/services/ai-coach';
 import type { Ambition, KeyResult, OKR, Action } from '@/types';
+import { AmbitionCategory } from '@/types';
 
 describe('AICoachService', () => {
   describe('validateAmbition', () => {
@@ -77,7 +78,7 @@ describe('AICoachService', () => {
       const keyResult: Partial<KeyResult> = {
         title: 'Atteindre 1 million d\'euros de chiffre d\'affaires',
         description: 'Augmenter le CA de 500K€ à 1M€ en développant 3 nouveaux canaux de vente',
-        targetValue: 1000000,
+        target: 1000000,
         unit: '€',
         deadline: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // Dans 1 an
       };
@@ -95,7 +96,7 @@ describe('AICoachService', () => {
       const keyResult: Partial<KeyResult> = {
         title: 'Vendre',
         description: 'Plus',
-        targetValue: 100,
+        target: 100,
         unit: '€',
         deadline: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
       };
@@ -112,7 +113,7 @@ describe('AICoachService', () => {
       const keyResult: Partial<KeyResult> = {
         title: 'Améliorer la satisfaction client',
         description: 'Rendre les clients plus heureux avec nos services',
-        targetValue: 0,
+        target: 0,
         unit: '',
         deadline: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
       };
@@ -129,7 +130,7 @@ describe('AICoachService', () => {
       const keyResult: Partial<KeyResult> = {
         title: 'Atteindre 1 million d\'euros de chiffre d\'affaires',
         description: 'Augmenter le CA significativement',
-        targetValue: 1000000,
+        target: 1000000,
         unit: '€',
       };
 
@@ -145,7 +146,7 @@ describe('AICoachService', () => {
       const keyResult: Partial<KeyResult> = {
         title: 'Atteindre 100 millions d\'euros de chiffre d\'affaires',
         description: 'Objectif très ambitieux pour cette année',
-        targetValue: 100000000,
+        target: 100000000,
         unit: '€',
         deadline: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
       };
@@ -167,16 +168,16 @@ describe('AICoachService', () => {
           {
             id: '1',
             title: 'Atteindre 250K€ de CA',
-            targetValue: 250000,
-            currentValue: 0,
+            target: 250000,
+            current: 0,
             unit: '€',
             weight: 50,
           },
           {
             id: '2',
             title: 'Acquérir 100 nouveaux clients',
-            targetValue: 100,
-            currentValue: 0,
+            target: 100,
+            current: 0,
             unit: 'clients',
             weight: 50,
           },
@@ -196,8 +197,8 @@ describe('AICoachService', () => {
           {
             id: '1',
             title: 'CA',
-            targetValue: 100,
-            currentValue: 0,
+            target: 100,
+            current: 0,
             unit: '€',
             weight: 100,
           },
@@ -230,8 +231,8 @@ describe('AICoachService', () => {
         keyResults: Array.from({ length: 7 }, (_, i) => ({
           id: i.toString(),
           title: `KR ${i + 1}`,
-          targetValue: 100,
-          currentValue: 0,
+          target: 100,
+          current: 0,
           unit: 'unités',
           weight: Math.round(100 / 7),
         })),
@@ -251,16 +252,16 @@ describe('AICoachService', () => {
           {
             id: '1',
             title: 'KR 1',
-            targetValue: 100,
-            currentValue: 0,
+            target: 100,
+            current: 0,
             unit: 'unités',
             weight: 30,
           },
           {
             id: '2',
             title: 'KR 2',
-            targetValue: 100,
-            currentValue: 0,
+            target: 100,
+            current: 0,
             unit: 'unités',
             weight: 30,
           },
@@ -333,7 +334,7 @@ describe('AICoachService', () => {
 
   describe('generateSuggestions', () => {
     it('should generate revenue-specific suggestions', () => {
-      const suggestions = aiCoachService.generateSuggestions('revenue', 'chiffre d\'affaires');
+      const suggestions = aiCoachService.generateSuggestions(AmbitionCategory.REVENUE, 'chiffre d\'affaires');
 
       expect(suggestions).toContain(
         expect.stringContaining('sources de revenus')
@@ -344,7 +345,7 @@ describe('AICoachService', () => {
     });
 
     it('should generate growth-specific suggestions', () => {
-      const suggestions = aiCoachService.generateSuggestions('growth', 'croissance');
+      const suggestions = aiCoachService.generateSuggestions(AmbitionCategory.GROWTH, 'croissance');
 
       expect(suggestions).toContain(
         expect.stringContaining('métriques de croissance')
@@ -355,7 +356,7 @@ describe('AICoachService', () => {
     });
 
     it('should generate product-specific suggestions', () => {
-      const suggestions = aiCoachService.generateSuggestions('product', 'produit');
+      const suggestions = aiCoachService.generateSuggestions(AmbitionCategory.PRODUCT, 'produit');
 
       expect(suggestions).toContain(
         expect.stringContaining('feedbacks utilisateurs')

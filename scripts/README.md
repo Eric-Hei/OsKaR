@@ -116,7 +116,8 @@ Copiez `.env.example` vers `.env.local` et remplissez les valeurs :
 
 ```env
 # Gemini AI
-NEXT_PUBLIC_GEMINI_API_KEY=votre_clé_gemini
+GEMINI_API_KEY=votre_clé_gemini
+GEMINI_MODEL=gemini-2.0-flash-exp
 
 # Supabase
 NEXT_PUBLIC_SUPABASE_URL=https://votre-projet.supabase.co

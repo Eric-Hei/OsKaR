@@ -198,35 +198,30 @@ CREATE TABLE shared_objectives (
 
 ---
 
-## 🧪 4. Page de Test
+## 🧪 4. Validation Fonctionnelle
 
-**Fichier:** `src/pages/test-new-services.tsx` (234 lignes)
+La validation de ces services se fait désormais via les parcours réels de l'application.
 
-**URL:** `/test-new-services`
+**Zones à utiliser :**
+- **`/teams`** pour la création d'équipe et les invitations
+- **`/management`** pour les objectifs et actions liés au partage
+- **dashboard Supabase** pour contrôler les écritures en base
 
-**Fonctionnalités:**
-- Boutons pour tester chaque service individuellement
-- Bouton "Tout Tester" pour exécuter tous les tests
-- Affichage des résultats en temps réel (console style terminal)
-- Statistiques en direct (nombre d'invitations, notifications, partages)
-- Affichage des données récupérées en JSON
-
-**Tests disponibles:**
-1. **Test Invitations** - Créer une invitation d'équipe
-2. **Test Notifications** - Créer une notification
-3. **Test Partages** - Créer un partage d'objectif
+**Scénarios à vérifier :**
+1. **Invitations** - créer une invitation d'équipe
+2. **Notifications** - générer une notification utilisateur
+3. **Partages** - créer un partage d'objectif
 
 ---
 
-## ✅ Résultat du Build
+## ✅ Résultat de Validation
 
 ```
-✓ Compiled successfully in 13.7s
-✓ Generating static pages (27/27)
-✓ Exporting (27/27)
+✓ Compiled successfully
+✓ Build Next.js compatible avec le runtime serveur Netlify
 ```
 
-**27 pages** générées avec succès (26 pages existantes + 1 nouvelle page de test)
+Les services sont intégrés sans dépendre d'une route de test exposée.
 
 ---
 
@@ -261,9 +256,9 @@ Chaque mutation invalide intelligemment les queries concernées :
 1. ✅ **Tables créées** - Migration SQL exécutée
 2. ✅ **Services implémentés** - 3 services complets avec conversions d'enums
 3. ✅ **Hooks React Query créés** - 3 fichiers de hooks
-4. ✅ **Page de test créée** - Interface de test complète
+4. ✅ **Parcours de validation définis** - Tests via les écrans métier réels
 5. ⏳ **Régénérer les types Supabase** - Pour remplacer les `any` temporaires
-6. ⏳ **Tester en conditions réelles** - Utiliser la page `/test-new-services`
+6. ⏳ **Tester en conditions réelles** - Utiliser `/teams`, `/management` et les vérifications Supabase
 7. ⏳ **Intégrer dans l'UI** - Ajouter les fonctionnalités dans les pages existantes
 8. ⏳ **Ajouter des tests unitaires** - Vérifier les conversions et mutations
 

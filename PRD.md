@@ -167,18 +167,18 @@ Devenir l'outil de référence pour la gestion d'objectifs des PME francophones,
 - **Backend** : Supabase (PostgreSQL, Auth, RLS)
 - **Forms** : React Hook Form + Zod validation
 - **DnD** : @dnd-kit (compatible React 19)
-- **IA** : Google Generative AI (Gemini 2.0 Flash Exp)
+- **IA** : Google Generative AI (Gemini 2.0 Flash Exp) via API interne serveur
 - **Export** : jsPDF, SheetJS
-- **Déploiement** : Netlify (export statique)
+- **Déploiement** : Netlify (mode serveur)
 
 ### Architecture
-- **Pattern** : JAMstack (JavaScript, APIs, Markup)
-- **Rendu** : Static Site Generation (SSG)
+- **Pattern** : Next.js + Supabase + API routes serveur
+- **Rendu** : application web côté client avec endpoints serveur ciblés
 - **Persistance** : Supabase (PostgreSQL) avec Row Level Security
 - **Cache** : React Query pour optimistic updates et cache client
 - **Auth** : Supabase Auth (Email/Password + Google OAuth)
-- **API** : Google Generative AI (externe)
-- **Build** : Next.js avec export statique
+- **API** : route interne `/api/gemini` pour les appels IA
+- **Build** : Next.js compatible Netlify server runtime
 
 ### Performance
 - **First Load JS** : ~114 kB (optimisé)
@@ -640,25 +640,26 @@ Devenir l'outil de référence pour la gestion d'objectifs des PME francophones,
 ## 🔐 Audit Sécurité — Mars 2026
 
 ### Synthèse
-- **Critique** : une clé Gemini est visible dans un artefact compilé sous `out/_next/...`; la clé doit être **rotée immédiatement**.
-- **Élevé** : le modèle actuel `NEXT_PUBLIC_GEMINI_API_KEY` expose par conception la clé côté navigateur.
-- **Élevé** : la CSP Netlify autorise encore `'unsafe-inline'` et `'unsafe-eval'`.
-- **Élevé** : plusieurs pages de test existent encore dans l'arbre de routes de production (`/test-db`, `/test-collaboration`, `/test-new-services`, `/test-ui`).
-- **Élevé** : des vulnérabilités de dépendances sont présentes (`jspdf`, `next`, chaîne `next-pwa/workbox`).
-- **Moyen** : une partie de la protection d'accès reste côté client; la sécurité réelle repose sur Supabase RLS.
+- **Historique critique** : une clé Gemini a été observée dans un artefact compilé local ; elle doit rester considérée comme exposée tant qu'elle n'a pas été rotée côté fournisseur.
+- **Corrigé** : suppression de `NEXT_PUBLIC_GEMINI_API_KEY` au profit de `GEMINI_API_KEY` côté serveur.
+- **Corrigé** : migration des appels Gemini vers la route interne `/api/gemini`.
+- **Corrigé** : durcissement de la CSP Netlify et suppression de `unsafe-eval`.
+- **Corrigé** : suppression des pages de test exposées en production (`/test-db`, `/test-collaboration`, `/test-new-services`, `/test-ui`).
+- **Corrigé** : purge ciblée des artefacts locaux `.netlify/`, `out/` et `.next` qui conservaient encore des traces historiques (route de test, clé publique Gemini, manifests obsolètes).
+- **Validé** : contrôles finaux OK via `npm test -- src/__tests__/services/gemini.test.ts`, `npm run type-check` et `npm run build`.
+- **À traiter séparément** : vulnérabilités de dépendances (`jspdf`, `next`, chaîne `next-pwa/workbox`) nécessitant une mise à jour via le gestionnaire de paquets.
 
 ### Points positifs
 - `.env` et variantes locales sont bien ignorés par Git.
 - La clé `SUPABASE_SERVICE_ROLE_KEY` n'est pas utilisée dans le code front applicatif.
 - Les tables Supabase inspectées ont RLS activé et des migrations récentes de durcissement existent.
+- L'authentification applicative repose désormais sur Supabase Auth comme source de vérité unique.
 
 ### Backlog prioritaire
-1. **Immédiat** : révoquer/rotater la clé Gemini exposée et purger les artefacts statiques générés localement.
-2. **Immédiat** : migrer les appels Gemini côté serveur (ex. Netlify Functions) si la fonctionnalité IA doit rester protégée.
-3. **Court terme** : retirer ou rendre `dev-only` toutes les pages de test.
-4. **Court terme** : resserrer la CSP et supprimer `unsafe-eval`, puis réduire `unsafe-inline`.
-5. **Court terme** : mettre à jour les dépendances vulnérables via le gestionnaire de paquets.
-6. **Court terme** : réduire les logs applicatifs exposant prompts, profils et détails opérationnels.
+1. **Immédiat** : rotater la clé Gemini historiquement exposée côté fournisseur si cela n'a pas encore été fait.
+2. **Court terme** : mettre à jour les dépendances vulnérables via le gestionnaire de paquets.
+3. **Court terme** : continuer à réduire `unsafe-inline` si compatible avec le runtime et les styles injectés.
+4. **Court terme** : ajouter une stratégie de rate limiting / observabilité côté API IA.
 
 ---
 
@@ -691,7 +692,6 @@ Devenir l'outil de référence pour la gestion d'objectifs des PME francophones,
 - `/share` - Vue publique lecture seule
 - `/import` - Import CSV/Google Sheets
 - `/teams` - Gestion d'équipes avec invitations (v1.3)
-- `/test-new-services` - Page de test des services Supabase (v1.3)
 - 4 pages légales (`/legal/*`)
 - Pages d'authentification (`/auth/*`) : login, register, callback, forgot-password, update-password
 
@@ -741,4 +741,4 @@ Devenir l'outil de référence pour la gestion d'objectifs des PME francophones,
 
 *Document mis à jour le : 12 Mars 2026*
 *Version : 1.3.7*
-*Dernières modifications : Audit sécurité, priorisation des remédiations, historique produit et technique*
+*Dernières modifications : remédiation sécurité Gemini côté serveur, suppression des routes de test, durcissement de la documentation et mise à jour du PRD*

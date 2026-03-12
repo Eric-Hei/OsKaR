@@ -8,12 +8,13 @@ Ce guide explique comment utiliser les nouveaux services (Invitations, Notificat
 
 ### 1. Tester les Services
 
-Accédez à la page de test : **`/test-new-services`**
+Utilisez désormais les parcours réels de l'application :
 
-Cette page vous permet de :
-- Tester chaque service individuellement
-- Voir les résultats en temps réel
-- Vérifier que les données sont bien créées dans Supabase
+- **`/teams`** pour les invitations et la gestion d'équipe
+- **`/management`** ou **`/canvas`** pour les objectifs et partages associés
+- le **dashboard Supabase** pour vérifier les écritures en base
+
+Les anciennes pages `/test-*` ont été retirées de la production afin de réduire la surface d'attaque.
 
 ---
 
