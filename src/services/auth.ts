@@ -162,36 +162,13 @@ export class AuthService {
   }
 
   /**
-   * Déconnexion
+   * Déconnexion - ne throw jamais pour permettre la déconnexion locale
    */
   static async signOut() {
     try {
-      console.log('🔴 AuthService.signOut() - Début');
-
-      // Ajouter un timeout de 3 secondes (réduit pour être plus rapide)
-      const signOutPromise = supabase.auth.signOut();
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Timeout de déconnexion')), 3000)
-      );
-
-      const { error } = await Promise.race([signOutPromise, timeoutPromise]) as any;
-
-      if (error) {
-        console.warn('⚠️ Erreur lors de la déconnexion Supabase (ignorée):', error.message);
-        // Ne pas throw, on continue avec la déconnexion locale
-        return;
-      }
-
-      console.log('✅ AuthService.signOut() - Succès');
+      await supabase.auth.signOut();
     } catch (error: any) {
-      // Gérer le timeout silencieusement
-      if (error.message?.includes('Timeout')) {
-        console.warn('⚠️ Timeout de déconnexion Supabase (ignoré) - déconnexion locale uniquement');
-      } else {
-        console.warn('⚠️ Erreur lors de la déconnexion Supabase (ignorée):', error.message);
-      }
-      // Ne pas throw l'erreur pour permettre la déconnexion locale
-      // throw error;
+      console.warn('⚠️ Erreur déconnexion Supabase (ignorée):', error.message);
     }
   }
 
@@ -318,55 +295,22 @@ export class AuthService {
    * Mettre à jour le profil d'entreprise
    */
   static async updateCompanyProfile(userId: string, companyProfile: any) {
-    console.log('🔄 Début de la mise à jour du profil d\'entreprise...');
-    console.log('📝 User ID:', userId);
-    console.log('📝 Company Profile:', companyProfile);
-
-    // Vérifier la session avant l'UPDATE
-    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-    console.log('🔐 Session actuelle:', sessionData?.session ? 'Valide' : 'Invalide');
-
-    if (sessionError) {
-      console.error('❌ Erreur de session:', sessionError);
-    }
-
-    if (!sessionData?.session) {
-      console.warn('⚠️ Aucune session active, tentative de rafraîchissement...');
-      const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
-
-      if (refreshError) {
-        console.error('❌ Erreur de rafraîchissement:', refreshError);
-        throw new Error('Session expirée. Veuillez vous reconnecter.');
-      }
-
-      console.log('✅ Session rafraîchie avec succès');
-    }
-
-    const result = await (supabase as any)
+    const { data, error } = await (supabase as any)
       .from('profiles')
       .update({ company_profile: companyProfile })
       .eq('id', userId)
       .select()
       .single();
 
-    const { data, error } = result;
-
-    console.log('📊 Résultat de l\'UPDATE:', { data, error });
-
     if (error) {
-      console.error('❌ Erreur lors de la mise à jour du profil d\'entreprise:', error);
-      console.error('❌ Code d\'erreur:', error.code);
-      console.error('❌ Message:', error.message);
-      console.error('❌ Détails:', error.details);
+      console.error('❌ Erreur mise à jour profil entreprise:', error.message);
       throw error;
     }
 
     if (!data) {
-      console.warn('⚠️ Aucune donnée retournée par l\'UPDATE');
       throw new Error('Aucune donnée retournée lors de la mise à jour du profil');
     }
 
-    console.log('✅ Profil d\'entreprise mis à jour avec succès:', data);
     return data;
   }
 

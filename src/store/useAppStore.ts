@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { devtools, persist } from 'zustand/middleware';
+import { devtools } from 'zustand/middleware';
 import { generateId } from '@/utils';
 import type {
   User,
@@ -47,92 +47,77 @@ interface Notification {
   message: string;
 }
 
-// Store principal (simplifié)
+// Store principal - en mémoire uniquement (pas de persist)
+// L'état d'authentification est géré exclusivement par Supabase Auth
 export const useAppStore = create<AppState>()(
-  persist(
-    devtools(
-      (set, get) => ({
-        // État initial
-        user: null,
-        isAuthenticated: false,
-        experimentalFeatures: {
-          checkIn: false,
-          focus: false,
-          canvas: false,
-        },
-        isLoading: false,
-        error: null,
-        notifications: [],
+  devtools(
+    (set, get) => ({
+      // État initial
+      user: null,
+      isAuthenticated: false,
+      experimentalFeatures: {
+        checkIn: false,
+        focus: false,
+        canvas: false,
+      },
+      isLoading: false,
+      error: null,
+      notifications: [],
 
-        // Actions utilisateur
-        setUser: (user) => {
-          set({ user, isAuthenticated: true });
-        },
+      // Actions utilisateur
+      setUser: (user) => {
+        set({ user, isAuthenticated: true });
+      },
 
-        updateCompanyProfile: (companyProfile) => {
-          const currentUser = get().user;
-          if (currentUser) {
-            const updatedUser = { ...currentUser, companyProfile };
-            set({ user: updatedUser });
-          }
-        },
+      updateCompanyProfile: (companyProfile) => {
+        const currentUser = get().user;
+        if (currentUser) {
+          const updatedUser = { ...currentUser, companyProfile };
+          set({ user: updatedUser });
+        }
+      },
 
-        logout: () => {
-          // Nettoyer le localStorage pour éviter les conflits
-          if (typeof window !== 'undefined') {
-            // Supprimer le store Zustand persisté
-            localStorage.removeItem('oskar-app-store');
-            localStorage.removeItem('app-store');
-            // Supprimer les anciennes clés OKaRina si elles existent
-            localStorage.removeItem('okarina-store');
-          }
-          set({
-            user: null,
-            isAuthenticated: false,
-          });
-        },
+      logout: () => {
+        set({
+          user: null,
+          isAuthenticated: false,
+        });
+      },
 
-        toggleExperimentalFeature: (feature) => {
-          set((state) => ({
-            experimentalFeatures: {
-              ...state.experimentalFeatures,
-              [feature]: !state.experimentalFeatures[feature],
-            },
-          }));
-        },
+      toggleExperimentalFeature: (feature) => {
+        set((state) => ({
+          experimentalFeatures: {
+            ...state.experimentalFeatures,
+            [feature]: !state.experimentalFeatures[feature],
+          },
+        }));
+      },
 
-        // Actions UI
-        setLoading: (isLoading) => {
-          set({ isLoading });
-        },
+      // Actions UI
+      setLoading: (isLoading) => {
+        set({ isLoading });
+      },
 
-        setError: (error) => {
-          set({ error });
-        },
+      setError: (error) => {
+        set({ error });
+      },
 
-        addNotification: (notification) => {
-          const newNotification: Notification = {
-            ...notification,
-            id: generateId(),
-          };
-          set({ notifications: [...get().notifications, newNotification] });
-        },
+      addNotification: (notification) => {
+        const newNotification: Notification = {
+          ...notification,
+          id: generateId(),
+        };
+        set({ notifications: [...get().notifications, newNotification] });
+      },
 
-        removeNotification: (id) => {
-          set({ notifications: get().notifications.filter(n => n.id !== id) });
-        },
+      removeNotification: (id) => {
+        set({ notifications: get().notifications.filter(n => n.id !== id) });
+      },
 
-        clearNotifications: () => {
-          set({ notifications: [] });
-        },
-      }),
-      { name: 'app-store-devtools' }
-    ),
-    {
-      name: 'okarina-settings',
-      partialize: (state) => ({
-        experimentalFeatures: state.experimentalFeatures,
-      }),
-    }
+      clearNotifications: () => {
+        set({ notifications: [] });
+      },
+    }),
+    { name: 'OKaRina Store' }
   )
 );

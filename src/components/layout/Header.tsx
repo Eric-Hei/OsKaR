@@ -71,23 +71,14 @@ const Header: React.FC<HeaderProps> = ({ onMenuToggle, isMobileMenuOpen }) => {
   const navigation = user ? authenticatedNavigation : publicNavigation;
 
   const handleLogout = async () => {
-    console.log('🔴 Déconnexion en cours...');
     try {
-      // Déconnexion Supabase si configuré
       if (isSupabaseConfigured()) {
-        console.log('🔴 Déconnexion Supabase...');
         await AuthService.signOut();
-        console.log('✅ Déconnexion Supabase réussie');
       }
-      // Déconnexion locale (Zustand + localStorage)
-      console.log('🔴 Déconnexion locale...');
       logout();
-      console.log('✅ Déconnexion locale réussie');
-      console.log('🔴 Redirection vers /...');
       router.push('/');
     } catch (error) {
       console.error('❌ Erreur lors de la déconnexion:', error);
-      // Déconnexion locale même en cas d'erreur
       logout();
       router.push('/');
     }

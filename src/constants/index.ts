@@ -13,21 +13,6 @@ export const APP_CONFIG = {
   maxTasksPerAction: 10,
 };
 
-// Clés pour le localStorage
-export const STORAGE_KEYS = {
-  USER: 'oskar_user',
-  AMBITIONS: 'oskar_ambitions',
-  KEY_RESULTS: 'oskar_key_results',
-  OKRS: 'oskar_okrs',
-  ACTIONS: 'oskar_actions',
-  QUARTERLY_OBJECTIVES: 'oskar_quarterly_objectives',
-  QUARTERLY_KEY_RESULTS: 'oskar_quarterly_key_results',
-  PROGRESS: 'oskar_progress',
-  SETTINGS: 'oskar_settings',
-  CANVAS_STATE: 'oskar_canvas_state',
-  COMMENTS: 'oskar_comments',
-};
-
 // Messages de l'IA Coach
 export const AI_MESSAGES = {
   WELCOME: "Bonjour ! Je suis votre coach IA. Je vais vous accompagner dans la définition et le suivi de vos objectifs. Commençons par vos ambitions pour cette année !",
