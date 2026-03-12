@@ -637,6 +637,31 @@ Devenir l'outil de référence pour la gestion d'objectifs des PME francophones,
 
 ---
 
+## 🔐 Audit Sécurité — Mars 2026
+
+### Synthèse
+- **Critique** : une clé Gemini est visible dans un artefact compilé sous `out/_next/...`; la clé doit être **rotée immédiatement**.
+- **Élevé** : le modèle actuel `NEXT_PUBLIC_GEMINI_API_KEY` expose par conception la clé côté navigateur.
+- **Élevé** : la CSP Netlify autorise encore `'unsafe-inline'` et `'unsafe-eval'`.
+- **Élevé** : plusieurs pages de test existent encore dans l'arbre de routes de production (`/test-db`, `/test-collaboration`, `/test-new-services`, `/test-ui`).
+- **Élevé** : des vulnérabilités de dépendances sont présentes (`jspdf`, `next`, chaîne `next-pwa/workbox`).
+- **Moyen** : une partie de la protection d'accès reste côté client; la sécurité réelle repose sur Supabase RLS.
+
+### Points positifs
+- `.env` et variantes locales sont bien ignorés par Git.
+- La clé `SUPABASE_SERVICE_ROLE_KEY` n'est pas utilisée dans le code front applicatif.
+- Les tables Supabase inspectées ont RLS activé et des migrations récentes de durcissement existent.
+
+### Backlog prioritaire
+1. **Immédiat** : révoquer/rotater la clé Gemini exposée et purger les artefacts statiques générés localement.
+2. **Immédiat** : migrer les appels Gemini côté serveur (ex. Netlify Functions) si la fonctionnalité IA doit rester protégée.
+3. **Court terme** : retirer ou rendre `dev-only` toutes les pages de test.
+4. **Court terme** : resserrer la CSP et supprimer `unsafe-eval`, puis réduire `unsafe-inline`.
+5. **Court terme** : mettre à jour les dépendances vulnérables via le gestionnaire de paquets.
+6. **Court terme** : réduire les logs applicatifs exposant prompts, profils et détails opérationnels.
+
+---
+
 ## 📞 Contacts Équipe
 
 - **Product Owner** : [À définir]
@@ -714,6 +739,6 @@ Devenir l'outil de référence pour la gestion d'objectifs des PME francophones,
 
 ---
 
-*Document mis à jour le : 11 Janvier 2025*
+*Document mis à jour le : 12 Mars 2026*
 *Version : 1.3.7*
-*Dernières modifications : Migration Supabase complète, React Query, Authentification, Page `/teams` avec gestion d'équipes et invitations*
+*Dernières modifications : Audit sécurité, priorisation des remédiations, historique produit et technique*
