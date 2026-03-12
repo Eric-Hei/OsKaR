@@ -637,6 +637,35 @@ Devenir l'outil de référence pour la gestion d'objectifs des PME francophones,
 
 ---
 
+## 💡 Pistes d'évolution prioritaires — Mars 2026
+
+### 1. Assistant de pilotage hebdomadaire orienté décision
+- Résumer automatiquement les signaux faibles de la semaine
+- Proposer 3 décisions concrètes au dirigeant
+- Générer un plan d'action priorisé en 5 minutes
+
+### 2. Vue équipe réellement opérationnelle
+- Objectifs par équipe, propriétaire, statut et retard
+- Heatmap des blocages et dépendances
+- Fil de notifications actionnable pour managers
+
+### 3. Health score explicable
+- Expliquer pourquoi un objectif est "à risque"
+- Afficher les leviers les plus impactants pour revenir "on track"
+- Donner une recommandation adaptée au contexte entreprise
+
+### 4. Partage externe premium
+- Lien partagé avec expiration, mot de passe et masquage sélectif
+- Mode investisseur / board avec synthèse auto
+- Export commentaire + décisions + prochaines étapes
+
+### 5. Socle IA produit et sûr
+- Historique des prompts/réponses côté app
+- Rate limiting, observabilité et suivi de qualité
+- Possibilité future de basculer entre plusieurs modèles
+
+---
+
 ## 🔐 Audit Sécurité — Mars 2026
 
 ### Synthèse
@@ -647,6 +676,7 @@ Devenir l'outil de référence pour la gestion d'objectifs des PME francophones,
 - **Corrigé** : suppression des pages de test exposées en production (`/test-db`, `/test-collaboration`, `/test-new-services`, `/test-ui`).
 - **Corrigé** : purge ciblée des artefacts locaux `.netlify/`, `out/` et `.next` qui conservaient encore des traces historiques (route de test, clé publique Gemini, manifests obsolètes).
 - **Validé** : contrôles finaux OK via `npm test -- src/__tests__/services/gemini.test.ts`, `npm run type-check` et `npm run build`.
+- **Déployé** : mise en production effectuée via `netlify-cli` sur `https://oskar-okr.netlify.app` après validation locale complète.
 - **À traiter séparément** : vulnérabilités de dépendances (`jspdf`, `next`, chaîne `next-pwa/workbox`) nécessitant une mise à jour via le gestionnaire de paquets.
 
 ### Points positifs
