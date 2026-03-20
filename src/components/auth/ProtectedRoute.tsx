@@ -21,19 +21,19 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   redirectTo = '/auth/login',
 }) => {
   const router = useRouter();
-  const { user, authReady } = useAppStore();
+  const { user, authReady, isAuthenticated } = useAppStore();
 
   useEffect(() => {
     if (!requireAuth || !authReady) return;
 
-    // Auth prête mais pas d'utilisateur → rediriger
-    if (!user) {
+    // Auth prête mais pas de session → rediriger
+    if (!isAuthenticated) {
       router.push(redirectTo);
     }
-  }, [requireAuth, authReady, user, redirectTo, router]);
+  }, [requireAuth, authReady, isAuthenticated, redirectTo, router]);
 
-  // Afficher un loader tant que l'auth n'est pas prête
-  if (requireAuth && !authReady) {
+  // Afficher un loader tant que l'auth n'est pas prête, ou pendant la transition session -> user
+  if (requireAuth && (!authReady || (isAuthenticated && !user))) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-indigo-50 flex items-center justify-center">
         <motion.div
@@ -48,8 +48,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
-  // Auth prête mais pas d'utilisateur → ne rien afficher (redirection en cours)
-  if (requireAuth && !user) {
+  // Auth prête mais pas de session → ne rien afficher (redirection en cours)
+  if (requireAuth && !isAuthenticated) {
     return null;
   }
 

@@ -157,7 +157,7 @@ export class AuthService {
         }
 
         if (attempt < MAX_RETRIES) {
-          console.warn(`⚠️ Profil introuvable (tentative ${attempt + 1}/${MAX_RETRIES + 1}), retry dans 1s...`);
+          console.warn(`⚠️ Profil introuvable (tentative ${attempt + 1}/${MAX_RETRIES + 1}), retry dans 1s…`);
           await new Promise(resolve => setTimeout(resolve, 1000));
         } else {
           console.error('❌ Impossible de récupérer le profil après plusieurs tentatives:', profileError);
@@ -171,6 +171,7 @@ export class AuthService {
       };
     }
 
+    console.warn('[AuthService.signIn] Pas de user dans authData');
     return authData;
   }
 
@@ -244,6 +245,30 @@ export class AuthService {
         return null;
       }
       console.error('Erreur lors de la récupération de l\'utilisateur:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Récupérer le profil à partir d'un user déjà connu (pas d'appel réseau getUser()).
+   * Utilisé par onAuthStateChange qui fournit déjà session.user.
+   */
+  static async fetchProfileForUser(userId: string) {
+    try {
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (error) {
+        console.error('Erreur lors de la récupération du profil:', error);
+        return null;
+      }
+
+      return { profile };
+    } catch (error: any) {
+      console.error('Erreur fetchProfileForUser:', error);
       return null;
     }
   }
@@ -352,6 +377,25 @@ export class AuthService {
     }
 
     return data;
+  }
+
+  /**
+   * Convertir un profil Supabase en User de l'app
+   */
+  static authUserToUser(authUser: any): User {
+    const email = authUser?.email || '';
+    const metadata = authUser?.user_metadata || {};
+
+    return {
+      id: authUser.id,
+      email,
+      name: metadata.name || email.split('@')[0] || 'Utilisateur',
+      company: metadata.company,
+      role: metadata.role,
+      createdAt: authUser?.created_at ? new Date(authUser.created_at) : new Date(),
+      lastLoginAt: new Date(),
+      companyProfile: metadata.company_profile,
+    };
   }
 
   /**

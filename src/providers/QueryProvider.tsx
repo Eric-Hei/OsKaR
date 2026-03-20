@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider, MutationCache, QueryCache } from '@tanstack/react-query';
-import { ReactNode, useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+import { ReactNode, useState } from 'react';
+import { useAppStore } from '@/store/useAppStore';
 
 interface QueryProviderProps {
   children: ReactNode;
@@ -18,23 +18,21 @@ function isAuthError(error: any): boolean {
 // Éviter les redirections multiples
 let isRedirecting = false;
 
-/** Réinitialiser le verrou de redirection (appelé quand l'utilisateur se reconnecte) */
-export function resetAuthRedirectLock() {
-  isRedirecting = false;
-}
-
 /**
- * Sur erreur de session → signOut + redirection login (pas de reload)
+ * Sur erreur d'auth dans une query → redirection login.
+ * Ne détruit PAS la session (signOut) — c'est le rôle de _app.tsx.
+ * Ne se déclenche PAS tant que l'auth n'est pas initialisée.
  */
 function handleQueryError(error: any) {
+  const { authReady } = useAppStore.getState();
+  if (!authReady) return;
+
   if (isAuthError(error) && !isRedirecting) {
     isRedirecting = true;
-    console.warn('⚠️ Erreur de session détectée, redirection vers login...');
-    supabase.auth.signOut().finally(() => {
-      if (typeof window !== 'undefined') {
-        window.location.href = '/auth/login?error=session_expired';
-      }
-    });
+    console.warn('⚠️ Erreur d\'auth dans une query, redirection vers login...');
+    if (typeof window !== 'undefined') {
+      window.location.href = '/auth/login?error=session_expired';
+    }
   }
 }
 

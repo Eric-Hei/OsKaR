@@ -13,21 +13,37 @@ import type { CompanyProfile } from '@/types';
 
 const OnboardingPage: React.FC = () => {
   const router = useRouter();
-  const { user, updateCompanyProfile, setUser } = useAppStore();
+  const { user, isAuthenticated, authReady, profileReady, updateCompanyProfile, setUser } = useAppStore();
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Rediriger vers l'inscription si l'utilisateur n'est pas connecté
+  // Attendre la résolution auth/profil avant de décider quoi faire
   useEffect(() => {
-    if (!user) {
-      router.push('/auth/register');
+    if (!authReady) return;
+
+    if (!isAuthenticated) {
+      router.push('/auth/login');
       return;
     }
+
     // Rediriger vers le dashboard si l'utilisateur a déjà un profil d'entreprise
-    if (user.companyProfile) {
+    if (profileReady && user?.companyProfile) {
       router.push('/dashboard');
     }
-  }, [user, router]);
+  }, [authReady, isAuthenticated, profileReady, user, router]);
+
+  if (!authReady || (isAuthenticated && (!user || !profileReady))) {
+    return (
+      <Layout title="Bienvenue dans OsKaR" skipOnboarding>
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center px-4">
+          <div className="text-center" role="status">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Préparation de votre espace...</p>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   const handleCompanyProfileSubmit = async (companyProfile: CompanyProfile) => {
     setIsSaving(true);

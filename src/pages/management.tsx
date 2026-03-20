@@ -62,11 +62,11 @@ const ManagementPage: React.FC = () => {
   const { data: subscription } = useSubscription(user?.id);
 
   // React Query - Données
-  const { data: ambitions = [], isLoading: ambitionsLoading } = useAmbitions(user?.id);
-  const { data: keyResults = [], isLoading: keyResultsLoading } = useKeyResultsByUser(user?.id);
-  const { data: quarterlyObjectives = [], isLoading: objectivesLoading } = useQuarterlyObjectives(user?.id);
-  const { data: quarterlyKeyResults = [], isLoading: quarterlyKeyResultsLoading } = useQuarterlyKeyResultsByUser(user?.id);
-  const { data: actions = [], isLoading: actionsLoading } = useActions(user?.id);
+  const { data: ambitions = [], isLoading: ambitionsLoading, isError: ambitionsError } = useAmbitions(user?.id);
+  const { data: keyResults = [], isLoading: keyResultsLoading, isError: keyResultsError } = useKeyResultsByUser(user?.id);
+  const { data: quarterlyObjectives = [], isLoading: objectivesLoading, isError: objectivesError } = useQuarterlyObjectives(user?.id);
+  const { data: quarterlyKeyResults = [], isLoading: quarterlyKeyResultsLoading, isError: quarterlyKeyResultsError } = useQuarterlyKeyResultsByUser(user?.id);
+  const { data: actions = [], isLoading: actionsLoading, isError: actionsError } = useActions(user?.id);
 
   // React Query - Mutations Ambitions
   const createAmbition = useCreateAmbition();
@@ -122,8 +122,12 @@ const ManagementPage: React.FC = () => {
   const hasActiveFilters = useHasActiveFilters(filters);
   const filtersDescription = useActiveFiltersDescription(filters, ambitions, quarterlyObjectives);
 
-  // État de chargement
-  const isLoading = ambitionsLoading || keyResultsLoading || objectivesLoading || quarterlyKeyResultsLoading || actionsLoading;
+  // État de chargement — on ne bloque pas la page si une query est en erreur
+  const isLoading = (ambitionsLoading && !ambitionsError) ||
+    (keyResultsLoading && !keyResultsError) ||
+    (objectivesLoading && !objectivesError) ||
+    (quarterlyKeyResultsLoading && !quarterlyKeyResultsError) ||
+    (actionsLoading && !actionsError);
 
 
 

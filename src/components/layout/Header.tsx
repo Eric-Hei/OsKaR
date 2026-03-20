@@ -36,7 +36,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onMenuToggle, isMobileMenuOpen }) => {
   const router = useRouter();
-  const { user, logout, experimentalFeatures } = useAppStore();
+  const { user, logout, experimentalFeatures, isAuthenticated } = useAppStore();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const { data: subscription } = useSubscription(user?.id);
@@ -68,7 +68,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuToggle, isMobileMenuOpen }) => {
     // { name: 'Tarifs', href: '/pricing', icon: Crown },
   ];
 
-  const navigation = user ? authenticatedNavigation : publicNavigation;
+  const navigation = isAuthenticated ? authenticatedNavigation : publicNavigation;
 
   const handleLogout = async () => {
     try {
@@ -104,7 +104,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuToggle, isMobileMenuOpen }) => {
         <div className="flex justify-between items-center h-16">
           {/* Logo et navigation principale */}
           <div className="flex items-center">
-            <Link href={user ? "/dashboard" : "/"} className="flex items-center">
+            <Link href={isAuthenticated ? "/dashboard" : "/"} className="flex items-center">
               <img
                 src="/images/Oskar-logo.png"
                 alt="OsKaR"
@@ -139,7 +139,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuToggle, isMobileMenuOpen }) => {
 
           {/* Actions utilisateur */}
           <div className="flex items-center space-x-4">
-            {user ? (
+            {isAuthenticated ? (
               <div className="flex items-center space-x-4">
                 {/* Menu utilisateur avec dropdown */}
                 <div className="relative" ref={userMenuRef}>
@@ -148,7 +148,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuToggle, isMobileMenuOpen }) => {
                     className="hidden sm:flex sm:items-center sm:space-x-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
                   >
                     <User className="h-5 w-5 text-gray-400" />
-                    <span className="text-sm text-gray-700">{user.name}</span>
+                    <span className="text-sm text-gray-700">{user?.name ?? 'Mon compte'}</span>
                     <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${isUserMenuOpen ? 'rotate-180' : ''
                       }`} />
                   </button>
@@ -163,8 +163,8 @@ const Header: React.FC<HeaderProps> = ({ onMenuToggle, isMobileMenuOpen }) => {
                             <User className="h-4 w-4 text-blue-600" />
                           </div>
                           <div className="flex-1">
-                            <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                            <p className="text-xs text-gray-500">{user.email}</p>
+                            <p className="text-sm font-medium text-gray-900">{user?.name ?? 'Mon compte'}</p>
+                            <p className="text-xs text-gray-500">{user?.email ?? ''}</p>
                             {subscription && (
                               <div className="mt-1">
                                 <Badge
@@ -314,7 +314,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuToggle, isMobileMenuOpen }) => {
       </div>
 
       {/* Menu mobile */}
-      {isMobileMenuOpen && user && (
+      {isMobileMenuOpen && isAuthenticated && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50 border-t border-gray-200">
             {navigation.map((item) => {
@@ -342,8 +342,8 @@ const Header: React.FC<HeaderProps> = ({ onMenuToggle, isMobileMenuOpen }) => {
               <div className="flex items-center px-3">
                 <User className="h-6 w-6 text-gray-400" />
                 <div className="ml-3">
-                  <div className="text-base font-medium text-gray-800">{user.name}</div>
-                  <div className="text-sm text-gray-500">{user.email}</div>
+                  <div className="text-base font-medium text-gray-800">{user?.name ?? 'Mon compte'}</div>
+                  <div className="text-sm text-gray-500">{user?.email ?? ''}</div>
                 </div>
               </div>
               <div className="mt-3 px-2 space-y-1">

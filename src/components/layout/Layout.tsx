@@ -25,7 +25,7 @@ const Layout: React.FC<LayoutProps> = ({
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const router = useRouter();
-  const { user, authReady } = useAppStore();
+  const { user, authReady, isAuthenticated, profileReady } = useAppStore();
 
   // Authentification : attendre que Supabase ait terminé l'initialisation
   // (INITIAL_SESSION reçu) avant de décider de rediriger
@@ -35,19 +35,20 @@ const Layout: React.FC<LayoutProps> = ({
     // Tant que l'auth n'est pas prête, ne rien faire
     if (!authReady) return;
 
-    // Auth prête : vérifier l'utilisateur
-    if (user) {
-      // Vérifier l'onboarding
-      if (!user.companyProfile && !skipOnboarding && router.pathname !== '/onboarding') {
-        router.push('/onboarding');
-      }
+    if (!isAuthenticated) {
+      console.log('🔄 Redirection vers login (pas de session après initialisation auth)');
+      router.push('/auth/login');
       return;
     }
 
-    // Auth prête mais pas d'utilisateur → rediriger vers login
-    console.log('🔄 Redirection vers login (pas de session après initialisation auth)');
-    router.push('/auth/login');
-  }, [requireAuth, user, authReady, skipOnboarding, router]);
+    // Session valide mais profil encore en cours de résolution
+    if (!user) return;
+
+    // Vérifier l'onboarding uniquement quand le profil est résolu
+    if (profileReady && !user.companyProfile && !skipOnboarding && router.pathname !== '/onboarding') {
+      router.push('/onboarding');
+    }
+  }, [requireAuth, user, authReady, isAuthenticated, profileReady, skipOnboarding, router]);
 
 
   const pageTitle = title ? `${title} - ${APP_CONFIG.name}` : APP_CONFIG.name;

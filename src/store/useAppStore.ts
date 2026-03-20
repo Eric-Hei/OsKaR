@@ -13,6 +13,8 @@ interface AppState {
   isAuthenticated: boolean;
   /** true une fois que onAuthStateChange a émis INITIAL_SESSION (ou SIGNED_IN) */
   authReady: boolean;
+  /** true une fois que le profil métier a été résolu (chargé ou considéré indisponible) */
+  profileReady: boolean;
 
   // Fonctionnalités expérimentales
   experimentalFeatures: {
@@ -27,8 +29,10 @@ interface AppState {
   notifications: Notification[];
 
   // Actions utilisateur
+  setSessionUser: (user: User) => void;
   setUser: (user: User) => void;
   setAuthReady: () => void;
+  setProfileReady: () => void;
   updateCompanyProfile: (companyProfile: CompanyProfile) => void;
   logout: () => void;
 
@@ -59,6 +63,7 @@ export const useAppStore = create<AppState>()(
       user: null,
       isAuthenticated: false,
       authReady: false,
+      profileReady: false,
       experimentalFeatures: {
         checkIn: false,
         focus: false,
@@ -69,12 +74,20 @@ export const useAppStore = create<AppState>()(
       notifications: [],
 
       // Actions utilisateur
+      setSessionUser: (user) => {
+        set({ user, isAuthenticated: true, authReady: true, profileReady: false });
+      },
+
       setUser: (user) => {
-        set({ user, isAuthenticated: true, authReady: true });
+        set({ user, isAuthenticated: true, authReady: true, profileReady: true });
       },
 
       setAuthReady: () => {
         set({ authReady: true });
+      },
+
+      setProfileReady: () => {
+        set({ profileReady: true, authReady: true });
       },
 
       updateCompanyProfile: (companyProfile) => {
@@ -89,6 +102,8 @@ export const useAppStore = create<AppState>()(
         set({
           user: null,
           isAuthenticated: false,
+          authReady: true,
+          profileReady: false,
         });
       },
 

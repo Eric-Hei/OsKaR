@@ -9,6 +9,7 @@ import { z } from 'zod';
 import Layout from '@/components/layout/Layout';
 import Button from '@/components/ui/Button';
 import { AuthService } from '@/services/auth';
+import { supabase } from '@/lib/supabaseClient';
 import { useAppStore } from '@/store/useAppStore';
 
 // Schéma de validation
@@ -21,7 +22,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
-  const { user, setUser } = useAppStore();
+  const { user, isAuthenticated, authReady } = useAppStore();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,61 +41,46 @@ const LoginPage: React.FC = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  // Si l'utilisateur est déjà connecté (événement Supabase), rediriger
+  // Si la session est déjà rétablie, rediriger sans attendre le chargement complet du profil
   useEffect(() => {
-    if (user) {
+    if (authReady && isAuthenticated) {
       router.push('/dashboard');
     }
-  }, [user, router]);
+  }, [authReady, isAuthenticated, router]);
 
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const result: any = await AuthService.signIn(data);
+      // Appel direct à signInWithPassword — pas de signOut() avant.
+      // Le SDK Supabase gère le remplacement de session automatiquement.
+      const { error: authError } = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
+      });
 
-      // Gestion des erreurs renvoयées sans throw
-      if (result?.error) {
-        const msg = result.error?.message || '';
+      if (authError) {
+        const msg = authError.message || '';
         if (msg.includes('Invalid login credentials')) {
           setError('Email ou mot de passe incorrect. Veuillez réessayer.');
         } else if (msg.includes('Email not confirmed')) {
           setError("Votre email n'a pas encore été confirmé. Vérifiez votre boîte mail.");
-        } else if (msg.includes('User not found')) {
-          setError("Aucun compte n'existe avec cet email. Voulez-vous créer un compte ?");
         } else if (msg.includes('Too many requests')) {
           setError('Trop de tentatives de connexion. Veuillez réessayer dans quelques minutes.');
         } else {
           setError('Une erreur est survenue lors de la connexion. Veuillez réessayer.');
         }
+        setIsLoading(false);
         return;
       }
 
-      if (result?.profile) {
-        // Convertir le profil Supabase en User de l'app
-        const user = AuthService.profileToUser(result.profile);
-        setUser(user);
-
-        // Rediriger vers le dashboard
-        router.push('/dashboard');
-      }
+      // Succès : le SDK émet SIGNED_IN → _app.tsx charge le profil → setUser → redirect
+      // Le useEffect [user] ci-dessus redirigera vers /dashboard automatiquement.
+      // On garde isLoading=true pour que le spinner reste visible pendant la transition.
     } catch (err: any) {
       console.error('Erreur de connexion:', err);
-
-      // Messages d'erreur personnalisés et clairs
-      if (err.message?.includes('Invalid login credentials')) {
-        setError('Email ou mot de passe incorrect. Veuillez réessayer.');
-      } else if (err.message?.includes('Email not confirmed')) {
-        setError('Votre email n\'a pas encore été confirmé. Vérifiez votre boîte mail.');
-      } else if (err.message?.includes('User not found')) {
-        setError('Aucun compte n\'existe avec cet email. Voulez-vous créer un compte ?');
-      } else if (err.message?.includes('Too many requests')) {
-        setError('Trop de tentatives de connexion. Veuillez réessayer dans quelques minutes.');
-      } else {
-        setError('Une erreur est survenue lors de la connexion. Veuillez réessayer.');
-      }
-    } finally {
+      setError('Une erreur est survenue lors de la connexion. Veuillez réessayer.');
       setIsLoading(false);
     }
   };
