@@ -25,15 +25,17 @@ const Layout: React.FC<LayoutProps> = ({
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const router = useRouter();
-  const { user } = useAppStore();
+  const { user, authReady } = useAppStore();
 
-  // Note: L'authentification est gérée ici quand requireAuth est activé
-  // Si après un délai il n'y a toujours pas d'utilisateur, rediriger vers login
+  // Authentification : attendre que Supabase ait terminé l'initialisation
+  // (INITIAL_SESSION reçu) avant de décider de rediriger
   useEffect(() => {
-    // Ne rien faire si requireAuth n'est pas activé
     if (!requireAuth) return;
 
-    // Si l'utilisateur est connecté
+    // Tant que l'auth n'est pas prête, ne rien faire
+    if (!authReady) return;
+
+    // Auth prête : vérifier l'utilisateur
     if (user) {
       // Vérifier l'onboarding
       if (!user.companyProfile && !skipOnboarding && router.pathname !== '/onboarding') {
@@ -42,17 +44,10 @@ const Layout: React.FC<LayoutProps> = ({
       return;
     }
 
-    // Si pas d'utilisateur, attendre un peu pour l'initialisation de l'auth
-    // puis rediriger vers login
-    const timeoutId = setTimeout(() => {
-      if (!user && requireAuth) {
-        console.log('🔄 Redirection vers login (pas de session après timeout)');
-        router.push('/auth/login');
-      }
-    }, 2000); // 2 secondes de grâce pour l'initialisation
-
-    return () => clearTimeout(timeoutId);
-  }, [requireAuth, user, skipOnboarding, router]);
+    // Auth prête mais pas d'utilisateur → rediriger vers login
+    console.log('🔄 Redirection vers login (pas de session après initialisation auth)');
+    router.push('/auth/login');
+  }, [requireAuth, user, authReady, skipOnboarding, router]);
 
 
   const pageTitle = title ? `${title} - ${APP_CONFIG.name}` : APP_CONFIG.name;

@@ -11,6 +11,8 @@ interface AppState {
   // État utilisateur (géré par Supabase Auth)
   user: User | null;
   isAuthenticated: boolean;
+  /** true une fois que onAuthStateChange a émis INITIAL_SESSION (ou SIGNED_IN) */
+  authReady: boolean;
 
   // Fonctionnalités expérimentales
   experimentalFeatures: {
@@ -26,6 +28,7 @@ interface AppState {
 
   // Actions utilisateur
   setUser: (user: User) => void;
+  setAuthReady: () => void;
   updateCompanyProfile: (companyProfile: CompanyProfile) => void;
   logout: () => void;
 
@@ -55,6 +58,7 @@ export const useAppStore = create<AppState>()(
       // État initial
       user: null,
       isAuthenticated: false,
+      authReady: false,
       experimentalFeatures: {
         checkIn: false,
         focus: false,
@@ -66,7 +70,11 @@ export const useAppStore = create<AppState>()(
 
       // Actions utilisateur
       setUser: (user) => {
-        set({ user, isAuthenticated: true });
+        set({ user, isAuthenticated: true, authReady: true });
+      },
+
+      setAuthReady: () => {
+        set({ authReady: true });
       },
 
       updateCompanyProfile: (companyProfile) => {

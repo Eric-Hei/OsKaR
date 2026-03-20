@@ -52,9 +52,7 @@ function fetchWithTimeout(input: RequestInfo | URL, init?: RequestInit): Promise
     });
 }
 
-// Client Supabase avec typage TypeScript
-// Pour isoler le problème CORS, on utilise ici la configuration par défaut
-// de @supabase/supabase-js, sans fetch personnalisé ni en-têtes globaux.
+// Client Supabase avec typage TypeScript et timeout de sécurité
 
 // Mock pour quand Supabase n'est pas configuré
 const createMockSupabase = () => {
@@ -91,7 +89,12 @@ const createMockSupabase = () => {
 export const supabase = hasEnv
   ? createClient<Database>(
     supabaseUrl as string,
-    supabaseAnonKey as string
+    supabaseAnonKey as string,
+    {
+      global: {
+        fetch: fetchWithTimeout,
+      },
+    }
   )
   : createMockSupabase();
 

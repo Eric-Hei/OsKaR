@@ -18,8 +18,19 @@ const AuthCallbackPage: React.FC = () => {
   useEffect(() => {
     const handleCallback = async () => {
       try {
-        // Récupérer l'utilisateur courant après OAuth
-        const result = await AuthService.getCurrentUser();
+        // Récupérer l'utilisateur courant après OAuth avec retry (cold start Supabase)
+        let result = null;
+        const MAX_RETRIES = 2;
+
+        for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+          result = await AuthService.getCurrentUser();
+          if (result?.profile) break;
+
+          if (attempt < MAX_RETRIES) {
+            console.warn(`⚠️ Profil OAuth introuvable (tentative ${attempt + 1}/${MAX_RETRIES + 1}), retry dans 1s...`);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+          }
+        }
 
         if (result && result.profile) {
           // Convertir le profil en User

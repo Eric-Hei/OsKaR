@@ -25,6 +25,13 @@ const LoginPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Détecter le query param ?error=session_expired pour afficher un message explicatif
+  useEffect(() => {
+    if (router.query.error === 'session_expired') {
+      setError('Votre session a expiré. Veuillez vous reconnecter.');
+    }
+  }, [router.query.error]);
+
   const {
     register,
     handleSubmit,

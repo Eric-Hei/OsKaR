@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider, MutationCache, QueryCache } from '@tanstack/react-query';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 
 interface QueryProviderProps {
@@ -17,6 +17,11 @@ function isAuthError(error: any): boolean {
 
 // Éviter les redirections multiples
 let isRedirecting = false;
+
+/** Réinitialiser le verrou de redirection (appelé quand l'utilisateur se reconnecte) */
+export function resetAuthRedirectLock() {
+  isRedirecting = false;
+}
 
 /**
  * Sur erreur de session → signOut + redirection login (pas de reload)

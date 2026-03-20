@@ -139,16 +139,29 @@ export class AuthService {
       return { error: authError } as any;
     }
 
-    // Récupérer le profil complet
+    // Récupérer le profil complet avec retry (la table profiles peut être lente au cold start)
     if (authData.user) {
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', authData.user.id)
-        .single();
+      let profile = null;
+      const MAX_RETRIES = 2;
 
-      if (profileError) {
-        console.error('Erreur lors de la récupération du profil:', profileError);
+      for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', authData.user.id)
+          .single();
+
+        if (!profileError && profileData) {
+          profile = profileData;
+          break;
+        }
+
+        if (attempt < MAX_RETRIES) {
+          console.warn(`⚠️ Profil introuvable (tentative ${attempt + 1}/${MAX_RETRIES + 1}), retry dans 1s...`);
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        } else {
+          console.error('❌ Impossible de récupérer le profil après plusieurs tentatives:', profileError);
+        }
       }
 
       return {
