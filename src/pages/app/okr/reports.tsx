@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Layout } from '@/components/layout/Layout';
+import { OkrShell } from '@/components/layout/OkrShell';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -235,24 +235,24 @@ const ReportsPage: React.FC = () => {
 
   if (!user) {
     return (
-      <Layout title="Rapports" requireAuth>
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div>
+      <OkrShell title="Rapports" topbarTitle="Rapports" topbarSubtitle="Générez et exportez vos rapports de performance">
+        <div className="flex items-center justify-center py-40">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-teal"></div>
         </div>
-      </Layout>
+      </OkrShell>
     );
   }
 
   return (
-    <Layout title="Rapports" requireAuth>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <OkrShell title="Rapports" topbarTitle="Rapports" topbarSubtitle="Générez et exportez vos rapports de performance">
+      <div>
         {/* En-tête */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-            <FileText className="h-8 w-8 mr-3 text-blue-600" />
+          <h1 className="text-3xl font-bold text-navy flex items-center">
+            <FileText className="h-8 w-8 mr-3 text-teal-dark" aria-hidden />
             Rapports
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-muted">
             Générez et exportez vos rapports de performance
           </p>
         </div>
@@ -478,7 +478,7 @@ const ReportsPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </Layout>
+    </OkrShell>
   );
 };
 

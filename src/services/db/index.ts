@@ -22,3 +22,6 @@ export { NotificationsService } from './notifications';
 
 // Services Abonnements
 export { SubscriptionsService } from './subscriptions';
+
+// Service Diagnostic de maturité
+export { DiagnosticsService } from './diagnostics';

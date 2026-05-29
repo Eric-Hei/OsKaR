@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { AlarmClock, Target, Sparkles, RefreshCw, History } from 'lucide-react';
-import { Layout } from '@/components/layout/Layout';
+import { OkrShell } from '@/components/layout/OkrShell';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -106,8 +106,8 @@ export default function CheckInPage() {
   };
 
   return (
-    <Layout title="Check-in hebdomadaire" requireAuth>
-      <div className="min-h-screen bg-gray-50 py-8">
+    <OkrShell title="Check-in hebdomadaire" topbarTitle="Check-in" topbarSubtitle="Faites le point sur vos Key Results">
+      <div>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* En-tête */}
           <motion.div
@@ -117,7 +117,7 @@ export default function CheckInPage() {
             className="mb-8"
           >
             <div className="flex items-center space-x-4">
-              <div className="bg-primary-600 rounded-lg p-3">
+              <div className="bg-navy rounded-lg p-3">
                 <AlarmClock className="h-8 w-8 text-white" />
               </div>
               <div>
@@ -132,7 +132,7 @@ export default function CheckInPage() {
             <Card>
               <CardContent className="py-12">
                 <div className="text-center text-gray-500">
-                  <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600 mx-auto mb-4"></div>
+                  <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-teal mx-auto mb-4"></div>
                   <p>Chargement des Key Results...</p>
                 </div>
               </CardContent>
@@ -170,7 +170,7 @@ export default function CheckInPage() {
                   <Card key={kr.id}>
                   <CardHeader>
                     <CardTitle className="text-lg flex items-center">
-                      <Target className="h-5 w-5 text-primary-600 mr-2" />
+                      <Target className="h-5 w-5 text-teal-dark mr-2" aria-hidden />
                       {kr.title}
                     </CardTitle>
                   </CardHeader>
@@ -260,7 +260,7 @@ export default function CheckInPage() {
           keyResult={historyKR}
         />
       )}
-    </Layout>
+    </OkrShell>
   );
 }
 

@@ -416,6 +416,32 @@ export interface Database {
           last_used_at?: string | null;
         };
       };
+      diagnostics: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          email: string | null;
+          scores: Json;
+          responses: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string | null;
+          email?: string | null;
+          scores?: Json;
+          responses?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string | null;
+          email?: string | null;
+          scores?: Json;
+          responses?: Json;
+          created_at?: string;
+        };
+      };
       action_assignees: {
         Row: {
           id: string;

@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { Layout } from '@/components/layout/Layout';
+import { OkrShell } from '@/components/layout/OkrShell';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -120,12 +120,12 @@ export default function FocusPage() {
   };
 
   return (
-    <Layout title="Focus du jour" requireAuth>
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <OkrShell title="Focus du jour" topbarTitle="Focus du jour" topbarSubtitle="Vos actions prioritaires aujourd'hui">
+      <div>
+        <div className="max-w-4xl mx-auto">
           <div className="flex items-center space-x-3 mb-2">
-            <AlarmClock className="h-6 w-6 text-primary-600" />
-            <h1 className="text-2xl font-bold text-gray-900">Focus du jour</h1>
+            <AlarmClock className="h-6 w-6 text-teal-dark" aria-hidden />
+            <h1 className="text-2xl font-bold text-navy">Focus du jour</h1>
           </div>
           <p className="text-sm text-gray-600 mb-6">Voici tes 3 focus recommandés pour aujourd'hui, basés sur la priorité, le statut et l'échéance.</p>
 
@@ -134,7 +134,7 @@ export default function FocusPage() {
               <CardContent>
                 <p className="text-gray-600">Aucune action prioritaire trouvée. Passe par la gestion pour en créer ou ajuster les priorités.</p>
                 <div className="mt-4">
-                  <Link href="/management" className="text-primary-600 hover:underline text-sm">Ouvrir la gestion des actions →</Link>
+                  <Link href="/app/okr/management" className="text-teal-dark hover:underline text-sm">Ouvrir la gestion des actions →</Link>
                 </div>
               </CardContent>
             </Card>
@@ -172,7 +172,7 @@ export default function FocusPage() {
           )}
         </div>
       </div>
-    </Layout>
+    </OkrShell>
   );
 }
 
