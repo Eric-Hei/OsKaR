@@ -1,6 +1,6 @@
 {
   "name": "oskar",
-  "version": "1.11.2",
+  "version": "2.0.1",
   "description": "Outil de gestion d'objectifs pour entrepreneurs avec IA coach intégrée",
   "private": true,
   "scripts": {
@@ -46,6 +46,7 @@
     "react-dom": "19.1.1",
     "react-hook-form": "^7.47.0",
     "recharts": "^2.8.0",
+    "resend": "^6.12.4",
     "tailwind-merge": "^2.0.0",
     "typescript": "^5.2.0",
     "zod": "^3.22.0",

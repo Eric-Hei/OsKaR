@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Layout } from '@/components/layout/Layout';
+import { OkrShell } from '@/components/layout/OkrShell';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
@@ -83,26 +83,26 @@ const ProgressPage: React.FC = () => {
 
   if (!user) {
     return (
-      <Layout title="Suivi des Progrès" requireAuth>
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div>
+      <OkrShell title="Suivi des Progrès" topbarTitle="Suivi des progrès" topbarSubtitle="Visualisez l'évolution de vos objectifs">
+        <div className="flex items-center justify-center py-40">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-teal"></div>
         </div>
-      </Layout>
+      </OkrShell>
     );
   }
 
   return (
-    <Layout title="Suivi des Progrès" requireAuth>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <OkrShell title="Suivi des Progrès" topbarTitle="Suivi des progrès" topbarSubtitle="Visualisez l'évolution de vos objectifs">
+      <div>
         {/* En-tête */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-                <Calendar className="h-8 w-8 mr-3 text-blue-600" />
+              <h1 className="text-3xl font-bold text-navy flex items-center">
+                <Calendar className="h-8 w-8 mr-3 text-teal-dark" aria-hidden />
                 Suivi des Progrès
               </h1>
-              <p className="mt-2 text-gray-600">
+              <p className="mt-2 text-muted">
                 Visualisez l'évolution de vos objectifs et Key Results
               </p>
             </div>
@@ -299,7 +299,7 @@ const ProgressPage: React.FC = () => {
           </Card>
         )}
       </div>
-    </Layout>
+    </OkrShell>
   );
 };
 

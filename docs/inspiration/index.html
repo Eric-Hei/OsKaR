@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<!-- saved from url=(0035)https://hasenso.fr/oskar/index.html -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OSKAR — Plateforme de Productivité</title>
+<link href="./index_files/css2" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #1e2d7d;
+    --navy-dark: #151f5e;
+    --navy-light: #2a3d99;
+    --teal: #00d4b4;
+    --teal-dark: #00b89c;
+    --teal-light: #e0faf6;
+    --bg: #f5f6fa;
+    --white: #ffffff;
+    --text: #1a1a2e;
+    --text-muted: #6b7280;
+    --border: #e2e4f0;
+    --sidebar-w: 240px;
+    --sidebar-collapsed: 64px;
+    --topbar-h: 64px;
+    --card-shadow: 0 2px 16px rgba(30,45,125,0.08);
+    --card-hover: 0 8px 32px rgba(30,45,125,0.14);
+    --radius: 12px;
+  }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ─── LAYOUT SHELL ─── */
+  .app-shell {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: var(--navy-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    z-index: 200;
+    transition: width 0.25s ease;
+    overflow: hidden;
+  }
+  .sidebar.collapsed {
+    width: var(--sidebar-collapsed);
+  }
+
+  .sidebar-logo {
+    padding: 16px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: var(--topbar-h);
+    overflow: hidden;
+    background: #ffffff;
+  }
+  .sidebar-logo img {
+    height: 30px;
+    flex-shrink: 0;
+  }
+  .logo-full { display: block; }
+  .logo-icon { display: none; width: 32px; height: 32px; object-fit: contain; }
+  .sidebar.collapsed .logo-full { display: none; }
+  .sidebar.collapsed .logo-icon { display: block; }
+  .sidebar-logo-text {
+    font-weight: 700;
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    opacity: 1;
+    transition: opacity 0.2s;
+  }
+  .sidebar.collapsed .sidebar-logo-text {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .sidebar-toggle {
+    position: fixed;
+    left: calc(var(--sidebar-w) - 12px);
+    top: 74px;
+    width: 24px; height: 24px;
+    background: var(--teal);
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,212,180,0.3);
+    transition: left 0.25s, transform 0.25s;
+    z-index: 300;
+  }
+  .sidebar.collapsed ~ * .sidebar-toggle,
+  .sidebar.collapsed .sidebar-toggle {
+    left: calc(var(--sidebar-collapsed) - 12px);
+  }
+  .sidebar.collapsed .sidebar-toggle {
+    transform: rotate(180deg);
+  }
+  .sidebar-toggle svg {
+    width: 12px; height: 12px;
+    fill: var(--navy-dark);
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 12px 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .sidebar-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    padding: 12px 20px 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    opacity: 1;
+    transition: opacity 0.2s;
+  }
+  .sidebar.collapsed .sidebar-section-label {
+    opacity: 0;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    color: rgba(255,255,255,0.65);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+    position: relative;
+    white-space: nowrap;
+  }
+  .nav-item:hover {
+    background: rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.95);
+  }
+  .nav-item.active {
+    background: rgba(0,212,180,0.12);
+    color: var(--teal);
+  }
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 4px; bottom: 4px;
+    width: 3px;
+    background: var(--teal);
+    border-radius: 0 2px 2px 0;
+  }
+  .nav-item .nav-icon {
+    width: 20px; height: 20px;
+    flex-shrink: 0;
+    opacity: 0.8;
+  }
+  .nav-item.active .nav-icon { opacity: 1; }
+  .nav-item .nav-label {
+    font-size: 13.5px;
+    font-weight: 500;
+    opacity: 1;
+    transition: opacity 0.2s;
+  }
+  .sidebar.collapsed .nav-label {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .nav-badge {
+    margin-left: auto;
+    background: var(--teal);
+    color: var(--navy-dark);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 20px;
+    flex-shrink: 0;
+    transition: opacity 0.2s;
+  }
+  .sidebar.collapsed .nav-badge { opacity: 0; }
+
+  .sidebar-footer {
+    padding: 12px 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* ─── MAIN AREA ─── */
+  .main-area {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    transition: margin-left 0.25s ease;
+  }
+  .main-area.expanded {
+    margin-left: var(--sidebar-collapsed);
+  }
+
+  /* ─── TOPBAR ─── */
+  .topbar {
+    height: var(--topbar-h);
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 32px;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--navy);
+    flex: 1;
+  }
+  .topbar-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: var(--teal);
+    color: var(--navy-dark);
+  }
+  .btn-primary:hover { background: var(--teal-dark); transform: translateY(-1px); }
+  .btn-outline {
+    background: transparent;
+    color: var(--navy);
+    border: 1.5px solid var(--border);
+  }
+  .btn-outline:hover { border-color: var(--navy); background: #f0f2ff; }
+  .btn-navy {
+    background: var(--navy);
+    color: white;
+  }
+  .btn-navy:hover { background: var(--navy-dark); }
+
+  /* ─── PAGE CONTENT ─── */
+  .page-content {
+    flex: 1;
+    padding: 32px;
+    max-width: 1200px;
+    width: 100%;
+  }
+
+  /* ─── HERO BANNER ─── */
+  .hero-banner {
+    background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 60%, #2a3d99 100%);
+    border-radius: 16px;
+    padding: 40px 48px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 32px;
+  }
+  .hero-banner::before {
+    content: '';
+    position: absolute;
+    right: -60px; top: -60px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(0,212,180,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-banner::after {
+    content: '';
+    position: absolute;
+    right: 80px; bottom: -40px;
+    width: 180px; height: 180px;
+    background: radial-gradient(circle, rgba(0,212,180,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 10px;
+  }
+  .hero-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: white;
+    line-height: 1.25;
+    max-width: 540px;
+    margin-bottom: 12px;
+  }
+  .hero-title span { color: var(--teal); }
+  .hero-desc {
+    font-size: 14.5px;
+    color: rgba(255,255,255,0.7);
+    max-width: 480px;
+    margin-bottom: 24px;
+    line-height: 1.7;
+  }
+  .hero-ctas {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .hero-stat-row {
+    position: absolute;
+    right: 48px;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 36px;
+    gap: 14px;
+    z-index: 1;
+  }
+  .hero-stat {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 12px 18px;
+    text-align: center;
+  }
+  .hero-stat-val {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--teal);
+    line-height: 1;
+  }
+  .hero-stat-lbl {
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    font-weight: 400;
+    margin-top: 2px;
+  }
+
+  /* ─── SECTION TITLES ─── */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .section-link {
+    font-size: 12.5px;
+    color: var(--teal-dark);
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .section-link:hover { text-decoration: underline; }
+
+  /* ─── BILAN CARD ─── */
+  .bilan-card {
+    background: white;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--card-shadow);
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .bilan-header {
+    background: linear-gradient(135deg, #f0f2ff 0%, #e8f8f5 100%);
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .bilan-header-left h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 2px;
+  }
+  .bilan-header-left p {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .bilan-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .bilan-questions {
+    padding: 24px;
+    border-right: 1px solid var(--border);
+  }
+  .bilan-question {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f6;
+    cursor: pointer;
+    transition: background 0.1s;
+    border-radius: 6px;
+    padding: 10px 8px;
+    margin: 0 -8px;
+  }
+  .bilan-question:last-child { border-bottom: none; }
+  .bilan-question:hover { background: #f8f8ff; }
+  .bq-num {
+    width: 22px; height: 22px;
+    background: var(--navy);
+    color: white;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .bq-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .bilan-scores {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .score-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .score-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .score-label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .score-val {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .score-bar-bg {
+    height: 7px;
+    background: #f0f2fa;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .score-bar {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--teal-dark), var(--teal));
+    transition: width 1s cubic-bezier(0.23,1,0.32,1);
+  }
+  .score-bar.warn { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+  .score-bar.danger { background: linear-gradient(90deg, #ef4444, #f87171); }
+
+  .bilan-footer {
+    padding: 16px 24px;
+    background: #fafbff;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* ─── 5 PILLARS GRID ─── */
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .pillar-card {
+    background: white;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 20px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .pillar-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--teal);
+    transform: scaleX(0);
+    transition: transform 0.2s;
+  }
+  .pillar-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--card-hover);
+    border-color: rgba(0,212,180,0.3);
+  }
+  .pillar-card:hover::before { transform: scaleX(1); }
+  .pillar-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+    font-size: 20px;
+  }
+  .pillar-icon svg {
+    width: 22px; height: 22px;
+  }
+  .pillar-number {
+    position: absolute;
+    top: 10px; right: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+  .pillar-name {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .pillar-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+  .pillar-status {
+    margin-top: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 20px;
+  }
+  .status-done { background: #e0faf6; color: #00846f; }
+  .status-lock { background: #f0f2fa; color: #9ca3af; }
+  .status-new { background: #fef3c7; color: #92400e; }
+
+  /* ─── AUTH MODAL ─── */
+  .auth-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,20,60,0.55);
+    backdrop-filter: blur(4px);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .auth-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .auth-modal {
+    background: white;
+    border-radius: 16px;
+    width: 420px;
+    max-width: 95vw;
+    box-shadow: 0 24px 80px rgba(15,20,60,0.25);
+    overflow: hidden;
+    transform: translateY(20px);
+    transition: transform 0.25s;
+  }
+  .auth-overlay.open .auth-modal {
+    transform: translateY(0);
+  }
+  .auth-modal-header {
+    background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+    padding: 28px 28px 20px;
+    text-align: center;
+    position: relative;
+  }
+  .auth-modal-header img {
+    height: 28px;
+    filter: brightness(0) invert(1);
+    margin-bottom: 14px;
+  }
+  .auth-modal-header h2 {
+    font-size: 20px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 4px;
+  }
+  .auth-modal-header p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+  }
+  .auth-modal-close {
+    position: absolute;
+    top: 14px; right: 16px;
+    background: rgba(255,255,255,0.12);
+    border: none;
+    color: white;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .auth-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+  }
+  .auth-tab {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text-muted);
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+  }
+  .auth-tab.active {
+    color: var(--navy);
+    border-bottom-color: var(--teal);
+  }
+  .auth-body {
+    padding: 24px 28px;
+  }
+  .auth-panel { display: none; }
+  .auth-panel.active { display: block; }
+  .form-group {
+    margin-bottom: 16px;
+  }
+  .form-label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .form-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    transition: border-color 0.15s;
+    outline: none;
+  }
+  .form-input:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(0,212,180,0.1);
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .auth-submit {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 8px;
+    margin-top: 4px;
+  }
+  .auth-divider {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin: 14px 0 10px;
+    position: relative;
+  }
+  .auth-divider::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 50%;
+    width: calc(50% - 20px);
+    height: 1px;
+    background: var(--border);
+  }
+  .auth-divider::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 50%;
+    width: calc(50% - 20px);
+    height: 1px;
+    background: var(--border);
+  }
+  .auth-footer-note {
+    text-align: center;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin-top: 16px;
+  }
+  .auth-footer-note a { color: var(--teal-dark); text-decoration: none; font-weight: 600; }
+
+  /* ─── AUTH PROMPT STRIP ─── */
+  .auth-strip {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    box-shadow: var(--card-shadow);
+    gap: 16px;
+  }
+  .auth-strip-text h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 2px;
+  }
+  .auth-strip-text p {
+    font-size: 12.5px;
+    color: var(--text-muted);
+  }
+  .auth-strip-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  /* ─── HOW IT WORKS ─── */
+  .steps-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 36px;
+    margin-bottom: 32px;
+  }
+  .step-card {
+    background: white;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 22px 20px;
+    position: relative;
+    box-shadow: var(--card-shadow);
+    overflow: visible;
+  }
+  .step-num {
+    width: 32px; height: 32px;
+    background: var(--navy);
+    color: white;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+  .step-card h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .step-card p {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .step-arrow {
+    position: absolute;
+    right: -28px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    color: var(--teal);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+  }
+
+  /* ─── TOOLTIP ─── */
+  [data-tip] { position: relative; }
+  [data-tip]:hover::after {
+    content: attr(data-tip);
+    position: absolute;
+    left: 50%; bottom: calc(100% + 6px);
+    transform: translateX(-50%);
+    background: var(--navy-dark);
+    color: white;
+    font-size: 11.5px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 300;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .sidebar { width: var(--sidebar-collapsed); }
+    .main-area { margin-left: var(--sidebar-collapsed); }
+    .hero-stat-row { display: none; }
+    .pillars-grid { grid-template-columns: repeat(3,1fr); }
+    .bilan-body { grid-template-columns: 1fr; }
+    .bilan-questions { border-right: none; border-bottom: 1px solid var(--border); }
+    .steps-row { grid-template-columns: 1fr; }
+    .step-arrow { display: none; }
+  }
+  @media (max-width: 600px) {
+    .page-content { padding: 16px; }
+    .hero-banner { padding: 24px 20px; }
+    .pillars-grid { grid-template-columns: repeat(2,1fr); }
+    .auth-strip { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+<script src="chrome-extension://ajdpfmkffanmkhejnopjppegokpogffp/assets/prompt.js"></script></head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ─── SIDEBAR ─── -->
+  <aside class="sidebar collapsed" id="sidebar">
+    <div class="sidebar-logo">
+      <img class="logo-full" src="./index_files/logo-oskar.png" alt="OSKAR">
+      <img class="logo-icon" src="./index_files/logo-oskar2.png" alt="OSKAR">
+      
+    </div>
+    <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Réduire le menu">
+      <svg viewBox="0 0 12 12"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"></path></svg>
+    </button>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Navigation</div>
+
+      <a class="nav-item active" href="https://hasenso.fr/oskar/index.html#" onclick="return false">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+        <span class="nav-label">Accueil</span>
+      </a>
+
+      <a class="nav-item" href="https://hasenso.fr/oskar/bilan.html">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path><rect x="9" y="3" width="6" height="4" rx="1"></rect><line x1="9" y1="12" x2="15" y2="12"></line><line x1="9" y1="16" x2="13" y2="16"></line></svg>
+        <span class="nav-label">Bilan &amp; Diagnostic</span>
+        <span class="nav-badge">Gratuit</span>
+      </a>
+
+      <div class="sidebar-section-label">Les 5 Piliers</div>
+
+      <a class="nav-item" href="https://hasenso.fr/oskar/vision.html">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path></svg>
+        <span class="nav-label">OSKAR Vision</span>
+      </a>
+
+      <a class="nav-item" href="https://hasenso.fr/oskar/index.html#" onclick="openAuth(); return false;">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"></path></svg>
+        <span class="nav-label">OSKAR Fit</span>
+      </a>
+
+      <a class="nav-item" href="https://hasenso.fr/oskar/index.html#" onclick="openAuth(); return false;">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"></path><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.077 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.077-2.354-1.253V5z" clip-rule="evenodd"></path></svg>
+        <span class="nav-label">OSKAR Business</span>
+      </a>
+
+      <a class="nav-item" href="https://hasenso.fr/oskar/index.html#" onclick="openAuth(); return false;">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+        <span class="nav-label">OSKAR OKR</span>
+      </a>
+
+      <a class="nav-item" href="https://hasenso.fr/oskar/index.html#" onclick="openAuth(); return false;">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"></path></svg>
+        <span class="nav-label">OSKAR Team</span>
+      </a>
+
+      <div class="sidebar-section-label">Ressources</div>
+
+      <a class="nav-item" href="https://hasenso.fr/oskar" target="_blank">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+        <span class="nav-label">À propos</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a class="nav-item" href="https://hasenso.fr/oskar/index.html#" onclick="openAuth(); return false;">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+        <span class="nav-label">Se connecter</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- ─── MAIN AREA ─── -->
+  <div class="main-area expanded" id="mainArea">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div>
+        <div class="topbar-title">Bienvenue sur OSKAR <span class="topbar-subtitle">— Plateforme de productivité</span></div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-outline" onclick="openAuth(&#39;login&#39;)">Connexion</button>
+        <button class="btn btn-primary" onclick="openAuth(&#39;register&#39;)">Commencer gratuitement →</button>
+      </div>
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <main class="page-content">
+
+      <!-- HERO BANNER -->
+      <section class="hero-banner">
+        <div class="hero-eyebrow">La méthode des organisations performantes</div>
+        <h1 class="hero-title">La productivité, c'est créer<br>plus de <span>valeur durable</span>.</h1>
+        <p class="hero-desc">OSKAR est un cadre de management structuré en 5 piliers pour aligner votre vision, valider votre marché, piloter vos finances, exécuter vos objectifs et renforcer vos équipes.</p>
+        <div class="hero-ctas">
+          <a href="https://hasenso.fr/oskar/bilan.html" class="btn btn-primary">Démarrer le bilan gratuit →</a>
+        </div>
+        <div class="hero-stat-row">
+          <div class="hero-stat">
+            <div class="hero-stat-val">5</div>
+            <div class="hero-stat-lbl">Piliers intégrés</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-val">10'</div>
+            <div class="hero-stat-lbl">Pour le bilan</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- AUTH STRIP -->
+      
+
+      <!-- HOW IT WORKS -->
+      <div class="section-header">
+        <div class="section-title">Comment ça marche ?</div>
+      </div>
+      <div class="steps-row">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h4>Faites votre bilan</h4>
+          <p>Répondez aux questions pour diagnostiquer vos points forts et vos zones de progression sur les 5 piliers OSKAR.</p>
+          <span class="step-arrow"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M4 10h12M10 4l6 6-6 6"></path></svg></span>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h4>Accédez aux modules</h4>
+          <p>Suivez les parcours guidés de chaque pilier : Vision, Market Fit, Finance, OKR, Team. Rituels courts, résultats concrets.</p>
+          <span class="step-arrow"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M4 10h12M10 4l6 6-6 6"></path></svg></span>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h4>Pilotez &amp; progressez</h4>
+          <p>Mesurez vos avancées, ajustez vos priorités et transformez durablement la performance de votre organisation.</p>
+        </div>
+      </div>
+
+      <!-- BILAN SECTION -->
+      <div id="bilan" class="section-header">
+        <div class="section-title">Bilan &amp; diagnostic OSKAR</div>
+      </div>
+      <div class="bilan-card" style="overflow:hidden">
+        <div style="display:grid;grid-template-columns:3fr 2fr;min-height:360px">
+
+          <!-- 3/5 gauche : descriptif -->
+          <div style="padding:32px 36px;display:flex;flex-direction:column;background:#fff">
+            <div style="flex:1">
+              <div style="font-size:10.5px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--teal);margin-bottom:16px">Outil gratuit · Confidentiel</div>
+              <h3 style="font-size:22px;font-weight:800;color:var(--navy);line-height:1.25;margin-bottom:14px">Mesurez l'efficacité<br>de votre organisation<br>sur les 5 piliers OSKAR.</h3>
+              <p style="font-size:13.5px;color:var(--text-muted);line-height:1.75;margin-bottom:22px;max-width:480px">Un diagnostic structuré pour identifier vos forces et vos zones d'amélioration — sans inscription requise.</p>
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <div style="display:inline-flex;align-items:center;gap:7px;background:#f0f2ff;border-radius:8px;padding:8px 14px">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.8" stroke-linecap="round" style="width:15px;height:15px;flex-shrink:0"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  <span style="font-size:13px;font-weight:700;color:var(--navy)">~10 minutes</span>
+                </div>
+                <div style="display:inline-flex;align-items:center;gap:7px;background:#f0f2ff;border-radius:8px;padding:8px 14px">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.8" stroke-linecap="round" style="width:15px;height:15px;flex-shrink:0"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                  <span style="font-size:13px;font-weight:700;color:var(--navy)">5 piliers · 15 critères</span>
+                </div>
+              </div>
+            </div>
+            <!-- Footer ligne : info + bouton -->
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:28px;padding-top:20px;border-top:1px solid var(--border)">
+              <div style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-muted)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00b89c" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                Gratuit et confidentiel. Aucune inscription requise.
+              </div>
+              <a href="https://hasenso.fr/oskar/bilan.html" class="btn btn-primary" style="flex-shrink:0;padding:10px 20px">Démarrer le bilan gratuit →</a>
+            </div>
+          </div>
+
+          <!-- 2/5 droite : araignée — séparateur 1px 80% hauteur centré -->
+          <div style="background:#fff;display:flex;align-items:center;justify-content:center;padding:24px 20px;position:relative">
+            <div style="position:absolute;left:0;top:10%;bottom:10%;width:1px;background:var(--border)"></div>
+            <p style="position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:10px;color:#9ca3af;font-family:Outfit,sans-serif">Exemple de résultats</p>
+            <div style="width:100%;max-width:260px;aspect-ratio:1/1;position:relative">
+              <canvas id="radarIndex" style="position: absolute; top: 0px; left: 0px; width: 260px; height: 260px; display: block; box-sizing: border-box;" width="260" height="260"></canvas>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 5 PILLARS -->
+      <div class="section-header">
+        <div class="section-title">Les 5 piliers OSKAR</div>
+        <span class="section-link" onclick="openAuth(&#39;register&#39;)">Accéder aux modules →</span>
+      </div>
+      <div class="pillars-grid">
+        <div class="pillar-card" onclick="window.location=&#39;vision.html&#39;">
+          <div class="pillar-number">01</div>
+          <div class="pillar-icon" style="background:#e8f0ff;color:#1e2d7d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></div>
+          <div class="pillar-name">OSKAR Vision</div>
+          <div class="pillar-sub">Clarifiez votre cap à 1 an, vos valeurs et vos objectifs fondateurs.</div>
+          <div class="pillar-status status-new"><a href="https://hasenso.fr/oskar/vision.html" style="color:inherit;text-decoration:none">Démarrer</a></div>
+        </div>
+        <div class="pillar-card" onclick="openAuth()">
+          <div class="pillar-number">02</div>
+          <div class="pillar-icon" style="background:#e0faf6;color:#00846f"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg></div>
+          <div class="pillar-name">OSKAR Fit</div>
+          <div class="pillar-sub">Validez votre adéquation produit-marché avec des preuves concrètes.</div>
+          <div class="pillar-status status-lock" style="display:inline-flex;align-items:center;gap:5px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;flex-shrink:0"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 018 0v4"></path></svg> Bientôt disponible</div>
+        </div>
+        <div class="pillar-card" onclick="openAuth()">
+          <div class="pillar-number">03</div>
+          <div class="pillar-icon" style="background:#fff7e6;color:#b45309"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+          <div class="pillar-name">OSKAR Business</div>
+          <div class="pillar-sub">Pilotez vos indicateurs financiers clés chaque mois.</div>
+          <div class="pillar-status status-lock" style="display:inline-flex;align-items:center;gap:5px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;flex-shrink:0"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 018 0v4"></path></svg> Bientôt disponible</div>
+        </div>
+        <div class="pillar-card" onclick="openAuth()">
+          <div class="pillar-number">04</div>
+          <div class="pillar-icon" style="background:#f0f8ff;color:#1d4ed8"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>
+          <div class="pillar-name">OSKAR OKR</div>
+          <div class="pillar-sub">Alignez stratégie et exécution avec des objectifs trimestriels.</div>
+          <div class="pillar-status status-lock" style="display:inline-flex;align-items:center;gap:5px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;flex-shrink:0"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 018 0v4"></path></svg> Bientôt disponible</div>
+        </div>
+        <div class="pillar-card" onclick="openAuth()">
+          <div class="pillar-number">05</div>
+          <div class="pillar-icon" style="background:#fdf0ff;color:#7c3aed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg></div>
+          <div class="pillar-name">OSKAR Team</div>
+          <div class="pillar-sub">Renforcez la cohésion et la santé de votre organisation.</div>
+          <div class="pillar-status status-lock" style="display:inline-flex;align-items:center;gap:5px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;flex-shrink:0"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 018 0v4"></path></svg> Bientôt disponible</div>
+        </div>
+      </div>
+
+      <!-- FOR WHO -->
+      <div class="section-header" style="margin-top:8px">
+        <div class="section-title">OSKAR est fait pour vous si…</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:40px">
+        <div style="background:white;border-radius:var(--radius);border:1px solid var(--border);padding:18px 16px;box-shadow:var(--card-shadow)">
+          <div style="width:38px;height:38px;color:#1e2d7d;margin-bottom:8px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.82m5.84-2.56a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.82m2.56-5.84a14.98 14.98 0 00-2.58 5.841"></path></svg></div>
+          <div style="font-size:13.5px;font-weight:700;color:var(--navy);margin-bottom:4px">Vous lancez votre projet</div>
+          <div style="font-size:12.5px;color:var(--text-muted)">Posez des fondations solides avant de scaler.</div>
+        </div>
+        <div style="background:white;border-radius:var(--radius);border:1px solid var(--border);padding:18px 16px;box-shadow:var(--card-shadow)">
+          <div style="width:38px;height:38px;color:#1e2d7d;margin-bottom:8px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg></div>
+          <div style="font-size:13.5px;font-weight:700;color:var(--navy);margin-bottom:4px">Vous pilotez sans visibilité</div>
+          <div style="font-size:12.5px;color:var(--text-muted)">Reprenez le contrôle avec des indicateurs actionnables.</div>
+        </div>
+        <div style="background:white;border-radius:var(--radius);border:1px solid var(--border);padding:18px 16px;box-shadow:var(--card-shadow)">
+          <div style="width:38px;height:38px;color:#1e2d7d;margin-bottom:8px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"></path><path d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"></path></svg></div>
+          <div style="font-size:13.5px;font-weight:700;color:var(--navy);margin-bottom:4px">Votre équipe n'est pas alignée</div>
+          <div style="font-size:12.5px;color:var(--text-muted)">Créez un langage commun et des rituels partagés.</div>
+        </div>
+        <div style="background:white;border-radius:var(--radius);border:1px solid var(--border);padding:18px 16px;box-shadow:var(--card-shadow)">
+          <div style="width:38px;height:38px;color:#1e2d7d;margin-bottom:8px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+          <div style="font-size:13.5px;font-weight:700;color:var(--navy);margin-bottom:4px">Vos objectifs restent théoriques</div>
+          <div style="font-size:12.5px;color:var(--text-muted)">Transformez vos ambitions en résultats mesurables.</div>
+        </div>
+        <div style="background:white;border-radius:var(--radius);border:1px solid var(--border);padding:18px 16px;box-shadow:var(--card-shadow)">
+          <div style="width:38px;height:38px;color:#1e2d7d;margin-bottom:8px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></div>
+          <div style="font-size:13.5px;font-weight:700;color:var(--navy);margin-bottom:4px">Vous accompagnez des équipes</div>
+          <div style="font-size:12.5px;color:var(--text-muted)">Coach, consultant, manager : structurez votre démarche.</div>
+        </div>
+        <div style="background:white;border-radius:var(--radius);border:1px solid var(--border);padding:18px 16px;box-shadow:var(--card-shadow)">
+          <div style="width:38px;height:38px;color:#1e2d7d;margin-bottom:8px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></div>
+          <div style="font-size:13.5px;font-weight:700;color:var(--navy);margin-bottom:4px">Vous voulez aller plus vite</div>
+          <div style="font-size:12.5px;color:var(--text-muted)">Des rituels courts et efficaces, pas de réunions interminables.</div>
+        </div>
+      </div>
+
+      <!-- FINAL CTA -->
+      <div style="background:linear-gradient(135deg,var(--navy-dark),var(--navy));border-radius:16px;padding:36px 40px;text-align:center;margin-bottom:40px;position:relative;overflow:hidden">
+        <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(0,212,180,0.12) 0%,transparent 70%)"></div>
+        <div style="position:relative;z-index:1">
+          <p style="font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--teal);margin-bottom:10px">Commencez maintenant</p>
+          <h2 style="font-size:24px;font-weight:800;color:white;margin-bottom:10px">Prêt à transformer votre organisation&nbsp;?</h2>
+          <p style="font-size:14px;color:rgba(255,255,255,0.65);margin-bottom:24px;max-width:480px;margin-left:auto;margin-right:auto">Démarrez par le bilan gratuit —<br>10 minutes pour savoir où concentrer votre énergie.</p>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            <a href="https://hasenso.fr/oskar/bilan.html" class="btn btn-primary" style="padding:12px 28px;font-size:15px">Démarrer le bilan gratuit →</a>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div><!-- end main-area -->
+</div><!-- end app-shell -->
+
+<!-- ─── AUTH MODAL ─── -->
+<div class="auth-overlay" id="authOverlay" onclick="closeAuthOnBg(event)">
+  <div class="auth-modal">
+    <div class="auth-modal-header">
+      <h2 id="authTitle">Rejoignez OSKAR</h2>
+      <p id="authSubtitle">Créez votre compte gratuit pour accéder à la plateforme</p>
+      <button class="auth-modal-close" onclick="closeAuth()">✕</button>
+    </div>
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tabRegister" onclick="switchTab(&#39;register&#39;)">Inscription</div>
+      <div class="auth-tab" id="tabLogin" onclick="switchTab(&#39;login&#39;)">Connexion</div>
+    </div>
+    <div class="auth-body" autocomplete="off">
+
+      <!-- REGISTER PANEL -->
+      <div class="auth-panel active" id="panelRegister">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Prénom</label>
+            <input type="text" class="form-input" autocomplete="off" placeholder="Sophie">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nom</label>
+            <input type="text" class="form-input" autocomplete="off" placeholder="Martin">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email professionnel</label>
+          <input type="email" class="form-input" autocomplete="off" placeholder="sophie@entreprise.fr">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Organisation</label>
+          <input type="text" class="form-input" autocomplete="off" placeholder="Ma Startup / PME / Cabinet...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mot de passe</label>
+          <input type="password" autocomplete="new-password" class="form-input" placeholder="••••••••">
+        </div>
+        <button class="btn btn-primary auth-submit">Créer mon compte gratuit →</button>
+        <div class="auth-footer-note">En créant un compte, vous acceptez les <a href="https://hasenso.fr/oskar/index.html#">CGU</a> et la <a href="https://hasenso.fr/oskar/index.html#">politique de confidentialité</a>.</div>
+      </div>
+
+      <!-- LOGIN PANEL -->
+      <div class="auth-panel" id="panelLogin">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" autocomplete="off" placeholder="vous@entreprise.fr">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mot de passe</label>
+          <input type="password" autocomplete="new-password" class="form-input" placeholder="••••••••">
+        </div>
+        <button class="btn btn-primary auth-submit">Se connecter →</button>
+        <div class="auth-divider">ou</div>
+        <div class="auth-footer-note">Pas encore de compte ? <a onclick="switchTab(&#39;register&#39;)" style="cursor:pointer">Inscrivez-vous gratuitement</a></div>
+        <div style="margin-top:10px;text-align:center"><a href="https://hasenso.fr/oskar/index.html#" style="font-size:12px;color:var(--text-muted)">Mot de passe oublié ?</a></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // Sidebar toggle
+  function toggleSidebar() {
+    const sb = document.getElementById('sidebar');
+    const ma = document.getElementById('mainArea');
+    const toggle = sb.querySelector('.sidebar-toggle');
+    sb.classList.toggle('collapsed');
+    ma.classList.toggle('expanded');
+    const collapsed = sb.classList.contains('collapsed');
+    toggle.style.left = collapsed ? 'calc(var(--sidebar-collapsed) - 12px)' : 'calc(var(--sidebar-w) - 12px)';
+  }
+
+  // Auth modal
+  function openAuth(tab) {
+    const overlay = document.getElementById('authOverlay');
+    overlay.classList.add('open');
+    if (tab) switchTab(tab);
+    document.body.style.overflow = 'hidden';
+  }
+  function closeAuth() {
+    document.getElementById('authOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function closeAuthOnBg(e) {
+    if (e.target === document.getElementById('authOverlay')) closeAuth();
+  }
+  function switchTab(tab) {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+    document.getElementById('panel' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+    const titleEl = document.getElementById('authTitle');
+    const subEl = document.getElementById('authSubtitle');
+    if (tab === 'login') {
+      titleEl.textContent = 'Bon retour !';
+      subEl.textContent = 'Connectez-vous à votre espace OSKAR';
+    } else {
+      titleEl.textContent = 'Rejoignez OSKAR';
+      subEl.textContent = 'Créez votre compte gratuit pour accéder à la plateforme';
+    }
+  }
+
+  // Smooth scroll
+  function smoothScroll(selector) {
+    const el = document.querySelector(selector);
+    if (el) el.scrollIntoView({behavior:'smooth'});
+    return false;
+  }
+
+  // Animate score bars on scroll
+  const bars = document.querySelectorAll('.score-bar');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const w = e.target.style.width;
+        e.target.style.width = '0';
+        requestAnimationFrame(() => { e.target.style.width = w; });
+        observer.unobserve(e.target);
+      }
+    });
+  }, {threshold: 0.3});
+  bars.forEach(b => observer.observe(b));
+
+  // Keyboard close
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuth(); });
+</script>
+
+<script src="./index_files/chart.umd.js.télécharger"></script>
+<script>
+new Chart(document.getElementById('radarIndex'), {
+  type: 'radar',
+  data: {
+    labels: ['Vision', 'Market Fit', 'Business', 'OKR', 'Team'],
+    datasets: [{
+      data: [7.0, 4.5, 5.5, 3.8, 7.1],
+      backgroundColor: 'rgba(0,212,180,0.12)',
+      borderColor: '#1e2d7d',
+      borderWidth: 2,
+      pointBackgroundColor: '#00d4b4',
+      pointBorderColor: '#1e2d7d',
+      pointBorderWidth: 1.5,
+      pointRadius: 5,
+      pointHoverRadius: 6
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ctx.raw.toFixed(1).replace('.', ',') + ' / 10' } }
+    },
+    scales: {
+      r: {
+        min: 0, max: 10,
+        ticks: { stepSize: 2, font: { size: 9 }, color: '#b0b5cc', backdropColor: 'transparent' },
+        grid: { color: 'rgba(30,45,125,0.07)' },
+        angleLines: { color: 'rgba(30,45,125,0.07)' },
+        pointLabels: { color: '#1e2d7d', font: { size: 11, weight: '600', family: 'Outfit' } }
+      }
+    }
+  }
+});
+</script>
+
+
+
+
+
+
+
+<script>
+(function(){
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('.auth-submit');
+    if (!btn) return;
+
+    // Remplace le contenu de la modale par le message
+    var authModal = document.querySelector('.auth-modal');
+    if (authModal) {
+      authModal.innerHTML =
+        '<div style="padding:52px 32px;text-align:center">' +
+          '<div style="width:52px;height:52px;background:#e0faf6;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="#00846f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px"><polyline points="20 6 9 17 4 12"/></svg>' +
+          '</div>' +
+          '<p style="font-size:16px;font-weight:700;color:#1e2d7d;margin-bottom:12px">Plateforme en cours de réalisation</p>' +
+          '<p style="font-size:13.5px;color:#6b7280;line-height:1.7">Veuillez vous rapprocher de votre coach<br>ou contact OSKAR.</p>' +
+        '</div>';
+    }
+
+    // Ferme l'overlay après 3 secondes
+    setTimeout(function() {
+      var overlay = document.getElementById('authOverlay');
+      if (overlay) {
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    }, 3000);
+  });
+})();
+</script>
+
+
+</body></html>

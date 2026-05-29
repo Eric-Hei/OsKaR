@@ -1,0 +1,2 @@
+GRANT INSERT ON diagnostics TO anon;
+GRANT SELECT, INSERT, UPDATE, DELETE ON diagnostics TO authenticated;

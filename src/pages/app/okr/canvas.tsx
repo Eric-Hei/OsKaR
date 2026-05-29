@@ -9,7 +9,7 @@ import {
   Lightbulb,
   AlertTriangle
 } from 'lucide-react';
-import { Layout } from '@/components/layout/Layout';
+import { OkrShell } from '@/components/layout/OkrShell';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -90,26 +90,26 @@ const CanvasPage: React.FC = () => {
 
   if (!user || isLoading) {
     return (
-      <Layout title="Canvas" requireAuth>
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div>
+      <OkrShell title="Canvas" topbarTitle="Canvas guidé" topbarSubtitle="Construisez vos OKR pas à pas">
+        <div className="flex items-center justify-center py-40">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-teal"></div>
         </div>
-      </Layout>
+      </OkrShell>
     );
   }
 
   return (
-    <Layout title="Canvas Guidé" requireAuth>
-      <div className="min-h-screen bg-gray-50">
+    <OkrShell title="Canvas Guidé" topbarTitle="Canvas guidé" topbarSubtitle="Construisez vos OKR pas à pas" contentPadding="p-0">
+      <div>
         {/* En-tête avec progression */}
-        <div className="bg-white shadow-sm border-b">
+        <div className="bg-white shadow-sm border-b border-line">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">
+                <h1 className="text-2xl font-bold text-navy">
                   Canvas Guidé OsKaR
                 </h1>
-                <p className="text-gray-600 mt-1">
+                <p className="text-muted mt-1">
                   Transformez vos ambitions en objectifs mesurables en 4 étapes
                 </p>
               </div>
@@ -135,7 +135,7 @@ const CanvasPage: React.FC = () => {
                       step.isCompleted
                         ? 'bg-green-500 border-green-500 text-white'
                         : step.isActive
-                        ? 'bg-primary-500 border-primary-500 text-white'
+                        ? 'bg-teal border-teal text-navy-dark'
                         : 'bg-white border-gray-300 text-gray-500 hover:border-gray-400'
                     }`}
                   >
@@ -148,7 +148,7 @@ const CanvasPage: React.FC = () => {
 
                   <div className="ml-3 min-w-0 flex-1">
                     <p className={`text-sm font-medium ${
-                      step.isActive ? 'text-primary-600' : 'text-gray-900'
+                      step.isActive ? 'text-teal-dark' : 'text-navy'
                     }`}>
                       {step.title}
                     </p>
@@ -180,7 +180,7 @@ const CanvasPage: React.FC = () => {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center">
-                      <span className="bg-primary-100 text-primary-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">
+                      <span className="bg-navy/10 text-navy rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">
                         {currentStep}
                       </span>
                       {currentStepData?.title}
@@ -506,7 +506,7 @@ const CanvasPage: React.FC = () => {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
-                        className="bg-primary-600 h-2 rounded-full transition-all duration-300"
+                        className="bg-teal h-2 rounded-full transition-all duration-300"
                         style={{
                           width: `${(steps.filter(s => s.isCompleted).length / steps.length) * 100}%`
                         }}
@@ -519,7 +519,7 @@ const CanvasPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </Layout>
+    </OkrShell>
   );
 };
 

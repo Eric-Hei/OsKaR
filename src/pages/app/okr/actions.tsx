@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Layout } from '@/components/layout/Layout';
+import { OkrShell } from '@/components/layout/OkrShell';
 import { KanbanBoard } from '@/components/ui/KanbanBoard';
 import { ActionsTableView } from '@/components/ui/ActionsTableView';
 import { ActionsChecklistView } from '@/components/ui/ActionsChecklistView';
@@ -214,8 +214,8 @@ const ActionsPage: React.FC = () => {
   };
 
   return (
-    <Layout title="Actions" requireAuth>
-      <div className="min-h-screen bg-gray-50 py-8">
+    <OkrShell title="Actions" topbarTitle="Actions" topbarSubtitle="Pilotez l'exécution de vos OKR" contentPadding="p-0">
+      <div className="py-8">
         {formMode === 'action' && (
           <ActionForm
             initialData={actionToFormData(editingAction)}
@@ -279,7 +279,7 @@ const ActionsPage: React.FC = () => {
                 <Filter className="h-4 w-4 mr-2" />
                 Filtres
                 {activeFiltersCount > 0 && (
-                  <span className="ml-2 bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full text-xs font-medium">
+                  <span className="ml-2 bg-navy/10 text-navy px-2 py-0.5 rounded-full text-xs font-medium">
                     {activeFiltersCount}
                   </span>
                 )}
@@ -393,7 +393,7 @@ const ActionsPage: React.FC = () => {
           availableYears={availableYears}
         />
       </div>
-    </Layout>
+    </OkrShell>
   );
 };
 

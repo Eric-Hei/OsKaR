@@ -6,7 +6,7 @@ import {
   Building2,
   Zap
 } from 'lucide-react';
-import { Layout } from '@/components/layout/Layout';
+import { OkrShell } from '@/components/layout/OkrShell';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { HierarchicalTreeView } from '@/components/ui/HierarchicalTreeView';
@@ -485,8 +485,8 @@ const ManagementPage: React.FC = () => {
       : null;
 
     return (
-      <Layout title="Gestion des Objectifs" requireAuth>
-        <div className="min-h-screen bg-gray-50 py-8">
+      <OkrShell title="Gestion des Objectifs" topbarTitle="Gestion" topbarSubtitle="Structurez vos objectifs et actions">
+        <div className="py-2">
           {formMode === 'ambition' && (
             <AmbitionForm
               initialData={editingItem}
@@ -529,33 +529,33 @@ const ManagementPage: React.FC = () => {
             />
           )}
         </div>
-      </Layout>
+      </OkrShell>
     );
   }
 
   if (isLoading) {
     return (
-      <Layout title="Gestion des Objectifs" requireAuth>
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div>
+      <OkrShell title="Gestion des Objectifs" topbarTitle="Gestion" topbarSubtitle="Structurez vos objectifs et actions">
+        <div className="flex items-center justify-center py-40">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-teal"></div>
         </div>
-      </Layout>
+      </OkrShell>
     );
   }
 
   return (
-    <Layout title="Gestion des Objectifs" requireAuth>
-      <div className="min-h-screen bg-gray-50">
+    <OkrShell title="Gestion des Objectifs" topbarTitle="Gestion" topbarSubtitle="Structurez vos objectifs et actions" contentPadding="p-0">
+      <div>
         {/* En-tête */}
-        <div className="bg-white shadow-sm border-b">
+        <div className="bg-white shadow-sm border-b border-line">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">
+                <h1 className="text-2xl font-bold text-navy">
                   Gestion des Objectifs
                 </h1>
                 {/* Statistiques */}
-                <div className="flex items-center space-x-4 text-sm text-gray-600 mt-2">
+                <div className="flex items-center space-x-4 text-sm text-muted mt-2">
                   <div className="flex items-center space-x-1">
                     <Building2 className="h-4 w-4" />
                     <span>{filteredAmbitions.length} objectifs annuels</span>
@@ -721,7 +721,7 @@ const ManagementPage: React.FC = () => {
           currentPlan={subscription?.planType}
         />
       </div>
-    </Layout>
+    </OkrShell>
   );
 };
 

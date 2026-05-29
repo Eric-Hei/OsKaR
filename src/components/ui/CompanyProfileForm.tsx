@@ -81,12 +81,12 @@ export const CompanyProfileForm: React.FC<CompanyProfileFormProps> = ({
       <Card>
         <CardHeader>
           <div className="flex items-center space-x-3">
-            <div className="bg-blue-100 rounded-lg p-3">
-              <Building2 className="h-6 w-6 text-blue-600" />
+            <div className="bg-teal/10 rounded-lg p-3">
+              <Building2 className="h-6 w-6 text-teal-dark" aria-hidden />
             </div>
             <div>
-              <CardTitle className="text-xl">Profil de votre entreprise</CardTitle>
-              <p className="text-sm text-gray-600 mt-1">
+              <CardTitle className="text-xl text-navy">Profil de votre entreprise</CardTitle>
+              <p className="text-sm text-muted mt-1">
                 Ces informations nous aideront à personnaliser vos conseils IA
               </p>
             </div>
@@ -102,7 +102,7 @@ export const CompanyProfileForm: React.FC<CompanyProfileFormProps> = ({
                 </label>
                 <input
                   type="text"
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm transition-colors focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  className="block w-full rounded-lg border border-line px-3 py-2 text-sm shadow-sm transition-colors focus:border-teal focus:outline-none focus:ring-1 focus:ring-teal"
                   {...register('name', { required: 'Le nom de l\'entreprise est requis' })}
                 />
                 {errors.name && (
@@ -117,7 +117,7 @@ export const CompanyProfileForm: React.FC<CompanyProfileFormProps> = ({
                 <input
                   type="text"
                   placeholder="Ex: SaaS, E-commerce, Consulting..."
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm transition-colors focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  className="block w-full rounded-lg border border-line px-3 py-2 text-sm shadow-sm transition-colors focus:border-teal focus:outline-none focus:ring-1 focus:ring-teal"
                   {...register('industry', { required: 'Le secteur d\'activité est requis' })}
                 />
                 {errors.industry && (
@@ -133,7 +133,7 @@ export const CompanyProfileForm: React.FC<CompanyProfileFormProps> = ({
                   Taille de l'entreprise
                 </label>
                 <select
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm transition-colors focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  className="block w-full rounded-lg border border-line px-3 py-2 text-sm shadow-sm transition-colors focus:border-teal focus:outline-none focus:ring-1 focus:ring-teal"
                   {...register('size')}
                 >
                   {COMPANY_SIZES.map((size) => (
@@ -149,7 +149,7 @@ export const CompanyProfileForm: React.FC<CompanyProfileFormProps> = ({
                   Stade de développement
                 </label>
                 <select
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm transition-colors focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  className="block w-full rounded-lg border border-line px-3 py-2 text-sm shadow-sm transition-colors focus:border-teal focus:outline-none focus:ring-1 focus:ring-teal"
                   {...register('stage')}
                 >
                   {COMPANY_STAGES.map((stage) => (
@@ -170,7 +170,7 @@ export const CompanyProfileForm: React.FC<CompanyProfileFormProps> = ({
                 <textarea
                   rows={3}
                   placeholder="Décrivez votre marché cible principal..."
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm transition-colors focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  className="block w-full rounded-lg border border-line px-3 py-2 text-sm shadow-sm transition-colors focus:border-teal focus:outline-none focus:ring-1 focus:ring-teal"
                   {...register('targetMarket')}
                 />
               </div>
@@ -182,7 +182,7 @@ export const CompanyProfileForm: React.FC<CompanyProfileFormProps> = ({
                 <textarea
                   rows={3}
                   placeholder="Comment générez-vous vos revenus ?"
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm transition-colors focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  className="block w-full rounded-lg border border-line px-3 py-2 text-sm shadow-sm transition-colors focus:border-teal focus:outline-none focus:ring-1 focus:ring-teal"
                   {...register('businessModel')}
                 />
               </div>
@@ -197,7 +197,7 @@ export const CompanyProfileForm: React.FC<CompanyProfileFormProps> = ({
                 <textarea
                   rows={3}
                   placeholder="Séparez vos défis par des virgules (ex: acquisition client, recrutement, financement...)"
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm transition-colors focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  className="block w-full rounded-lg border border-line px-3 py-2 text-sm shadow-sm transition-colors focus:border-teal focus:outline-none focus:ring-1 focus:ring-teal"
                   {...register('mainChallenges')}
                 />
               </div>
@@ -236,15 +236,15 @@ export const CompanyProfileForm: React.FC<CompanyProfileFormProps> = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200"
+        className="mt-6 p-4 bg-navy/5 rounded-lg border border-navy/10"
       >
         <div className="flex items-start space-x-3">
-          <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5" />
+          <AlertCircle className="h-5 w-5 text-teal-dark mt-0.5" aria-hidden />
           <div>
-            <h4 className="text-sm font-medium text-blue-900">
+            <h4 className="text-sm font-medium text-navy">
               Pourquoi ces informations ?
             </h4>
-            <p className="text-sm text-blue-700 mt-1">
+            <p className="text-sm text-muted mt-1">
               Ces données nous permettent de personnaliser les conseils IA selon votre contexte business.
               Elles sont stockées localement et ne sont pas partagées.
             </p>

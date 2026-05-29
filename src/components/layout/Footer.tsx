@@ -58,22 +58,22 @@ export const Footer: React.FC = () => {
             </h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/canvas" className="text-sm text-gray-600 hover:text-primary-600 transition-colors">
+                <Link href="/app/okr/canvas" className="text-sm text-gray-600 hover:text-primary-600 transition-colors">
                   Canvas OKR
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard" className="text-sm text-gray-600 hover:text-primary-600 transition-colors">
+                <Link href="/app/okr/dashboard" className="text-sm text-gray-600 hover:text-primary-600 transition-colors">
                   Dashboard
                 </Link>
               </li>
               <li>
-                <Link href="/management" className="text-sm text-gray-600 hover:text-primary-600 transition-colors">
+                <Link href="/app/okr/management" className="text-sm text-gray-600 hover:text-primary-600 transition-colors">
                   Gestion
                 </Link>
               </li>
               <li>
-                <Link href="/reports" className="text-sm text-gray-600 hover:text-primary-600 transition-colors">
+                <Link href="/app/okr/reports" className="text-sm text-gray-600 hover:text-primary-600 transition-colors">
                   Rapports
                 </Link>
               </li>

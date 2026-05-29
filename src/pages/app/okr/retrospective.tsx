@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Layout } from '@/components/layout/Layout';
+import { OkrShell } from '@/components/layout/OkrShell';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -104,26 +104,26 @@ const RetrospectivePage: React.FC = () => {
 
   if (!user) {
     return (
-      <Layout title="Rétrospective Trimestrielle" requireAuth>
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div>
+      <OkrShell title="Rétrospective Trimestrielle" topbarTitle="Rétrospective" topbarSubtitle="Analysez vos performances trimestrielles">
+        <div className="flex items-center justify-center py-40">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-teal"></div>
         </div>
-      </Layout>
+      </OkrShell>
     );
   }
 
   return (
-    <Layout title="Rétrospective Trimestrielle" requireAuth>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <OkrShell title="Rétrospective Trimestrielle" topbarTitle="Rétrospective" topbarSubtitle="Analysez vos performances trimestrielles">
+      <div>
         {/* En-tête */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-                <History className="h-8 w-8 mr-3 text-blue-600" />
+              <h1 className="text-3xl font-bold text-navy flex items-center">
+                <History className="h-8 w-8 mr-3 text-teal-dark" aria-hidden />
                 Rétrospective Trimestrielle
               </h1>
-              <p className="mt-2 text-gray-600">
+              <p className="mt-2 text-muted">
                 Analysez vos performances et générez des insights avec l'IA
               </p>
             </div>
@@ -334,7 +334,7 @@ const RetrospectivePage: React.FC = () => {
           </CardContent>
         </Card>
       </div>
-    </Layout>
+    </OkrShell>
   );
 };
 

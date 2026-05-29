@@ -43,13 +43,13 @@ const Header: React.FC<HeaderProps> = ({ onMenuToggle, isMobileMenuOpen }) => {
 
   // Navigation complète avec features expérimentales
   const allNavigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: BarChart3 },
-    { name: 'Check-in', href: '/check-in', icon: AlarmClock, experimental: true, featureKey: 'checkIn' },
-    { name: 'Focus', href: '/focus', icon: AlarmClock, experimental: true, featureKey: 'focus' },
-    { name: 'Canvas', href: '/canvas', icon: FileText, experimental: true, featureKey: 'canvas' },
-    { name: 'Gestion', href: '/management', icon: FolderKanban },
-    { name: 'Actions', href: '/actions', icon: CheckSquare },
-    { name: 'Suivi', href: '/progress', icon: Calendar },
+    { name: 'Dashboard', href: '/app/okr/dashboard', icon: BarChart3 },
+    { name: 'Check-in', href: '/app/okr/check-in', icon: AlarmClock, experimental: true, featureKey: 'checkIn' },
+    { name: 'Focus', href: '/app/okr/focus', icon: AlarmClock, experimental: true, featureKey: 'focus' },
+    { name: 'Canvas', href: '/app/okr/canvas', icon: FileText, experimental: true, featureKey: 'canvas' },
+    { name: 'Gestion', href: '/app/okr/management', icon: FolderKanban },
+    { name: 'Actions', href: '/app/okr/actions', icon: CheckSquare },
+    { name: 'Suivi', href: '/app/okr/progress', icon: Calendar },
   ];
 
   // Filtrer selon activation des features expérimentales
@@ -104,7 +104,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuToggle, isMobileMenuOpen }) => {
         <div className="flex justify-between items-center h-16">
           {/* Logo et navigation principale */}
           <div className="flex items-center">
-            <Link href={isAuthenticated ? "/dashboard" : "/"} className="flex items-center">
+            <Link href={isAuthenticated ? "/app/okr/dashboard" : "/"} className="flex items-center">
               <img
                 src="/images/Oskar-logo.png"
                 alt="OsKaR"
@@ -194,7 +194,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuToggle, isMobileMenuOpen }) => {
                       <div className="py-1">
                         <button
                           onClick={() => {
-                            router.push('/reports');
+                            router.push('/app/okr/reports');
                             setIsUserMenuOpen(false);
                           }}
                           className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
@@ -205,7 +205,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuToggle, isMobileMenuOpen }) => {
 
                         <button
                           onClick={() => {
-                            router.push('/retrospective');
+                            router.push('/app/okr/retrospective');
                             setIsUserMenuOpen(false);
                           }}
                           className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"

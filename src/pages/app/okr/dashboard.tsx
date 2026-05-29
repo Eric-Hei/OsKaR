@@ -13,7 +13,7 @@ import {
   Users,
   Zap
 } from 'lucide-react';
-import { Layout } from '@/components/layout/Layout';
+import { OkrShell } from '@/components/layout/OkrShell';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -58,7 +58,7 @@ const DashboardPage: React.FC = () => {
     }
 
     // Rediriger vers la page de gestion
-    router.push('/management');
+    router.push('/app/okr/management');
   };
 
   // Calculer les métriques à partir des données React Query
@@ -129,24 +129,24 @@ const DashboardPage: React.FC = () => {
       title: 'Objectifs annuels',
       value: metrics.totalAmbitions,
       icon: Target,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100',
+      color: 'text-navy',
+      bgColor: 'bg-navy/10',
       change: '+2 ce mois',
     },
     {
       title: 'OKRs Actifs',
       value: metrics.activeOKRs,
       icon: BarChart3,
-      color: 'text-green-600',
-      bgColor: 'bg-green-100',
+      color: 'text-teal-dark',
+      bgColor: 'bg-teal/10',
       change: '+1 ce trimestre',
     },
     {
       title: 'Actions Terminées',
       value: metrics.completedActions,
       icon: CheckCircle,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-100',
+      color: 'text-teal-dark',
+      bgColor: 'bg-teal/10',
       change: '+5 cette semaine',
     },
     {
@@ -164,17 +164,17 @@ const DashboardPage: React.FC = () => {
 
   if (!user || isLoading) {
     return (
-      <Layout title="Dashboard" requireAuth>
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div>
+      <OkrShell title="Dashboard" topbarTitle="Dashboard OKR" topbarSubtitle="Vue d'ensemble de vos objectifs">
+        <div className="flex items-center justify-center py-40">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-teal"></div>
         </div>
-      </Layout>
+      </OkrShell>
     );
   }
 
   return (
-    <Layout title="Dashboard" requireAuth>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <OkrShell title="Dashboard" topbarTitle="Dashboard OKR" topbarSubtitle="Vue d'ensemble de vos objectifs">
+      <div>
         {/* En-tête */}
         <div className="mb-8">
           <motion.div
@@ -182,10 +182,10 @@ const DashboardPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-navy mb-2">
               Bonjour {user.name} ! 👋
             </h1>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-muted">
               Voici un aperçu de vos objectifs et de votre progression.
             </p>
           </motion.div>
@@ -238,8 +238,8 @@ const DashboardPage: React.FC = () => {
             >
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <TrendingUp className="h-5 w-5 mr-2 text-primary-600" />
+                  <CardTitle className="flex items-center text-navy">
+                    <TrendingUp className="h-5 w-5 mr-2 text-teal-dark" aria-hidden />
                     Progrès Global
                   </CardTitle>
                 </CardHeader>
@@ -304,8 +304,8 @@ const DashboardPage: React.FC = () => {
               <Card>
                 <CardHeader>
                   <div className="flex justify-between items-center">
-                    <CardTitle className="flex items-center">
-                      <Target className="h-5 w-5 mr-2 text-primary-600" />
+                    <CardTitle className="flex items-center text-navy">
+                      <Target className="h-5 w-5 mr-2 text-teal-dark" aria-hidden />
                       Mes Objectifs Annuels
                     </CardTitle>
                     <Button
@@ -348,7 +348,7 @@ const DashboardPage: React.FC = () => {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => router.push('/ambitions')}
+                          onClick={() => router.push('/app/okr/management')}
                           className="w-full"
                         >
                           Voir tous les objectifs annuels ({ambitions.length})
@@ -475,15 +475,15 @@ const DashboardPage: React.FC = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.8 }}
             >
-              <Card className="bg-gradient-to-br from-primary-50 to-blue-50 border-primary-200">
+              <Card className="bg-navy border-navy text-white">
                 <CardHeader>
-                  <CardTitle className="flex items-center text-primary-700">
-                    <Users className="h-5 w-5 mr-2" />
+                  <CardTitle className="flex items-center text-teal">
+                    <Users className="h-5 w-5 mr-2" aria-hidden />
                     Conseil IA du jour
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-primary-800">
+                  <p className="text-sm text-white/80">
                     💡 Concentrez-vous sur vos 3 actions les plus importantes aujourd'hui.
                     La productivité vient de la prioritisation, pas de la multiplication des tâches.
                   </p>
@@ -501,7 +501,7 @@ const DashboardPage: React.FC = () => {
           currentPlan={subscription?.planType}
         />
       </div>
-    </Layout>
+    </OkrShell>
   );
 };
 
