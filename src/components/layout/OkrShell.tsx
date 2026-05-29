@@ -83,8 +83,12 @@ export const OkrShell: React.FC<OkrShellProps> = ({
       return;
     }
     if (!user) return;
-    if (profileReady && !user.companyProfile && router.pathname !== '/onboarding') {
-      router.push('/onboarding');
+    if (profileReady && router.pathname !== '/onboarding') {
+      if (!user.companyProfile) {
+        router.push('/onboarding?module=okr');
+      } else if (!user.settings?.onboarding?.okr) {
+        router.push('/onboarding?module=okr');
+      }
     }
   }, [authReady, isAuthenticated, user, profileReady, router]);
 

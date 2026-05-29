@@ -3,7 +3,7 @@ import { AmbitionCategory, Priority, Quarter } from '@/types';
 // Configuration de l'application
 export const APP_CONFIG = {
   name: 'OsKaR',
-  version: '2.0.1',
+  version: '2.0.2',
   description: 'Outil de gestion d\'objectifs pour entrepreneurs avec IA coach',
   author: 'OsKaR Team',
   maxAmbitionsPerYear: 5,

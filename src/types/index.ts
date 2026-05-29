@@ -10,6 +10,16 @@ export interface User {
   lastLoginAt: Date;
   companyProfile?: CompanyProfile;
   subscription?: Subscription;
+  settings?: UserSettings;
+}
+
+export interface UserSettings {
+  /** Suivi de l'onboarding spécifique à chaque module/pilier (ex. okr). */
+  onboarding?: {
+    okr?: boolean;
+    [module: string]: boolean | undefined;
+  };
+  [key: string]: unknown;
 }
 
 // Types pour les abonnements
