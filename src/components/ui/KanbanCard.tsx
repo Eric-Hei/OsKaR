@@ -130,11 +130,7 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({
 
       {/* Description */}
       {action.description && (
-        <p className="text-xs text-gray-600 mb-3 overflow-hidden" style={{
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical' as const
-        }}>
+        <p className="text-xs text-gray-600 mb-3 line-clamp-2">
           {action.description}
         </p>
       )}
