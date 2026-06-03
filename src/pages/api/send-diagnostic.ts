@@ -33,7 +33,10 @@ function buildEmailHtml(result: AnalysisResult): string {
       <p>Le détail complet (axes prioritaires, points d'appui et recommandations) se trouve dans le PDF joint.</p>
       <p style="color:#6b7280;font-size:13px;margin-top:24px;">— L'équipe OSKAR</p>
     </div>
-  </div>`;
+  </div>
+  <br/><br/>`;
+  
+
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ApiResponse>) {
