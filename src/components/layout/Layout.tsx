@@ -3,7 +3,6 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Header } from './Header';
 import { Footer } from './Footer';
-import { CookieBanner } from '@/components/ui/CookieBanner';
 import { NotificationContainer } from '@/components/ui/Notification';
 import { useAppStore } from '@/store/useAppStore';
 import { APP_CONFIG } from '@/constants';
@@ -73,7 +72,6 @@ const Layout: React.FC<LayoutProps> = ({
         </main>
 
         <Footer />
-        <CookieBanner />
         <NotificationContainer />
       </div>
     </>

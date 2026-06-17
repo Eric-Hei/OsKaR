@@ -5,13 +5,14 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { AppShell } from '@/components/layout/AppShell';
+import { UserMenu } from '@/components/layout/UserMenu';
 import { useAppStore } from '@/store/useAppStore';
 import { useSubscription, useSubscriptionPlans } from '@/hooks/useSubscription';
 import { PricingCard } from '@/components/pricing/PricingCard';
 
 export default function PricingPage() {
   const router = useRouter();
-  const { user } = useAppStore();
+  const { user, isAuthenticated, authReady } = useAppStore();
   const { data: subscription, isLoading: subscriptionLoading } = useSubscription(user?.id);
   const { data: plans, isLoading: plansLoading } = useSubscriptionPlans();
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
@@ -57,6 +58,7 @@ export default function PricingPage() {
       description="Choisissez le plan OsKaR qui correspond à vos besoins"
       topbarTitle="Tarifs"
       topbarSubtitle="Choisissez le plan adapté à votre croissance"
+      topbarActions={authReady && isAuthenticated ? <UserMenu /> : null}
       contentMaxWidth="max-w-7xl"
     >
       <div>

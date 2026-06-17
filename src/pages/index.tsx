@@ -25,9 +25,8 @@ import {
 } from 'recharts';
 import { AppShell } from '@/components/layout/AppShell';
 import { AuthModal } from '@/components/layout/AuthModal';
+import { UserMenu } from '@/components/layout/UserMenu';
 import { useAppStore } from '@/store/useAppStore';
-import { AuthService } from '@/services/auth';
-import { isSupabaseConfigured } from '@/lib/supabaseClient';
 
 const RADAR_DATA = [
   { subject: 'Vision', A: 70 },
@@ -39,7 +38,7 @@ const RADAR_DATA = [
 
 const HomePage: React.FC = () => {
   const router = useRouter();
-  const { user, authReady, isAuthenticated, logout } = useAppStore();
+  const { authReady, isAuthenticated } = useAppStore();
   const [authOpen, setAuthOpen] = useState(false);
   const [authTab, setAuthTab] = useState<'login' | 'register'>('register');
 
@@ -48,29 +47,15 @@ const HomePage: React.FC = () => {
     setAuthOpen(true);
   };
 
-  const handleLogout = async () => {
-    try {
-      if (isSupabaseConfigured()) await AuthService.signOut();
-    } finally {
-      logout();
-      router.push('/');
-    }
-  };
-
   const topbarActions = !authReady ? null : isAuthenticated ? (
     <>
-      <span className="hidden sm:inline text-sm text-muted">
-        Bonjour <span className="font-semibold text-navy">{user?.name ?? 'vous'}</span>
-      </span>
       <button
         onClick={() => router.push('/app/okr/dashboard')}
         className="px-5 py-2.5 bg-teal text-navy-dark text-sm font-bold rounded-lg shadow-sm hover:bg-teal-dark hover:-translate-y-0.5 transition-all"
       >
         Accéder à mon espace →
       </button>
-      <button onClick={handleLogout} className="px-4 py-2 text-sm font-semibold text-navy hover:text-navy-light transition-colors">
-        Déconnexion
-      </button>
+      <UserMenu />
     </>
   ) : (
     <>

@@ -1,16 +1,22 @@
-import React, { useState } from 'react';
-import { Layout } from '@/components/layout/Layout';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { AppShell } from '@/components/layout/AppShell';
+import { UserMenu } from '@/components/layout/UserMenu';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
 import { useAppStore } from '@/store/useAppStore';
 import { supabase } from '@/lib/supabaseClient';
-import { Settings, User, Bell, Lock, Trash2, Download, Upload, Eye, EyeOff, Save, CreditCard, Beaker } from 'lucide-react';
+import { Settings, User, Bell, Lock, Trash2, Download, Eye, EyeOff, Save, CreditCard, Beaker, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SubscriptionTab } from '@/components/settings/SubscriptionTab';
 
 const SettingsPage: React.FC = () => {
-  const { user, experimentalFeatures, toggleExperimentalFeature } = useAppStore();
+  const router = useRouter();
+  const { user, authReady, isAuthenticated, experimentalFeatures, toggleExperimentalFeature } = useAppStore();
+
+  useEffect(() => {
+    if (authReady && !isAuthenticated) router.push('/auth/login');
+  }, [authReady, isAuthenticated, router]);
   const [activeTab, setActiveTab] = useState<'profile' | 'subscription' | 'notifications' | 'privacy' | 'data' | 'experimental'>('profile');
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -248,24 +254,32 @@ const SettingsPage: React.FC = () => {
 
   if (!user) {
     return (
-      <Layout title="Paramètres" requireAuth>
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div>
+      <AppShell title="Paramètres" topbarTitle="Paramètres">
+        <div className="flex flex-col items-center justify-center py-32 text-muted" aria-live="polite">
+          <Loader2 className="h-8 w-8 animate-spin text-teal mb-4" aria-hidden />
+          <p className="text-sm">Chargement de vos paramètres…</p>
         </div>
-      </Layout>
+      </AppShell>
     );
   }
 
   return (
-    <Layout title="Paramètres" requireAuth>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <AppShell
+      title="Paramètres"
+      description="Gérez votre compte et vos préférences"
+      topbarTitle="Paramètres"
+      topbarSubtitle="Compte & préférences"
+      topbarActions={<UserMenu />}
+      contentMaxWidth="max-w-7xl"
+    >
+      <div>
         {/* En-tête */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-            <Settings className="h-8 w-8 mr-3 text-blue-600" />
+          <h1 className="text-2xl font-bold text-navy flex items-center">
+            <Settings className="h-7 w-7 mr-3 text-teal-dark" aria-hidden />
             Paramètres
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-muted">
             Gérez votre compte et vos préférences
           </p>
         </div>
@@ -275,6 +289,7 @@ const SettingsPage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
+            role={message.type === 'error' ? 'alert' : 'status'}
             className={`mb-6 p-4 rounded-lg ${message.type === 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'
               }`}
           >
@@ -283,20 +298,21 @@ const SettingsPage: React.FC = () => {
         )}
 
         {/* Tabs */}
-        <div className="mb-6 border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8">
+        <div className="mb-6 border-b border-line">
+          <nav className="-mb-px flex flex-wrap gap-x-8">
             {tabs.map(tab => {
               const Icon = tab.icon;
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
+                  aria-current={activeTab === tab.id ? 'page' : undefined}
                   className={`flex items-center py-4 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === tab.id
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'border-teal text-teal-dark'
+                    : 'border-transparent text-muted hover:text-navy hover:border-line'
                     }`}
                 >
-                  <Icon className="h-5 w-5 mr-2" />
+                  <Icon className="h-5 w-5 mr-2" aria-hidden />
                   {tab.label}
                 </button>
               );
@@ -314,23 +330,25 @@ const SettingsPage: React.FC = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Nom</label>
+                  <label htmlFor="settings-name" className="block text-sm font-medium text-gray-700 mb-2">Nom</label>
                   <input
+                    id="settings-name"
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="block w-full rounded-lg border border-line px-3 py-2 text-sm shadow-sm transition-colors focus:border-teal focus:outline-none focus:ring-1 focus:ring-teal"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                  <label htmlFor="settings-email" className="block text-sm font-medium text-gray-700 mb-2">Email</label>
                   <input
+                    id="settings-email"
                     type="email"
                     value={email}
                     disabled
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed"
+                    className="block w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm text-muted cursor-not-allowed"
                   />
-                  <p className="text-xs text-gray-500 mt-1">L'email ne peut pas être modifié</p>
+                  <p className="text-xs text-muted mt-1">L'email ne peut pas être modifié</p>
                 </div>
                 <Button onClick={handleUpdateProfile} disabled={isLoading} leftIcon={<Save className="h-4 w-4" />}>
                   {isLoading ? 'Enregistrement...' : 'Enregistrer'}
@@ -348,24 +366,27 @@ const SettingsPage: React.FC = () => {
           {activeTab === 'experimental' && (
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Beaker className="h-5 w-5 text-purple-600" />
+                <CardTitle className="flex items-center gap-2 text-navy">
+                  <Beaker className="h-5 w-5 text-teal-dark" aria-hidden />
                   Fonctionnalités expérimentales
                 </CardTitle>
-                <p className="text-sm text-gray-500 mt-2">
+                <p className="text-sm text-muted mt-2">
                   Activez ou désactivez les fonctionnalités en cours de développement
                 </p>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-gray-900">Check-in</p>
-                    <p className="text-sm text-gray-500">Page de suivi quotidien et hebdomadaire</p>
+                    <p className="font-medium text-navy">Check-in</p>
+                    <p className="text-sm text-muted">Page de suivi quotidien et hebdomadaire</p>
                   </div>
                   <button
                     type="button"
+                    role="switch"
+                    aria-checked={experimentalFeatures.checkIn}
+                    aria-label="Activer la fonctionnalité Check-in"
                     onClick={() => toggleExperimentalFeature('checkIn')}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${experimentalFeatures.checkIn ? 'bg-purple-600' : 'bg-gray-200'
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 ${experimentalFeatures.checkIn ? 'bg-teal' : 'bg-gray-200'
                       }`}
                   >
                     <span
@@ -376,13 +397,16 @@ const SettingsPage: React.FC = () => {
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-gray-900">Focus</p>
-                    <p className="text-sm text-gray-500">Mode concentration avec pomodoro</p>
+                    <p className="font-medium text-navy">Focus</p>
+                    <p className="text-sm text-muted">Mode concentration avec pomodoro</p>
                   </div>
                   <button
                     type="button"
+                    role="switch"
+                    aria-checked={experimentalFeatures.focus}
+                    aria-label="Activer la fonctionnalité Focus"
                     onClick={() => toggleExperimentalFeature('focus')}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${experimentalFeatures.focus ? 'bg-purple-600' : 'bg-gray-200'
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 ${experimentalFeatures.focus ? 'bg-teal' : 'bg-gray-200'
                       }`}
                   >
                     <span
@@ -393,13 +417,16 @@ const SettingsPage: React.FC = () => {
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-gray-900">Canvas</p>
-                    <p className="text-sm text-gray-500">Visualisation stratégique de vos objectifs</p>
+                    <p className="font-medium text-navy">Canvas</p>
+                    <p className="text-sm text-muted">Visualisation stratégique de vos objectifs</p>
                   </div>
                   <button
                     type="button"
+                    role="switch"
+                    aria-checked={experimentalFeatures.canvas}
+                    aria-label="Activer la fonctionnalité Canvas"
                     onClick={() => toggleExperimentalFeature('canvas')}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${experimentalFeatures.canvas ? 'bg-purple-600' : 'bg-gray-200'
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 ${experimentalFeatures.canvas ? 'bg-teal' : 'bg-gray-200'
                       }`}
                   >
                     <span
@@ -421,12 +448,16 @@ const SettingsPage: React.FC = () => {
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-gray-900">Notifications par email</p>
-                    <p className="text-sm text-gray-500">Recevoir des emails pour les mises à jour importantes</p>
+                    <p className="font-medium text-navy">Notifications par email</p>
+                    <p className="text-sm text-muted">Recevoir des emails pour les mises à jour importantes</p>
                   </div>
                   <button
+                    type="button"
+                    role="switch"
+                    aria-checked={emailNotifications}
+                    aria-label="Activer les notifications par email"
                     onClick={() => setEmailNotifications(!emailNotifications)}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${emailNotifications ? 'bg-blue-600' : 'bg-gray-200'
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 ${emailNotifications ? 'bg-teal' : 'bg-gray-200'
                       }`}
                   >
                     <span
@@ -437,12 +468,16 @@ const SettingsPage: React.FC = () => {
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-gray-900">Résumé hebdomadaire</p>
-                    <p className="text-sm text-gray-500">Recevoir un résumé de vos progrès chaque semaine</p>
+                    <p className="font-medium text-navy">Résumé hebdomadaire</p>
+                    <p className="text-sm text-muted">Recevoir un résumé de vos progrès chaque semaine</p>
                   </div>
                   <button
+                    type="button"
+                    role="switch"
+                    aria-checked={weeklyDigest}
+                    aria-label="Activer le résumé hebdomadaire"
                     onClick={() => setWeeklyDigest(!weeklyDigest)}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${weeklyDigest ? 'bg-blue-600' : 'bg-gray-200'
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 ${weeklyDigest ? 'bg-teal' : 'bg-gray-200'
                       }`}
                   >
                     <span
@@ -463,33 +498,36 @@ const SettingsPage: React.FC = () => {
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-4">
-                  <h3 className="font-medium text-gray-900">Changer le mot de passe</h3>
+                  <h3 className="font-medium text-navy">Changer le mot de passe</h3>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Nouveau mot de passe</label>
+                    <label htmlFor="settings-new-password" className="block text-sm font-medium text-gray-700 mb-2">Nouveau mot de passe</label>
                     <div className="relative">
                       <input
+                        id="settings-new-password"
                         type={showPassword ? 'text' : 'password'}
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
-                        className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="block w-full rounded-lg border border-line px-3 py-2 pr-10 text-sm shadow-sm transition-colors focus:border-teal focus:outline-none focus:ring-1 focus:ring-teal"
                         placeholder="Minimum 6 caractères"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-navy"
                       >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        {showPassword ? <EyeOff className="h-4 w-4" aria-hidden /> : <Eye className="h-4 w-4" aria-hidden />}
                       </button>
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Confirmer le mot de passe</label>
+                    <label htmlFor="settings-confirm-password" className="block text-sm font-medium text-gray-700 mb-2">Confirmer le mot de passe</label>
                     <input
+                      id="settings-confirm-password"
                       type={showPassword ? 'text' : 'password'}
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="block w-full rounded-lg border border-line px-3 py-2 text-sm shadow-sm transition-colors focus:border-teal focus:outline-none focus:ring-1 focus:ring-teal"
                       placeholder="Retapez le mot de passe"
                     />
                   </div>
@@ -509,7 +547,7 @@ const SettingsPage: React.FC = () => {
                   <CardTitle>Exporter mes données</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-muted mb-4">
                     Téléchargez toutes vos données au format JSON (conforme RGPD)
                   </p>
                   <Button onClick={handleExportData} disabled={isLoading} leftIcon={<Download className="h-4 w-4" />}>
@@ -523,7 +561,7 @@ const SettingsPage: React.FC = () => {
                   <CardTitle className="text-red-600">Zone de danger</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-muted mb-4">
                     La suppression de votre compte est définitive et irréversible. Toutes vos données seront perdues.
                   </p>
                   <Button
@@ -540,7 +578,7 @@ const SettingsPage: React.FC = () => {
           )}
         </div>
       </div>
-    </Layout>
+    </AppShell>
   );
 };
 

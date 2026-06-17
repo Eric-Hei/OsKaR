@@ -33,7 +33,8 @@ interface SidebarProps {
   collapsed: boolean;
   onToggle: () => void;
   sections?: SidebarSection[];
-  footerItem?: SidebarNavItem;
+  /** Élément de pied de sidebar. `null` pour le masquer entièrement. */
+  footerItem?: SidebarNavItem | null;
 }
 
 const DEFAULT_SECTIONS: SidebarSection[] = [
@@ -125,12 +126,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
       className={`fixed inset-y-0 left-0 z-40 flex flex-col bg-navy-dark transition-[width] duration-250 overflow-visible ${width}`}
       aria-label="Navigation principale"
     >
-      <div className="flex items-center min-h-[64px] gap-2.5 px-4 bg-white border-b border-white/10 overflow-hidden">
-        {collapsed ? (
-          <Image src="/images/oskar/logo-oskar2.png" alt="OsKaR" width={32} height={32} className="object-contain" priority />
-        ) : (
-          <Image src="/images/oskar/logo-oskar.png" alt="OsKaR" width={150} height={30} className="object-contain h-[30px] w-auto" priority />
-        )}
+      <div className="flex items-center min-h-[64px] px-4 bg-white border-b border-white/10 overflow-hidden">
+        <Link
+          href="/"
+          aria-label="Retour à l'accueil"
+          className="flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal"
+        >
+          {collapsed ? (
+            <Image src="/images/oskar/logo-oskar2.png" alt="OsKaR" width={32} height={32} className="object-contain" priority />
+          ) : (
+            <Image src="/images/oskar/logo-oskar.png" alt="OsKaR" width={150} height={30} className="object-contain h-[30px] w-auto" priority />
+          )}
+        </Link>
       </div>
       <button
         type="button"
@@ -153,7 +160,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         ))}
       </nav>
-      <div className="py-3 border-t border-white/10">{renderItem(footerItem)}</div>
+      {footerItem && <div className="py-3 border-t border-white/10">{renderItem(footerItem)}</div>}
     </aside>
   );
 };

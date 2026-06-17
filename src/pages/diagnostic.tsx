@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import { AlertCircle, AlertTriangle, Check } from 'lucide-react';
 import { AppShell } from '@/components/layout/AppShell';
 import { AuthModal, type AuthModalTab } from '@/components/layout/AuthModal';
+import { UserMenu } from '@/components/layout/UserMenu';
 import { PillarCard } from '@/components/diagnostic/PillarCard';
 import { SynthesisPanel } from '@/components/diagnostic/SynthesisPanel';
 import { AnalysisModal } from '@/components/diagnostic/AnalysisModal';
@@ -27,6 +28,7 @@ const DiagnosticPage: React.FC = () => {
 
   const user = useAppStore((s) => s.user);
   const isAuthenticated = useAppStore((s) => s.isAuthenticated);
+  const authReady = useAppStore((s) => s.authReady);
   const toast = useToast();
   const createDiagnostic = useCreateDiagnostic();
 
@@ -206,14 +208,18 @@ const DiagnosticPage: React.FC = () => {
       topbarTitle="Bienvenue sur OSKAR"
       topbarSubtitle="Plateforme de productivité"
       topbarActions={
-        <>
-          <button onClick={() => openAuth('login')} className="px-4 py-2 text-sm font-semibold text-navy hover:text-navy-light transition-colors">
-            Connexion
-          </button>
-          <button onClick={() => openAuth('register')} className="px-5 py-2.5 bg-teal text-navy-dark text-sm font-bold rounded-lg shadow-sm hover:bg-teal-dark hover:-translate-y-0.5 transition-all">
-            Commencer gratuitement →
-          </button>
-        </>
+        !authReady ? null : isAuthenticated ? (
+          <UserMenu />
+        ) : (
+          <>
+            <button onClick={() => openAuth('login')} className="px-4 py-2 text-sm font-semibold text-navy hover:text-navy-light transition-colors">
+              Connexion
+            </button>
+            <button onClick={() => openAuth('register')} className="px-5 py-2.5 bg-teal text-navy-dark text-sm font-bold rounded-lg shadow-sm hover:bg-teal-dark hover:-translate-y-0.5 transition-all">
+              Commencer gratuitement →
+            </button>
+          </>
+        )
       }
     >
       {/* En-tête */}
