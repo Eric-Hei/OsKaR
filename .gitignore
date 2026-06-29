@@ -161,3 +161,4 @@ config.local.json
 # Temporary folders
 tmp/
 temp/
+docs/GUIDE_MIGRATION_OUTIL.md

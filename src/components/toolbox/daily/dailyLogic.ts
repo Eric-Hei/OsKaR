@@ -26,6 +26,15 @@ export const DAILY_DURATIONS = [
   { value: 300, label: '5 min' },
 ];
 
+/** Messages taquins affichés quand on dépasse le double du temps imparti (rotation par tour). */
+export const OVERTIME_TAUNTS: { emoji: string; text: string }[] = [
+  { emoji: '🐢', text: 'On a tout notre temps, hein ?' },
+  { emoji: '🍿', text: 'On sort le pop-corn ?' },
+  { emoji: '⌛', text: 'Le sablier a rendu l\'âme…' },
+  { emoji: '📖', text: 'C\'est devenu un roman ?' },
+  { emoji: '☕', text: 'Le café a eu le temps de refroidir.' },
+];
+
 export const INITIAL_DAILY_STATE: DailyState = {
   phase: 'idle',
   order: [],

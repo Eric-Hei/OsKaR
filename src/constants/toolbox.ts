@@ -1,7 +1,7 @@
 import type { LucideIcon } from 'lucide-react';
 import {
   Layers, Star, Sunrise, Smile, Lightbulb, StickyNote,
-  Scale, PartyPopper, Radar, Sailboat,
+  Scale, PartyPopper, Radar, Sailboat, RefreshCw,
 } from 'lucide-react';
 
 /**
@@ -51,6 +51,7 @@ export type ToolType =
   | 'disons-nous'
   | 'en-mode-recre'
   | 'competences'
+  | 'retrospective'
   | 'speedboat';
 
 export interface ToolDefinition {
@@ -172,6 +173,17 @@ export const TOOLS: ToolDefinition[] = [
     participants: '3 – 20 participants',
     gradient: 'linear-gradient(135deg, #0369a1, #7dd3fc)',
     icon: Radar,
+  },
+  {
+    type: 'retrospective',
+    status: 'soon',
+    title: "Rétrospective d'équipe",
+    description:
+      "Un tableau à quatre quadrants — ce qui a bien marché, ce qui a moins bien marché, les questions ouvertes et ce qu'on démarre. Chacun prépare ses notes, on révèle, puis on transforme les pistes en actions à suivre.",
+    duration: '45 – 60 min',
+    participants: '3 – 12 participants',
+    gradient: 'linear-gradient(135deg, #047857, #34d399)',
+    icon: RefreshCw,
   },
   {
     type: 'speedboat',

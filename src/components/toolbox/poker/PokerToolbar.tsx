@@ -14,11 +14,27 @@ interface PokerToolbarProps {
   suiteKey: SuiteKey;
   onToggleChrono: () => void;
   onResetChrono: () => void;
-  onDurationChange: (minutes: number) => void;
+  onDurationChange: (seconds: number) => void;
   onSuiteChange: (key: SuiteKey) => void;
   onApplyCustom: (raw: string) => void;
   onReveal: () => void;
   onReset: () => void;
+}
+
+/** Parse une saisie de durée (« mm:ss », « m:ss » ou un entier = minutes) en secondes, ou null si invalide. */
+function parseDurationInput(raw: string): number | null {
+  const t = raw.trim();
+  if (!t) return null;
+  if (t.includes(':')) {
+    const [mStr, sStr = '0'] = t.split(':');
+    const m = parseInt(mStr, 10);
+    const s = parseInt(sStr, 10);
+    if (Number.isNaN(m) || Number.isNaN(s)) return null;
+    return m * 60 + s;
+  }
+  const n = parseInt(t, 10);
+  if (Number.isNaN(n)) return null;
+  return n * 60;
 }
 
 /** Barre de contrôle (chrono synchronisé + actions animateur). */
@@ -30,6 +46,16 @@ export const PokerToolbar: React.FC<PokerToolbarProps> = (props) => {
   } = props;
 
   const [customRaw, setCustomRaw] = useState('');
+  // Champ chrono unique : éditable à l'arrêt (saisie mm:ss), lecture seule pendant le décompte.
+  const [chronoEditing, setChronoEditing] = useState(false);
+  const [chronoDraft, setChronoDraft] = useState('');
+
+  const commitChrono = () => {
+    setChronoEditing(false);
+    const sec = parseDurationInput(chronoDraft);
+    if (sec != null) onDurationChange(sec);
+  };
+
   const ratio = durationSec > 0 ? remainingSec / durationSec : 1;
   const dispClass =
     ratio <= 0.1 ? 'text-danger-600 border-danger-300 bg-danger-50 animate-pulse'
@@ -100,27 +126,31 @@ export const PokerToolbar: React.FC<PokerToolbarProps> = (props) => {
 
       {/* Chrono */}
       <div className="ml-auto flex items-center gap-2.5">
-        {isFacilitator && (
+        {isFacilitator && !running ? (
           <>
-            <label htmlFor="chrono-min" className="sr-only">Durée du chrono en minutes</label>
+            <label htmlFor="chrono-time" className="sr-only">
+              Durée du compte à rebours (minutes:secondes)
+            </label>
             <input
-              id="chrono-min"
-              type="number"
-              min={1}
-              max={60}
-              defaultValue={Math.round(durationSec / 60)}
-              onChange={(e) => onDurationChange(parseInt(e.target.value, 10) || 1)}
-              className="w-16 rounded-lg border border-line bg-surface px-2 py-1.5 text-center text-sm font-semibold text-navy outline-none focus:border-teal"
+              id="chrono-time"
+              type="text"
+              inputMode="numeric"
+              value={chronoEditing ? chronoDraft : formatTime(remainingSec)}
+              onFocus={() => { setChronoDraft(formatTime(remainingSec)); setChronoEditing(true); }}
+              onChange={(e) => setChronoDraft(e.target.value)}
+              onBlur={commitChrono}
+              onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); }}
+              className={`w-[88px] rounded-lg border px-3 py-1.5 text-center font-mono text-lg font-bold tracking-widest outline-none focus:border-teal ${dispClass}`}
             />
-            <span className="text-sm text-white/55">min</span>
           </>
+        ) : (
+          <output
+            className={`min-w-[88px] rounded-lg border px-3 py-1.5 text-center font-mono text-lg font-bold tracking-widest ${dispClass}`}
+            aria-label="Temps restant"
+          >
+            {formatTime(remainingSec)}
+          </output>
         )}
-        <output
-          className={`min-w-[68px] rounded-lg border px-3 py-1.5 text-center font-mono text-lg font-bold tracking-widest ${dispClass}`}
-          aria-label="Temps restant"
-        >
-          {formatTime(remainingSec)}
-        </output>
         {isFacilitator && (
           <div className="flex items-center gap-1.5">
             <button

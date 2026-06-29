@@ -127,8 +127,8 @@ export function usePokerSession(code: string | null, identity: ToolIdentity | nu
     setState((p) => ({ ...p, chrono: { ...p.chrono, running: false, endsAt: null, remainingSec: p.chrono.durationSec } }));
   }, [setState]);
 
-  const setDuration = useCallback((minutes: number) => {
-    const sec = Math.max(60, Math.min(60 * 60, minutes * 60));
+  const setDuration = useCallback((seconds: number) => {
+    const sec = Math.max(60, Math.min(60 * 60, Math.round(seconds)));
     setState((p) => ({ ...p, chrono: { running: false, endsAt: null, remainingSec: sec, durationSec: sec } }));
   }, [setState]);
 

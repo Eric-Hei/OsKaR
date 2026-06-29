@@ -12,6 +12,7 @@ const CODE_PREFIX: Record<ToolType, string> = {
   'disons-nous': 'DISONS',
   'en-mode-recre': 'RECRE',
   'competences': 'SKILLS',
+  'retrospective': 'RETRO',
   'speedboat': 'BOAT',
 };
 
