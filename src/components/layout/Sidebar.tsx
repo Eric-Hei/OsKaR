@@ -11,6 +11,7 @@ import {
   CheckSquare,
   Users,
   Info,
+  Wrench,
   LogIn,
   ChevronLeft,
 } from 'lucide-react';
@@ -54,6 +55,10 @@ const DEFAULT_SECTIONS: SidebarSection[] = [
       { href: '/app/okr', label: 'OsKaR OKR', icon: CheckSquare },
       { href: '/team', label: 'OsKaR Team', icon: Users },
     ],
+  },
+  {
+    label: 'Collaboration',
+    items: [{ href: '/app/outils', label: 'Boîte à outils', icon: Wrench }],
   },
   {
     label: 'Ressources',

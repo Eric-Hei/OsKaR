@@ -1,13 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { Sidebar, type SidebarSection, type SidebarNavItem } from './Sidebar';
 import { Topbar } from './Topbar';
 import { openCookieSettings } from '@/components/ui/CookieBanner';
 import { useAppStore } from '@/store/useAppStore';
+import { useSidebarCollapsed } from '@/hooks/useSidebarCollapsed';
 import { APP_CONFIG } from '@/constants';
-
-const STORAGE_KEY = 'oskar.sidebar.collapsed';
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -40,9 +39,8 @@ export const AppShell: React.FC<AppShellProps> = ({
   contentMaxWidth = 'max-w-content',
   contentPadding = 'p-8',
 }) => {
-  const [collapsed, setCollapsed] = useState<boolean>(true);
-  const [mounted, setMounted] = useState(false);
   const { authReady, isAuthenticated } = useAppStore();
+  const { collapsed: sidebarCollapsed, toggle: handleToggle } = useSidebarCollapsed();
 
   // Pied de sidebar : si non fourni par l'appelant, on déduit de l'auth.
   // - utilisateur connecté (ou état en cours de résolution) : masqué (null)
@@ -50,37 +48,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   const resolvedFooterItem =
     footerItem !== undefined ? footerItem : !authReady || isAuthenticated ? null : undefined;
 
-  useEffect(() => {
-    setMounted(true);
-    try {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
-      if (stored !== null) {
-        setCollapsed(stored === '1');
-      } else if (window.matchMedia('(max-width: 900px)').matches) {
-        setCollapsed(true);
-      } else {
-        setCollapsed(false);
-      }
-    } catch {
-      /* localStorage indisponible : on garde la valeur par défaut */
-    }
-  }, []);
-
-  const handleToggle = useCallback(() => {
-    setCollapsed((prev) => {
-      const next = !prev;
-      try {
-        window.localStorage.setItem(STORAGE_KEY, next ? '1' : '0');
-      } catch {
-        /* silent */
-      }
-      return next;
-    });
-  }, []);
-
   const pageTitle = title ? `${title} — ${APP_CONFIG.name}` : APP_CONFIG.name;
-  // Pendant le SSR/avant montage on rend la sidebar pliée (cohérent avec valeur initiale)
-  const sidebarCollapsed = mounted ? collapsed : true;
   const mainOffset = sidebarCollapsed ? 'ml-16' : 'ml-60';
 
   return (

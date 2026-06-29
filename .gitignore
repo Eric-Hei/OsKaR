@@ -28,6 +28,7 @@
 *.swp
 *.swo
 *~
+/docs/inspiration
 
 # debug
 npm-debug.log*
