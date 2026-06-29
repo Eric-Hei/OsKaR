@@ -10,11 +10,11 @@ export interface MoodDimension {
 }
 
 export const MOOD_DIMS: MoodDimension[] = [
-  { key: 'energie', label: 'Énergie', sub: 'Est-ce que je me sens en forme ?', color: '#f59e0b' },
-  { key: 'charge', label: 'Charge', sub: 'Ma charge est-elle soutenable ?', color: '#6366f1' },
-  { key: 'sens', label: 'Sens', sub: 'Ce que je fais a du sens pour moi', color: '#0ea5e9' },
-  { key: 'liens', label: 'Liens', sub: 'Je me sens bien dans l\'équipe', color: '#ec4899' },
   { key: 'epanouissement', label: 'Épanouissement', sub: 'Je progresse et j\'apprends', color: '#22c55e' },
+  { key: 'sens', label: 'Sens', sub: 'Ce que je fais a du sens pour moi', color: '#0ea5e9' },
+  { key: 'charge', label: 'Charge', sub: 'Ma charge est-elle soutenable ?', color: '#6366f1' },
+  { key: 'energie', label: 'Énergie', sub: 'Est-ce que je me sens en forme ?', color: '#f59e0b' },
+  { key: 'liens', label: 'Liens', sub: 'Je me sens bien dans l\'équipe', color: '#ec4899' },
 ];
 
 export type MoodScores = Record<MoodDimKey, number>;

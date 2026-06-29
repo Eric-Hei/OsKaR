@@ -64,7 +64,7 @@ export const ToolPageShell: React.FC<ToolPageShellProps> = ({
   return (
     <>
       <Head>
-        <title>{title} — OsKaR</title>
+        <title>{`${title} — OsKaR`}</title>
         <meta name="robots" content="noindex" />
       </Head>
 
