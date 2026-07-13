@@ -75,3 +75,19 @@ export async function uploadRecrePhoto(code: string, photoId: string, file: File
   const { data } = supabase.storage.from(RECRE_BUCKET).getPublicUrl(path);
   return data.publicUrl;
 }
+
+/**
+ * Supprime une photo précédemment téléversée du bucket Storage. En mode
+ * dégradé (repli base64, pas de Supabase configuré), il n'existe aucun
+ * fichier distant à nettoyer : l'appel est un no-op.
+ */
+export async function deleteRecrePhoto(code: string, photoId: string): Promise<void> {
+  if (!isSupabaseConfigured()) return;
+
+  const path = `${code.trim().toUpperCase()}/${photoId}.jpg`;
+  const { error } = await supabase.storage.from(RECRE_BUCKET).remove([path]);
+
+  if (error) {
+    console.error('❌ Suppression photo « récré » échouée :', error.message);
+  }
+}

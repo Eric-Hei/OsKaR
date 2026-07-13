@@ -1,23 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { Heart, ImageIcon, X } from 'lucide-react';
+import { Heart, ImageIcon, Trash2, X } from 'lucide-react';
 import { tiltFor, type RecreState } from './recreLogic';
 
 interface RecreBoardProps {
   state: RecreState;
   myId: string;
   onToggleLike: (photoId: string) => void;
+  onDeletePhoto: (photoId: string) => void;
 }
 
-/** Galerie « polaroid » des photos déposées, avec compteur de « j'aime ». */
-export const RecreBoard: React.FC<RecreBoardProps> = ({ state, myId, onToggleLike }) => {
+/** Galerie « polaroid » des photos déposées, avec compteur de « j'aime ». Les
+ * photos restent anonymes sur le board (pas de nom affiché). */
+export const RecreBoard: React.FC<RecreBoardProps> = ({ state, myId, onToggleLike, onDeletePhoto }) => {
   const [zoom, setZoom] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!zoom) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setZoom(null); };
+    if (!zoom && !confirmDeleteId) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      setZoom(null);
+      setConfirmDeleteId(null);
+    };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [zoom]);
+  }, [zoom, confirmDeleteId]);
 
   if (state.photos.length === 0) {
     return (
@@ -44,14 +51,12 @@ export const RecreBoard: React.FC<RecreBoardProps> = ({ state, myId, onToggleLik
                 type="button"
                 onClick={() => setZoom(photo.url)}
                 className="block w-full overflow-hidden rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ec4899]"
-                aria-label={`Agrandir la photo de ${photo.authorName}`}
+                aria-label="Agrandir la photo"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={photo.url} alt={`Photo partagée par ${photo.authorName}`} className="aspect-square w-full object-cover" />
+                <img src={photo.url} alt="Photo partagée sur le board" className="aspect-square w-full object-cover" />
               </button>
               <div className="mt-2 flex items-center gap-2">
-                <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: photo.authorColor }} aria-hidden />
-                <span className="min-w-0 flex-1 truncate text-xs font-semibold text-navy">{photo.authorName}</span>
                 <button
                   type="button"
                   onClick={() => onToggleLike(photo.id)}
@@ -63,11 +68,55 @@ export const RecreBoard: React.FC<RecreBoardProps> = ({ state, myId, onToggleLik
                   <Heart className="h-3.5 w-3.5" style={{ fill: liked ? '#ec4899' : 'none' }} aria-hidden />
                   {count > 0 && count}
                 </button>
+                {photo.authorId === myId && (
+                  <button
+                    type="button"
+                    onClick={() => setConfirmDeleteId(photo.id)}
+                    aria-label="Supprimer ma photo"
+                    className="ml-auto rounded-full p-1 text-muted transition-colors hover:bg-danger-50 hover:text-danger-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ec4899]"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" aria-hidden />
+                  </button>
+                )}
               </div>
             </li>
           );
         })}
       </ul>
+
+      {confirmDeleteId && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="recre-confirm-delete-title"
+          className="fixed inset-0 z-[210] flex items-center justify-center bg-navy/60 p-6"
+        >
+          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-card-hover">
+            <h2 id="recre-confirm-delete-title" className="text-base font-bold text-navy">
+              Supprimer votre photo ?
+            </h2>
+            <p className="mt-2 text-sm text-muted">
+              Cette action est définitive : la photo sera retirée du board pour tout le monde.
+            </p>
+            <div className="mt-5 flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setConfirmDeleteId(null)}
+                className="rounded-lg border border-line px-3 py-1.5 text-sm font-semibold text-navy transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal"
+              >
+                Annuler
+              </button>
+              <button
+                type="button"
+                onClick={() => { onDeletePhoto(confirmDeleteId); setConfirmDeleteId(null); }}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-danger-600 px-3 py-1.5 text-sm font-bold text-white transition-colors hover:bg-danger-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger-600"
+              >
+                <Trash2 className="h-4 w-4" aria-hidden /> Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {zoom && (
         <div

@@ -1,9 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { ImagePlus, Loader2, Send, X } from 'lucide-react';
-import type { RecreState } from './recreLogic';
 
 interface RecreUploaderProps {
-  state: RecreState;
   myName: string;
   myColor: string;
   onAddPhotos: (files: File[]) => Promise<void>;
@@ -15,11 +13,10 @@ interface Pending {
 }
 
 /** Panneau latéral : ajout (et prévisualisation) de ses photos avant envoi. */
-export const RecreUploader: React.FC<RecreUploaderProps> = ({ state, myName, myColor, onAddPhotos }) => {
+export const RecreUploader: React.FC<RecreUploaderProps> = ({ myName, myColor, onAddPhotos }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [pending, setPending] = useState<Pending[]>([]);
   const [sending, setSending] = useState(false);
-  const disabled = state.phase === 'reveal';
 
   const handleFiles = (files: FileList | null) => {
     if (!files) return;
@@ -59,7 +56,6 @@ export const RecreUploader: React.FC<RecreUploaderProps> = ({ state, myName, myC
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          disabled={disabled}
           className="flex flex-col items-center gap-2 rounded-xl border-2 border-dashed border-line bg-surface px-4 py-6 text-center transition-colors hover:border-[#ec4899] hover:bg-[#fdf2f8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ec4899] disabled:cursor-not-allowed disabled:opacity-50"
         >
           <ImagePlus className="h-7 w-7 text-muted" aria-hidden />
@@ -103,7 +99,7 @@ export const RecreUploader: React.FC<RecreUploaderProps> = ({ state, myName, myC
         <button
           type="button"
           onClick={handleSend}
-          disabled={disabled || sending || pending.length === 0}
+          disabled={sending || pending.length === 0}
           className="mt-auto inline-flex items-center justify-center gap-2 rounded-xl bg-navy px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-navy-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal disabled:cursor-not-allowed disabled:opacity-40"
         >
           {sending ? (

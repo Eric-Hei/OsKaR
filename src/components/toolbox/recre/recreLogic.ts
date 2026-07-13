@@ -3,7 +3,8 @@
 /** Accent rose de l'outil (cohérent avec sa bannière et les « j'aime »). */
 export const RECRE_ACCENT = '#ec4899';
 
-export type RecrePhase = 'deposit' | 'reveal';
+/** Durée par défaut du minuteur de dépôt des photos (5 minutes). */
+export const RECRE_DEFAULT_DURATION_SEC = 5 * 60;
 
 export interface RecrePhoto {
   id: string;
@@ -16,37 +17,34 @@ export interface RecrePhoto {
   likedBy: string[];
 }
 
+/** Minuteur partagé (mêmes mécaniques que le Planning Poker). */
+export interface RecreChrono {
+  running: boolean;
+  /** Timestamp (ms) de fin quand le chrono tourne, sinon null. */
+  endsAt: number | null;
+  /** Secondes restantes quand le chrono est en pause / à l'arrêt. */
+  remainingSec: number;
+  /** Durée configurée (secondes) pour un reset. */
+  durationSec: number;
+}
+
 export interface RecreState {
-  phase: RecrePhase;
   /** Thème / consigne de la séance (saisi par l'animateur). */
   theme: string;
   photos: RecrePhoto[];
-  /** Ordre (mélangé) des photos en mode révélation. */
-  revealOrder: string[];
-  /** Index courant dans `revealOrder`. */
-  revealIdx: number;
-  /** L'auteur de la photo courante est-il dévoilé ? */
-  authorShown: boolean;
+  chrono: RecreChrono;
 }
 
 export const INITIAL_RECRE_STATE: RecreState = {
-  phase: 'deposit',
   theme: '',
   photos: [],
-  revealOrder: [],
-  revealIdx: 0,
-  authorShown: false,
+  chrono: {
+    running: false,
+    endsAt: null,
+    remainingSec: RECRE_DEFAULT_DURATION_SEC,
+    durationSec: RECRE_DEFAULT_DURATION_SEC,
+  },
 };
-
-/** Mélange (Fisher–Yates) une copie du tableau. */
-export function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
 
 /** Légère inclinaison déterministe d'une photo (effet « polaroid »). */
 export function tiltFor(index: number): number {
@@ -54,8 +52,17 @@ export function tiltFor(index: number): number {
   return tilts[index % tilts.length];
 }
 
-/** Retrouve une photo par son identifiant. */
-export function findPhoto(state: RecreState, id: string | undefined): RecrePhoto | undefined {
-  if (!id) return undefined;
-  return state.photos.find((p) => p.id === id);
+/** Secondes restantes effectives selon l'état du chrono. */
+export function chronoRemaining(chrono: RecreChrono, now: number = Date.now()): number {
+  if (chrono.running && chrono.endsAt) {
+    return Math.max(0, Math.round((chrono.endsAt - now) / 1000));
+  }
+  return chrono.remainingSec;
+}
+
+/** Format mm:ss. */
+export function formatTime(totalSec: number): string {
+  const m = Math.floor(totalSec / 60);
+  const s = totalSec % 60;
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
 }

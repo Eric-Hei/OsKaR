@@ -1,8 +1,8 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useToolSession, type ToolIdentity } from '@/hooks/useToolSession';
 import { useFacilitator } from '@/hooks/useFacilitator';
-import { uploadRecrePhoto } from '@/services/recreStorage';
-import { INITIAL_RECRE_STATE, shuffle, type RecrePhoto, type RecreState } from './recreLogic';
+import { deleteRecrePhoto, uploadRecrePhoto } from '@/services/recreStorage';
+import { chronoRemaining, INITIAL_RECRE_STATE, type RecrePhoto, type RecreState } from './recreLogic';
 
 /** Orchestration métier de « En mode récré ! » au-dessus du socle temps réel. */
 export function useRecreSession(code: string | null, identity: ToolIdentity | null) {
@@ -15,6 +15,18 @@ export function useRecreSession(code: string | null, identity: ToolIdentity | nu
   const { state, setState, isHost } = session;
   const { isFacilitator, toggleFacilitator } = useFacilitator(isHost);
   const myId = identity?.id ?? '';
+
+  const [now, setNow] = useState(() => Date.now());
+
+  // Tick d'affichage du chrono lorsqu'il tourne (cf. usePokerSession).
+  useEffect(() => {
+    if (!state.chrono.running) return;
+    setNow(Date.now());
+    const t = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, [state.chrono.running]);
+
+  const remainingSec = chronoRemaining(state.chrono, now);
 
   const setTheme = useCallback((theme: string) => {
     setState((p) => ({ ...p, theme }));
@@ -38,6 +50,16 @@ export function useRecreSession(code: string | null, identity: ToolIdentity | nu
     }
   }, [code, identity, setState]);
 
+  /** Supprime une de ses propres photos (déjà confirmé côté UI). */
+  const removePhoto = useCallback((photoId: string) => {
+    setState((p) => ({ ...p, photos: p.photos.filter((ph) => ph.id !== photoId) }));
+    if (code) {
+      deleteRecrePhoto(code, photoId).catch(() => {
+        /* best-effort : le fichier Storage sera purgé avec la session expirée */
+      });
+    }
+  }, [code, setState]);
+
   const toggleLike = useCallback((photoId: string) => {
     setState((p) => ({
       ...p,
@@ -52,34 +74,25 @@ export function useRecreSession(code: string | null, identity: ToolIdentity | nu
     }));
   }, [setState, myId]);
 
-  const startReveal = useCallback(() => {
+  const toggleChrono = useCallback(() => {
+    setNow(Date.now());
     setState((p) => {
-      if (p.photos.length === 0) return p;
-      return {
-        ...p,
-        phase: 'reveal',
-        revealOrder: shuffle(p.photos.map((x) => x.id)),
-        revealIdx: 0,
-        authorShown: false,
-      };
-    });
-  }, [setState]);
-
-  const revealAuthor = useCallback(() => {
-    setState((p) => ({ ...p, authorShown: true }));
-  }, [setState]);
-
-  const nextPhoto = useCallback(() => {
-    setState((p) => {
-      if (p.revealIdx >= p.revealOrder.length - 1) {
-        return { ...p, phase: 'deposit', authorShown: false };
+      const c = p.chrono;
+      if (c.running) {
+        return { ...p, chrono: { ...c, running: false, endsAt: null, remainingSec: chronoRemaining(c) } };
       }
-      return { ...p, revealIdx: p.revealIdx + 1, authorShown: false };
+      const rem = c.remainingSec > 0 ? c.remainingSec : c.durationSec;
+      return { ...p, chrono: { ...c, running: true, endsAt: Date.now() + rem * 1000, remainingSec: rem } };
     });
   }, [setState]);
 
-  const closeReveal = useCallback(() => {
-    setState((p) => ({ ...p, phase: 'deposit', authorShown: false }));
+  const resetChrono = useCallback(() => {
+    setState((p) => ({ ...p, chrono: { ...p.chrono, running: false, endsAt: null, remainingSec: p.chrono.durationSec } }));
+  }, [setState]);
+
+  const setDuration = useCallback((seconds: number) => {
+    const sec = Math.max(60, Math.min(60 * 60, Math.round(seconds)));
+    setState((p) => ({ ...p, chrono: { running: false, endsAt: null, remainingSec: sec, durationSec: sec } }));
   }, [setState]);
 
   const reset = useCallback(() => {
@@ -92,8 +105,9 @@ export function useRecreSession(code: string | null, identity: ToolIdentity | nu
     isFacilitator,
     toggleFacilitator,
     isLoading: session.isLoading,
+    remainingSec,
     myId,
-    actions: { setTheme, addPhotos, toggleLike, startReveal, revealAuthor, nextPhoto, closeReveal, reset },
+    actions: { setTheme, addPhotos, removePhoto, toggleLike, toggleChrono, resetChrono, setDuration, reset },
   };
 }
 
