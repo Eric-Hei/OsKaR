@@ -10,8 +10,20 @@ interface CookiePreferences {
   functional: boolean;
 }
 
-const COOKIE_CONSENT_KEY = 'okarina_cookie_consent';
-const COOKIE_PREFERENCES_KEY = 'okarina_cookie_preferences';
+export const COOKIE_CONSENT_KEY = 'oskar_cookie_consent';
+export const COOKIE_PREFERENCES_KEY = 'oskar_cookie_preferences';
+const COOKIE_CONSENT_DATE_KEY = 'oskar_consent_date';
+const OPEN_COOKIE_SETTINGS_EVENT = 'oskar:open-cookie-settings';
+
+/**
+ * Rouvre la bannière de cookies (panneau de paramètres) depuis n'importe où
+ * (ex : bouton « Paramètres des cookies » d'un pied de page).
+ */
+export const openCookieSettings = () => {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent(OPEN_COOKIE_SETTINGS_EVENT));
+  }
+};
 
 export const CookieBanner: React.FC = () => {
   const [showBanner, setShowBanner] = useState(false);
@@ -37,10 +49,24 @@ export const CookieBanner: React.FC = () => {
     }
   }, []);
 
+  // Permettre la réouverture du panneau de paramètres depuis un pied de page
+  useEffect(() => {
+    const handleOpen = () => {
+      const savedPreferences = localStorage.getItem(COOKIE_PREFERENCES_KEY);
+      if (savedPreferences) {
+        setPreferences(JSON.parse(savedPreferences));
+      }
+      setShowBanner(true);
+      setShowSettings(true);
+    };
+    window.addEventListener(OPEN_COOKIE_SETTINGS_EVENT, handleOpen);
+    return () => window.removeEventListener(OPEN_COOKIE_SETTINGS_EVENT, handleOpen);
+  }, []);
+
   const savePreferences = (prefs: CookiePreferences) => {
     localStorage.setItem(COOKIE_CONSENT_KEY, 'true');
     localStorage.setItem(COOKIE_PREFERENCES_KEY, JSON.stringify(prefs));
-    localStorage.setItem('okarina_consent_date', new Date().toISOString());
+    localStorage.setItem(COOKIE_CONSENT_DATE_KEY, new Date().toISOString());
     
     // Appliquer les préférences
     applyPreferences(prefs);
@@ -114,6 +140,8 @@ export const CookieBanner: React.FC = () => {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             className="w-full max-w-6xl mx-4 mb-4 pointer-events-auto"
+            role="region"
+            aria-label="Bandeau de consentement aux cookies"
           >
             <Card className="shadow-2xl border-2 border-primary-200">
               <CardContent className="p-6">
@@ -171,8 +199,9 @@ export const CookieBanner: React.FC = () => {
                   <button
                     onClick={() => setShowBanner(false)}
                     className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
+                    aria-label="Fermer le bandeau cookies"
                   >
-                    <X className="h-5 w-5" />
+                    <X className="h-5 w-5" aria-hidden="true" />
                   </button>
                 </div>
               </CardContent>
@@ -187,19 +216,23 @@ export const CookieBanner: React.FC = () => {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             className="w-full max-w-2xl mx-4 mb-4 pointer-events-auto"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="cookie-settings-title"
           >
             <Card className="shadow-2xl">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center">
+                  <CardTitle id="cookie-settings-title" className="flex items-center">
                     <Settings className="h-5 w-5 mr-2 text-primary-600" />
                     Paramètres des Cookies
                   </CardTitle>
                   <button
                     onClick={() => setShowSettings(false)}
                     className="text-gray-400 hover:text-gray-600 transition-colors"
+                    aria-label="Fermer les paramètres des cookies"
                   >
-                    <X className="h-5 w-5" />
+                    <X className="h-5 w-5" aria-hidden="true" />
                   </button>
                 </div>
               </CardHeader>

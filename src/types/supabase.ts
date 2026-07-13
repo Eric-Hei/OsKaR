@@ -24,6 +24,38 @@ export type SubscriptionStatus = 'active' | 'cancelled' | 'expired' | 'trialing'
 export interface Database {
   public: {
     Tables: {
+      tool_sessions: {
+        Row: {
+          id: string;
+          code: string;
+          tool_type: string;
+          host_id: string | null;
+          state: Json;
+          created_at: string;
+          updated_at: string;
+          expires_at: string;
+        };
+        Insert: {
+          id?: string;
+          code: string;
+          tool_type: string;
+          host_id?: string | null;
+          state?: Json;
+          created_at?: string;
+          updated_at?: string;
+          expires_at: string;
+        };
+        Update: {
+          id?: string;
+          code?: string;
+          tool_type?: string;
+          host_id?: string | null;
+          state?: Json;
+          created_at?: string;
+          updated_at?: string;
+          expires_at?: string;
+        };
+      };
       profiles: {
         Row: {
           id: string;

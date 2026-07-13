@@ -7,6 +7,7 @@ import { isSupabaseConfigured } from '@/lib/supabaseClient';
 import { QueryProvider } from '@/providers/QueryProvider';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { ToastContainer } from '@/components/ui/Toast';
+import { CookieBanner } from '@/components/ui/CookieBanner';
 import { useToastStore } from '@/hooks/useToast';
 import '@/styles/globals.css';
 
@@ -118,6 +119,7 @@ export default function App({ Component, pageProps }: AppProps) {
         </Head>
         <Component {...pageProps} />
         <ToastContainer toasts={toasts} onClose={removeToast} />
+        <CookieBanner />
       </QueryProvider>
     </ErrorBoundary>
   );

@@ -70,7 +70,7 @@ export const SynthesisPanel: React.FC<SynthesisPanelProps> = ({ state, onAnalyse
             <RadarChart cx="50%" cy="50%" outerRadius="78%" data={radarData}>
               <PolarGrid stroke="rgba(30,45,125,0.1)" />
               <PolarAngleAxis dataKey="subject" tick={{ fill: '#4b5494', fontSize: 12, fontWeight: 500 }} />
-              <PolarRadiusAxis domain={[0, 10]} tickCount={6} tick={{ fill: '#9098c5', fontSize: 11 }} axisLine={false} />
+              <PolarRadiusAxis angle={90} domain={[0, 10]} tickCount={6} tick={{ fill: '#9098c5', fontSize: 11 }} axisLine={false} tickFormatter={(v: number) => v === 0 ? '' : String(v)} />
               <Radar
                 name="Score"
                 dataKey="value"
