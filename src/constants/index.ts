@@ -1,9 +1,10 @@
 import { AmbitionCategory, Priority, Quarter } from '@/types';
+import packageJson from '../../package.json';
 
-// Configuration de l'application
+// Configuration de l'application (version : source unique = package.json)
 export const APP_CONFIG = {
   name: 'OsKaR',
-  version: '2.2.0',
+  version: packageJson.version,
   description: 'Outil de gestion d\'objectifs pour entrepreneurs avec IA coach',
   author: 'OsKaR Team',
   maxAmbitionsPerYear: 5,

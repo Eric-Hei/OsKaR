@@ -2,9 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Shield, FileText, Cookie, Mail, Github, Twitter, Linkedin, Settings } from 'lucide-react';
 import { openCookieSettings } from '@/components/ui/CookieBanner';
-
-// Importer la version depuis package.json
-const packageJson = require('../../../package.json');
+import { APP_CONFIG } from '@/constants';
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -161,7 +159,7 @@ export const Footer: React.FC = () => {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             {/* Copyright et version */}
             <p className="text-sm text-gray-500">
-              © {currentYear} OsKaR v{packageJson.version}. Tous droits réservés.
+              © {currentYear} OsKaR v{APP_CONFIG.version}. Tous droits réservés.
             </p>
 
             {/* Bouton paramètres cookies */}
