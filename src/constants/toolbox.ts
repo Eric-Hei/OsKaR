@@ -68,6 +68,8 @@ export interface ToolDefinition {
   /** Dégradé de la bannière (CSS background). */
   gradient: string;
   icon: LucideIcon;
+  /** Libellé du bouton d'action (défaut : « Lancer le {titre} »). */
+  cta?: string;
 }
 
 /**
@@ -121,7 +123,7 @@ export const TOOLS: ToolDefinition[] = [
   },
   {
     type: 'idea-box',
-    status: 'soon',
+    status: 'live',
     title: 'Boîte à idées',
     description:
       "Chacun soumet ses idées, les publie dans l'espace commun et l'équipe vote avec des cœurs. L'animateur retient les meilleures en réunion.",
@@ -129,10 +131,11 @@ export const TOOLS: ToolDefinition[] = [
     participants: "Toute l'équipe",
     gradient: 'linear-gradient(135deg, #b45309, #f59e0b)',
     icon: Lightbulb,
+    cta: 'Ouvrir la boîte à idées',
   },
   {
     type: 'brainstorming',
-    status: 'soon',
+    status: 'live',
     title: 'Brainstorming',
     description:
       "Un espace de post-its libres pour générer des idées ensemble. Chacun prépare ses idées en privé, puis les révèle une à une sur un canvas partagé.",
@@ -143,7 +146,7 @@ export const TOOLS: ToolDefinition[] = [
   },
   {
     type: 'disons-nous',
-    status: 'soon',
+    status: 'live',
     title: 'Disons-nous les choses',
     description:
       "Deux colonnes — Freins et Moteurs — pour nommer sans détour ce qui bloque et ce qui propulse. On vote, on priorise, on retient.",
@@ -151,6 +154,7 @@ export const TOOLS: ToolDefinition[] = [
     participants: '3 – 15 participants',
     gradient: 'linear-gradient(135deg, #be123c, #f43f5e)',
     icon: Scale,
+    cta: 'Lancer la session',
   },
   {
     type: 'en-mode-recre',
@@ -165,7 +169,7 @@ export const TOOLS: ToolDefinition[] = [
   },
   {
     type: 'competences',
-    status: 'soon',
+    status: 'live',
     title: "Compétences de l'équipe",
     description:
       "Chacun se note de 1 à 10 sur une liste de compétences configurables. Les radars individuels et le radar agrégé de l'équipe émergent en temps réel.",
@@ -173,21 +177,23 @@ export const TOOLS: ToolDefinition[] = [
     participants: '3 – 20 participants',
     gradient: 'linear-gradient(135deg, #0369a1, #7dd3fc)',
     icon: Radar,
+    cta: "Lancer l'évaluation",
   },
   {
     type: 'retrospective',
-    status: 'soon',
+    status: 'live',
     title: "Rétrospective d'équipe",
     description:
       "Un tableau à quatre quadrants — ce qui a bien marché, ce qui a moins bien marché, les questions ouvertes et ce qu'on démarre. Chacun prépare ses notes, on révèle, puis on transforme les pistes en actions à suivre.",
     duration: '45 – 60 min',
-    participants: '3 – 12 participants',
+    participants: '3 – 20 participants',
     gradient: 'linear-gradient(135deg, #047857, #34d399)',
     icon: RefreshCw,
+    cta: 'Lancer la rétro',
   },
   {
     type: 'speedboat',
-    status: 'soon',
+    status: 'live',
     title: 'Rétrospective Speedboat',
     description:
       "Un voilier qui file vers son île au trésor. Chaque participant place ses tickets sur le tableau : vent, ancres, récifs, succès.",
@@ -195,6 +201,7 @@ export const TOOLS: ToolDefinition[] = [
     participants: '3 – 15 participants',
     gradient: 'linear-gradient(135deg, #0369a1, #00d4b4)',
     icon: Sailboat,
+    cta: 'Lancer le Speedboat',
   },
 ];
 

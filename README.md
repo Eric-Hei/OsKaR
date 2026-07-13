@@ -19,10 +19,7 @@ OsKaR transforme vos ambitions en résultats concrets grâce à une approche gui
 - ✅ **Robustesse** - Timeout, retry, idempotence sur toutes les opérations
 
 ### 📚 Documentation
-- [Migration Supabase](docs/MIGRATION_SUPABASE.md) - Récapitulatif complet
-- [Prochaines étapes](docs/NEXT_STEPS_UI_MIGRATION.md) - Stratégie de migration UI
 - [Guide de test](docs/TESTING_GUIDE.md) - Comment tester l'application
-- [Résumé complet](docs/MIGRATION_COMPLETE_SUMMARY.md) - État actuel et progression
 - [Données de démo](docs/DEMO_DATA.md) - Guide des données de démo "The Office"
 - [Cheat Sheet Démo](docs/DEMO_CHEATSHEET.md) - Guide rapide pour les démos
 - [Référence Enums Supabase](docs/SUPABASE_ENUMS.md) - Liste des valeurs valides pour les enums
