@@ -24,6 +24,38 @@ export type SubscriptionStatus = 'active' | 'cancelled' | 'expired' | 'trialing'
 export interface Database {
   public: {
     Tables: {
+      tool_sessions: {
+        Row: {
+          id: string;
+          code: string;
+          tool_type: string;
+          host_id: string | null;
+          state: Json;
+          created_at: string;
+          updated_at: string;
+          expires_at: string;
+        };
+        Insert: {
+          id?: string;
+          code: string;
+          tool_type: string;
+          host_id?: string | null;
+          state?: Json;
+          created_at?: string;
+          updated_at?: string;
+          expires_at: string;
+        };
+        Update: {
+          id?: string;
+          code?: string;
+          tool_type?: string;
+          host_id?: string | null;
+          state?: Json;
+          created_at?: string;
+          updated_at?: string;
+          expires_at?: string;
+        };
+      };
       profiles: {
         Row: {
           id: string;
@@ -414,6 +446,32 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
           last_used_at?: string | null;
+        };
+      };
+      diagnostics: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          email: string | null;
+          scores: Json;
+          responses: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string | null;
+          email?: string | null;
+          scores?: Json;
+          responses?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string | null;
+          email?: string | null;
+          scores?: Json;
+          responses?: Json;
+          created_at?: string;
         };
       };
       action_assignees: {

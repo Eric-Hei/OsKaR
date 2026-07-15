@@ -1,9 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { Shield, FileText, Cookie, Mail, Github, Twitter, Linkedin, Settings } from 'lucide-react';
-
-// Importer la version depuis package.json
-const packageJson = require('../../../package.json');
+import { openCookieSettings } from '@/components/ui/CookieBanner';
+import { APP_CONFIG } from '@/constants';
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -58,22 +57,22 @@ export const Footer: React.FC = () => {
             </h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/canvas" className="text-sm text-gray-600 hover:text-primary-600 transition-colors">
+                <Link href="/app/okr/canvas" className="text-sm text-gray-600 hover:text-primary-600 transition-colors">
                   Canvas OKR
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard" className="text-sm text-gray-600 hover:text-primary-600 transition-colors">
+                <Link href="/app/okr/dashboard" className="text-sm text-gray-600 hover:text-primary-600 transition-colors">
                   Dashboard
                 </Link>
               </li>
               <li>
-                <Link href="/management" className="text-sm text-gray-600 hover:text-primary-600 transition-colors">
+                <Link href="/app/okr/management" className="text-sm text-gray-600 hover:text-primary-600 transition-colors">
                   Gestion
                 </Link>
               </li>
               <li>
-                <Link href="/reports" className="text-sm text-gray-600 hover:text-primary-600 transition-colors">
+                <Link href="/app/okr/reports" className="text-sm text-gray-600 hover:text-primary-600 transition-colors">
                   Rapports
                 </Link>
               </li>
@@ -160,19 +159,15 @@ export const Footer: React.FC = () => {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             {/* Copyright et version */}
             <p className="text-sm text-gray-500">
-              © {currentYear} OsKaR v{packageJson.version}. Tous droits réservés.
+              © {currentYear} OsKaR v{APP_CONFIG.version}. Tous droits réservés.
             </p>
 
             {/* Bouton paramètres cookies */}
             <button
-              onClick={() => {
-                // Supprimer le consentement pour réafficher la bannière
-                localStorage.removeItem('oskar_cookie_consent');
-                window.location.reload();
-              }}
+              onClick={openCookieSettings}
               className="text-sm text-gray-600 hover:text-primary-600 transition-colors flex items-center"
             >
-              <Settings className="h-4 w-4 mr-2" />
+              <Settings className="h-4 w-4 mr-2" aria-hidden="true" />
               Paramètres des cookies
             </button>
 

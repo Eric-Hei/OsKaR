@@ -39,7 +39,7 @@ const AuthCallbackPage: React.FC = () => {
 
           // Rediriger vers le dashboard ou onboarding selon le profil
           if ((result.profile as any).company_profile) {
-            router.push('/dashboard');
+            router.push('/app/okr/dashboard');
           } else {
             router.push('/onboarding');
           }

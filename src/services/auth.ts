@@ -395,6 +395,7 @@ export class AuthService {
       createdAt: authUser?.created_at ? new Date(authUser.created_at) : new Date(),
       lastLoginAt: new Date(),
       companyProfile: metadata.company_profile,
+      settings: (metadata.settings as any) ?? {},
     };
   }
 
@@ -411,6 +412,7 @@ export class AuthService {
       createdAt: new Date(profile.created_at),
       lastLoginAt: new Date(),
       companyProfile: profile.company_profile,
+      settings: profile.settings ?? {},
     };
   }
 }

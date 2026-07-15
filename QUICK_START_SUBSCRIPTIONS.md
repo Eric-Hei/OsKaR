@@ -282,5 +282,5 @@ Une fois ces tests validés :
 
 **Bon test ! 🚀**
 
-Si vous rencontrez un problème, consultez `SUBSCRIPTION_IMPLEMENTATION_STATUS.md` pour plus de détails.
+Si vous rencontrez un problème, consultez `STRIPE_SETUP.md` pour plus de détails.
 

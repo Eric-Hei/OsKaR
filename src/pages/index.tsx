@@ -1,308 +1,282 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import {
-  Target,
-  Brain,
-  BarChart3,
-  Users,
-  CheckCircle,
   ArrowRight,
-  Star,
+  Eye,
+  Target as TargetIcon,
+  LineChart,
+  CheckSquare,
+  Users,
+  Clock,
+  TrendingUp,
+  PlayCircle,
+  Shield,
   Zap,
-  Shield
+  BarChart3,
+  MessageSquare,
 } from 'lucide-react';
-import { Layout } from '@/components/layout/Layout';
-import { Button } from '@/components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import {
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  ResponsiveContainer,
+} from 'recharts';
+import { AppShell } from '@/components/layout/AppShell';
+import { AuthModal } from '@/components/layout/AuthModal';
+import { UserMenu } from '@/components/layout/UserMenu';
+import { useAppStore } from '@/store/useAppStore';
+
+const RADAR_DATA = [
+  { subject: 'Vision', A: 70 },
+  { subject: 'Market Fit', A: 45 },
+  { subject: 'Business', A: 55 },
+  { subject: 'OKR', A: 38 },
+  { subject: 'Team', A: 71 },
+];
 
 const HomePage: React.FC = () => {
   const router = useRouter();
+  const { authReady, isAuthenticated } = useAppStore();
+  const [authOpen, setAuthOpen] = useState(false);
+  const [authTab, setAuthTab] = useState<'login' | 'register'>('register');
 
-  const features = [
-    {
-      icon: Target,
-      title: 'Canvas guidé',
-      description: 'Transformez vos ambitions en objectifs mesurables grâce à notre processus en 5 étapes.',
-    },
-    {
-      icon: Brain,
-      title: 'IA Coach intégrée',
-      description: 'Bénéficiez de conseils personnalisés et de validations intelligentes en temps réel.',
-    },
-    {
-      icon: BarChart3,
-      title: 'Suivi en temps réel',
-      description: 'Visualisez vos progrès avec des tableaux de bord interactifs et des métriques claires.',
-    },
-    {
-      icon: Users,
-      title: 'Collaboration',
-      description: 'Partagez vos objectifs avec votre équipe et alignez tous vos efforts.',
-    },
-  ];
+  const openAuth = (tab: 'login' | 'register' = 'register') => {
+    setAuthTab(tab);
+    setAuthOpen(true);
+  };
 
-  const benefits = [
-    'Clarté et focus sur vos priorités',
-    'Transformation des idées en actions concrètes',
-    'Accompagnement IA personnalisé',
-    'Suivi régulier et motivation continue',
-    'Rapports automatiques pour vos partenaires',
-    'Méthode éprouvée sans complexité',
-  ];
-
-  const testimonials = [
-    {
-      name: 'Marie Dubois',
-      role: 'CEO, TechStart',
-      content: 'OsKaR m\'a aidée à structurer ma vision et à la transformer en résultats concrets. En 6 mois, nous avons doublé notre chiffre d\'affaires !',
-      rating: 5,
-    },
-    {
-      name: 'Pierre Martin',
-      role: 'Fondateur, GreenTech',
-      content: 'L\'IA coach est incroyable ! Elle m\'a guidé pour reformuler mes objectifs et les rendre vraiment SMART. Je recommande vivement.',
-      rating: 5,
-    },
-    {
-      name: 'Sophie Laurent',
-      role: 'Directrice, InnoLab',
-      content: 'Enfin un outil simple et efficace ! Fini les méthodes complexes, OsKaR rend la gestion d\'objectifs accessible à tous.',
-      rating: 5,
-    },
-  ];
+  const topbarActions = !authReady ? null : isAuthenticated ? (
+    <>
+      <button
+        onClick={() => router.push('/app/okr/dashboard')}
+        className="px-5 py-2.5 bg-teal text-navy-dark text-sm font-bold rounded-lg shadow-sm hover:bg-teal-dark hover:-translate-y-0.5 transition-all"
+      >
+        Accéder à mon espace →
+      </button>
+      <UserMenu />
+    </>
+  ) : (
+    <>
+      <button onClick={() => openAuth('login')} className="px-4 py-2 text-sm font-semibold text-navy hover:text-navy-light transition-colors">
+        Connexion
+      </button>
+      <button
+        onClick={() => openAuth('register')}
+        className="px-5 py-2.5 bg-teal text-navy-dark text-sm font-bold rounded-lg shadow-sm hover:bg-teal-dark hover:-translate-y-0.5 transition-all"
+      >
+        Commencer gratuitement →
+      </button>
+    </>
+  );
 
   return (
-    <Layout
+    <AppShell
       title="Accueil"
-      description="Transformez vos ambitions en résultats avec OsKaR - L'outil de gestion d'objectifs avec IA coach intégrée"
+      topbarTitle="Bienvenue sur OSKAR"
+      topbarSubtitle="Plateforme de productivité"
+      topbarActions={topbarActions}
     >
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 text-white">
-        <div className="absolute inset-0 bg-black opacity-10"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center"
-          >
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Transformez vos{' '}
-              <span className="text-yellow-300">ambitions</span>
-              <br />
-              en résultats concrets
+      <section className="relative overflow-hidden bg-navy-dark rounded-[24px] mb-12 p-10 lg:p-16 text-white shadow-card">
+        <div className="relative z-10 max-w-2xl">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            <span className="inline-block text-[11px] font-bold tracking-[2px] uppercase text-teal mb-4">
+              La méthode des organisations performantes
+            </span>
+            <h1 className="text-4xl lg:text-5xl font-extrabold leading-[1.15] mb-6">
+              La productivité, c'est créer <span className="text-teal">plus de valeur durable.</span>
             </h1>
-            <p className="text-xl md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto">
-              L'outil de gestion d'objectifs avec IA coach intégrée,
-              spécialement conçu pour les entrepreneurs et dirigeants de PME.
+            <p className="text-lg text-white/70 leading-relaxed mb-8">
+              OSKAR est un cadre de management structuré en 5 piliers pour aligner votre vision, valider votre marché, piloter vos finances, exécuter vos objectifs et renforcer vos équipes.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
-                variant="secondary"
-                onClick={() => router.push('/auth/register')}
-                rightIcon={<ArrowRight className="h-5 w-5" />}
-                className="text-primary-700 hover:text-primary-800"
-              >
-                Commencer gratuitement
-              </Button>
-            </div>
+            <button
+              onClick={() => router.push('/diagnostic')}
+              className="px-8 py-4 bg-teal text-navy-dark font-bold rounded-xl shadow-lg hover:bg-teal-dark hover:-translate-y-1 transition-all flex items-center gap-2"
+            >
+              Démarrer le bilan gratuit <ArrowRight className="h-5 w-5" />
+            </button>
           </motion.div>
+        </div>
+        <div className="hidden lg:flex absolute right-12 bottom-12 flex-col gap-4">
+          <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-4 text-center min-w-[120px]">
+            <div className="text-3xl font-black text-teal">5</div>
+            <div className="text-[10px] uppercase tracking-wider text-white/50">Piliers intégrés</div>
+          </div>
+          <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-4 text-center min-w-[120px]">
+            <div className="text-3xl font-black text-teal">10'</div>
+            <div className="text-[10px] uppercase tracking-wider text-white/50">Pour le bilan</div>
+          </div>
+        </div>
+        <div className="absolute -right-20 -top-20 w-80 h-80 bg-teal/10 rounded-full blur-[100px]" />
+      </section>
+
+      {/* Steps Section */}
+      <section className="mb-20">
+        <h2 className="text-xl font-bold text-navy mb-10 text-center uppercase tracking-wider">Comment ça marche ?</h2>
+        <div className="grid md:grid-cols-3 gap-8 relative">
+          {[
+            { n: 1, t: 'Faites votre bilan', d: 'Répondez aux questions pour diagnostiquer vos points forts et vos zones de progression sur les 5 piliers.' },
+            { n: 2, t: 'Accédez aux modules', d: 'Suivez les parcours guidés de chaque pilier : Vision, Market Fit, Finance, OKR, Team. Rituels courts.' },
+            { n: 3, t: 'Pilotez & progressez', d: 'Mesurez vos avancées, ajustez vos priorités et transformez durablement la performance.' },
+          ].map((step, idx) => (
+            <div key={step.n} className="bg-white p-8 rounded-2xl border border-line shadow-card relative">
+              <div className="w-10 h-10 bg-navy text-white rounded-lg flex items-center justify-center font-bold mb-4">{step.n}</div>
+              <h4 className="font-bold text-navy mb-2">{step.t}</h4>
+              <p className="text-sm text-muted leading-relaxed">{step.d}</p>
+              {idx < 2 && <ArrowRight className="hidden lg:block absolute -right-6 top-1/2 -translate-y-1/2 text-teal h-6 w-6 z-10" />}
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Pourquoi choisir OsKaR ?
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Une approche simple et guidée pour transformer vos idées en objectifs mesurables,
-              avec l'accompagnement d'une IA coach personnalisée.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <motion.div
-                  key={feature.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <Card className="h-full hover:shadow-lg transition-shadow">
-                    <CardHeader className="text-center">
-                      <div className="mx-auto w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
-                        <Icon className="h-6 w-6 text-primary-600" />
-                      </div>
-                      <CardTitle className="text-lg">{feature.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-600 text-center">{feature.description}</p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              );
-            })}
+      {/* Bilan Section */}
+      <section className="mb-20">
+        <div className="flex items-baseline justify-between mb-8">
+          <h2 className="text-xl font-bold text-navy uppercase tracking-wider">Bilan & diagnostic OSKAR</h2>
+          <button onClick={() => router.push('/diagnostic')} className="text-sm font-bold text-teal-dark hover:underline">
+            Voir un exemple →
+          </button>
+        </div>
+        <div className="bg-white rounded-3xl border border-line shadow-card overflow-hidden">
+          <div className="grid lg:grid-cols-2">
+            <div className="p-8 lg:p-12 border-b lg:border-b-0 lg:border-r border-line bg-gradient-to-br from-[#f0f2ff] to-[#e8f8f5]">
+              <span className="inline-block px-3 py-1 bg-white/50 rounded-full text-[11px] font-bold text-navy-light mb-4 tracking-wide">
+                Outil gratuit · Confidentiel
+              </span>
+              <h3 className="text-2xl font-extrabold text-navy mb-4 leading-tight">
+                Mesurez l'efficacité de votre organisation sur les 5 piliers OSKAR.
+              </h3>
+              <p className="text-sm text-muted mb-8 leading-relaxed max-w-md">
+                Un diagnostic structuré pour identifier vos forces et vos zones d'amélioration — sans inscription requise.
+              </p>
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                <div className="flex items-center gap-2.5 text-navy font-semibold text-[13px]">
+                  <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-sm text-teal">
+                    <Clock className="h-4 w-4" />
+                  </div>
+                  ~10 minutes
+                </div>
+                <div className="flex items-center gap-2.5 text-navy font-semibold text-[13px]">
+                  <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-sm text-teal">
+                    <TrendingUp className="h-4 w-4" />
+                  </div>
+                  5 piliers · 15 critères
+                </div>
+              </div>
+              <button
+                onClick={() => router.push('/diagnostic')}
+                className="w-full lg:w-auto px-8 py-4 bg-teal text-navy-dark font-bold rounded-xl shadow-lg hover:bg-teal-dark hover:-translate-y-1 transition-all"
+              >
+                Démarrer le bilan gratuit →
+              </button>
+            </div>
+            <div className="p-8 lg:p-12 flex flex-col items-center justify-center min-h-[400px]">
+              <span className="text-[11px] font-bold uppercase tracking-widest text-muted mb-6">Exemple de résultats</span>
+              <div className="w-full h-64 lg:h-72">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart cx="50%" cy="50%" outerRadius="80%" data={RADAR_DATA}>
+                    <PolarGrid stroke="#e2e4f0" />
+                    <PolarAngleAxis dataKey="subject" tick={{ fill: '#1e2d7d', fontSize: 11, fontWeight: 600 }} />
+                    <Radar
+                      name="Score"
+                      dataKey="A"
+                      stroke="#1e2d7d"
+                      fill="#00d4b4"
+                      fillOpacity={0.2}
+                      dot={{ r: 4, fill: '#00d4b4', stroke: '#1e2d7d' }}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
           </div>
+        </div>
+      </section>
+
+      {/* Pillars Grid Section */}
+      <section className="mb-20">
+        <div className="flex items-baseline justify-between mb-8">
+          <h2 className="text-xl font-bold text-navy uppercase tracking-wider">Les 5 piliers OSKAR</h2>
+          <button className="text-sm font-bold text-teal-dark hover:underline">Accéder aux modules →</button>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {[
+            { id: '01', name: 'OSKAR Vision', desc: 'Clarifiez votre cap à 1 an, vos valeurs et vos objectifs.', icon: Eye, status: 'Démarrer' },
+            { id: '02', name: 'OSKAR Fit', desc: 'Validez votre adéquation produit-marché.', icon: LineChart, status: 'Bientôt' },
+            { id: '03', name: 'OSKAR Business', desc: 'Pilotez vos indicateurs financiers clés.', icon: TargetIcon, status: 'Bientôt' },
+            { id: '04', name: 'OSKAR OKR', desc: 'Alignez stratégie et exécution.', icon: CheckSquare, status: 'Bientôt' },
+            { id: '05', name: 'OSKAR Team', desc: 'Renforcez la cohésion de votre organisation.', icon: Users, status: 'Bientôt' },
+          ].map((pillar) => (
+            <div
+              key={pillar.id}
+              className="group bg-white p-6 rounded-2xl border border-line shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all text-center relative overflow-hidden"
+            >
+              <div className="absolute top-3 right-4 text-[10px] font-bold text-muted/30">{pillar.id}</div>
+              <div className="w-12 h-12 bg-surface rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <pillar.icon className="h-6 w-6 text-navy" />
+              </div>
+              <h4 className="font-bold text-navy text-[13.5px] mb-1">{pillar.name}</h4>
+              <p className="text-[11.5px] text-muted leading-relaxed mb-4">{pillar.desc}</p>
+              <span
+                className={`inline-block px-3 py-1 rounded-full text-[10px] font-bold ${pillar.status === 'Démarrer' ? 'bg-teal/10 text-teal-dark' : 'bg-surface text-muted/60'}`}
+              >
+                {pillar.status}
+              </span>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* Benefits Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <section className="mb-20">
+        <h2 className="text-xl font-bold text-navy mb-10 text-center uppercase tracking-wider">OSKAR est fait pour vous si…</h2>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+            { t: 'Vous lancez votre projet', d: 'Posez des fondations solides avant de scaler.', i: PlayCircle },
+            { t: 'Vous pilotez sans visibilité', d: 'Reprenez le contrôle avec des indicateurs actionnables.', i: BarChart3 },
+            { t: 'Votre équipe n\'est pas alignée', d: 'Créez un langage commun et des rituels partagés.', i: MessageSquare },
+            { t: 'Vos objectifs restent théoriques', d: 'Transformez vos ambitions en résultats mesurables.', i: Zap },
+            { t: 'Vous accompagnez des équipes', d: 'Coach, consultant : structurez votre démarche.', i: Users },
+            { t: 'Vous voulez aller plus vite', d: 'Des rituels courts et efficaces, pas de réunions interminables.', i: TrendingUp },
+          ].map((item, idx) => (
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
+              key={idx}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: idx * 0.05 }}
+              className="flex items-start gap-4 p-6 bg-white rounded-2xl border border-line"
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-                Les bénéfices pour votre entreprise
-              </h2>
-              <p className="text-lg text-gray-600 mb-8">
-                OsKaR vous aide à créer une culture du résultat sans complexité inutile.
-                Gagnez en clarté, en focus et en motivation grâce à notre approche guidée.
-              </p>
-              <ul className="space-y-4">
-                {benefits.map((benefit, index) => (
-                  <motion.li
-                    key={benefit}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                    className="flex items-center"
-                  >
-                    <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                    <span className="text-gray-700">{benefit}</span>
-                  </motion.li>
-                ))}
-              </ul>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="relative"
-            >
-              <div className="bg-white rounded-2xl shadow-xl p-8">
-                <div className="flex items-center mb-6">
-                  <Zap className="h-8 w-8 text-yellow-500 mr-3" />
-                  <h3 className="text-xl font-semibold">Résultats rapides</h3>
-                </div>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Clarté des objectifs</span>
-                    <span className="font-semibold text-green-600">+85%</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Motivation équipe</span>
-                    <span className="font-semibold text-green-600">+72%</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Atteinte des objectifs</span>
-                    <span className="font-semibold text-green-600">+68%</span>
-                  </div>
-                </div>
+              <div className="w-10 h-10 rounded-lg bg-teal/10 flex items-center justify-center shrink-0">
+                <item.i className="h-5 w-5 text-teal-dark" />
+              </div>
+              <div>
+                <h4 className="font-bold text-navy text-sm mb-1">{item.t}</h4>
+                <p className="text-xs text-muted leading-relaxed">{item.d}</p>
               </div>
             </motion.div>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Ce que disent nos utilisateurs
-            </h2>
-            <p className="text-xl text-gray-600">
-              Rejoignez des centaines d'entrepreneurs qui ont transformé leur approche des objectifs
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={testimonial.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <Card className="h-full">
-                  <CardContent className="p-6">
-                    <div className="flex mb-4">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
-                      ))}
-                    </div>
-                    <p className="text-gray-600 mb-6 italic">"{testimonial.content}"</p>
-                    <div>
-                      <p className="font-semibold text-gray-900">{testimonial.name}</p>
-                      <p className="text-sm text-gray-500">{testimonial.role}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
+      {/* Final CTA */}
+      <section className="bg-navy rounded-[32px] p-10 lg:p-16 text-center text-white shadow-card mb-12">
+        <Shield className="h-12 w-12 text-teal mx-auto mb-6 opacity-80" />
+        <h2 className="text-3xl font-extrabold mb-4">Prêt à transformer votre organisation ?</h2>
+        <p className="text-white/60 mb-10 max-w-xl mx-auto leading-relaxed">
+          Démarrez par le bilan gratuit — 10 minutes pour savoir où concentrer votre énergie et identifier vos priorités.
+        </p>
+        <button
+          onClick={() => router.push('/diagnostic')}
+          className="px-10 py-5 bg-teal text-navy-dark font-black rounded-xl shadow-lg hover:bg-teal-dark hover:-translate-y-1 transition-all text-sm uppercase tracking-wider"
+        >
+          Démarrer le bilan gratuit →
+        </button>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-primary-600">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <Shield className="h-16 w-16 text-white mx-auto mb-6" />
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              Prêt à transformer vos ambitions en résultats ?
-            </h2>
-            <p className="text-xl text-blue-100 mb-8">
-              Commencez dès maintenant avec notre canvas guidé et découvrez
-              la puissance de l'accompagnement IA personnalisé.
-            </p>
-            <Button
-              size="lg"
-              variant="secondary"
-              onClick={() => router.push('/auth/register')}
-              rightIcon={<ArrowRight className="h-5 w-5" />}
-              className="text-primary-700 hover:text-primary-800"
-            >
-              Démarrer mon canvas gratuitement
-            </Button>
-          </motion.div>
-        </div>
-      </section>
-    </Layout>
+      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} initialTab={authTab} />
+    </AppShell>
   );
 };
 

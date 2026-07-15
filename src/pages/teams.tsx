@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Layout } from '@/components/layout/Layout';
+import { OkrShell } from '@/components/layout/OkrShell';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { useAppStore } from '@/store/useAppStore';
@@ -175,17 +175,17 @@ export default function TeamsPage() {
 
   if (teamsLoading) {
     return (
-      <Layout title="Mon Équipe" requireAuth>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center">Chargement...</div>
+      <OkrShell title="Mon Équipe" topbarTitle="Mon Équipe" topbarSubtitle="Gérez vos équipes et collaborateurs">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center text-muted">Chargement...</div>
         </div>
-      </Layout>
+      </OkrShell>
     );
   }
 
   return (
-    <Layout title="Mon Équipe" requireAuth>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <OkrShell title="Mon Équipe" topbarTitle="Mon Équipe" topbarSubtitle="Gérez vos équipes et collaborateurs">
+      <div className="max-w-7xl mx-auto">
         {/* En-tête */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -194,12 +194,12 @@ export default function TeamsPage() {
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="bg-blue-100 rounded-lg p-3">
-                <Users className="h-6 w-6 text-blue-600" />
+              <div className="bg-teal/10 rounded-lg p-3">
+                <Users className="h-6 w-6 text-teal" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Mon Équipe</h1>
-                <p className="text-gray-600">
+                <h1 className="text-2xl font-bold text-navy">Mon Équipe</h1>
+                <p className="text-muted">
                   Gérez vos équipes et invitez des collaborateurs
                 </p>
               </div>
@@ -232,8 +232,8 @@ export default function TeamsPage() {
                         onClick={() => setSelectedTeamId(team.id)}
                         className={`w-full text-left p-3 rounded-lg border transition-colors ${
                           selectedTeamId === team.id
-                            ? 'bg-blue-50 border-blue-500'
-                            : 'bg-white border-gray-200 hover:bg-gray-50'
+                            ? 'bg-teal/10 border-teal'
+                            : 'bg-white border-line hover:bg-surface'
                         }`}
                       >
                         <div className="flex items-center justify-between">
@@ -277,15 +277,15 @@ export default function TeamsPage() {
                       <div
                         key={notif.id}
                         className={`p-3 rounded-lg border ${
-                          notif.isRead ? 'bg-white border-gray-200' : 'bg-blue-50 border-blue-200'
+                          notif.isRead ? 'bg-white border-line' : 'bg-teal/10 border-teal/40'
                         }`}
                       >
-                        <p className="text-sm font-medium text-gray-900">{notif.title}</p>
-                        <p className="text-xs text-gray-500 mt-1">{notif.message}</p>
+                        <p className="text-sm font-medium text-navy">{notif.title}</p>
+                        <p className="text-xs text-muted mt-1">{notif.message}</p>
                         {!notif.isRead && (
                           <button
                             onClick={() => markAsRead.mutate(notif.id)}
-                            className="text-xs text-blue-600 hover:text-blue-700 mt-2"
+                            className="text-xs text-teal hover:text-teal-dark mt-2"
                           >
                             Marquer comme lu
                           </button>
@@ -466,7 +466,6 @@ export default function TeamsPage() {
           </motion.div>
         </div>
       </div>
-
       {/* Modal Créer une équipe */}
       {showCreateTeamModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -485,7 +484,7 @@ export default function TeamsPage() {
                   type="text"
                   value={newTeamName}
                   onChange={(e) => setNewTeamName(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-line rounded-lg focus:ring-2 focus:ring-teal focus:border-transparent"
                   placeholder="Ex: Équipe Marketing"
                 />
               </div>
@@ -496,7 +495,7 @@ export default function TeamsPage() {
                 <textarea
                   value={newTeamDescription}
                   onChange={(e) => setNewTeamDescription(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-line rounded-lg focus:ring-2 focus:ring-teal focus:border-transparent"
                   rows={3}
                   placeholder="Décrivez votre équipe..."
                 />
@@ -543,7 +542,7 @@ export default function TeamsPage() {
                   type="email"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-line rounded-lg focus:ring-2 focus:ring-teal focus:border-transparent"
                   placeholder="membre@example.com"
                 />
               </div>
@@ -554,7 +553,7 @@ export default function TeamsPage() {
                 <select
                   value={inviteRole}
                   onChange={(e) => setInviteRole(e.target.value as TeamRole)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-line rounded-lg focus:ring-2 focus:ring-teal focus:border-transparent"
                 >
                   <option value={TeamRole.VIEWER}>Observateur (lecture seule)</option>
                   <option value={TeamRole.MEMBER}>Membre (lecture et édition)</option>
@@ -607,7 +606,7 @@ export default function TeamsPage() {
                 <select
                   value={newRole}
                   onChange={(e) => setNewRole(e.target.value as TeamRole)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-line rounded-lg focus:ring-2 focus:ring-teal focus:border-transparent"
                 >
                   <option value={TeamRole.VIEWER}>Observateur (lecture seule)</option>
                   <option value={TeamRole.MEMBER}>Membre (lecture et édition)</option>
@@ -641,7 +640,7 @@ export default function TeamsPage() {
           </motion.div>
         </div>
       )}
-    </Layout>
+    </OkrShell>
   );
 }
 

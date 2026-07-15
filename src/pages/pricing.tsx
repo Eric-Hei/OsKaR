@@ -4,15 +4,15 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import Head from 'next/head';
-import { Layout } from '@/components/layout/Layout';
+import { AppShell } from '@/components/layout/AppShell';
+import { UserMenu } from '@/components/layout/UserMenu';
 import { useAppStore } from '@/store/useAppStore';
 import { useSubscription, useSubscriptionPlans } from '@/hooks/useSubscription';
 import { PricingCard } from '@/components/pricing/PricingCard';
 
 export default function PricingPage() {
   const router = useRouter();
-  const { user } = useAppStore();
+  const { user, isAuthenticated, authReady } = useAppStore();
   const { data: subscription, isLoading: subscriptionLoading } = useSubscription(user?.id);
   const { data: plans, isLoading: plansLoading } = useSubscriptionPlans();
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
@@ -53,20 +53,22 @@ export default function PricingPage() {
   const publicPlans = plans?.filter(p => p.planType !== 'unlimited') || [];
 
   return (
-    <Layout>
-      <Head>
-        <title>Tarifs - OsKaR</title>
-        <meta name="description" content="Choisissez le plan OsKaR qui correspond à vos besoins" />
-      </Head>
-
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
+    <AppShell
+      title="Tarifs"
+      description="Choisissez le plan OsKaR qui correspond à vos besoins"
+      topbarTitle="Tarifs"
+      topbarSubtitle="Choisissez le plan adapté à votre croissance"
+      topbarActions={authReady && isAuthenticated ? <UserMenu /> : null}
+      contentMaxWidth="max-w-7xl"
+    >
+      <div>
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold text-navy mb-4">
               Choisissez votre plan
             </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-muted max-w-2xl mx-auto">
               Commencez gratuitement et évoluez au rythme de votre croissance
             </p>
           </div>
@@ -74,7 +76,7 @@ export default function PricingPage() {
           {/* Loading state */}
           {isLoading && (
             <div className="flex justify-center items-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal"></div>
             </div>
           )}
 
@@ -97,10 +99,10 @@ export default function PricingPage() {
           {/* No plans found */}
           {!isLoading && publicPlans.length === 0 && (
             <div className="text-center py-20">
-              <p className="text-gray-600 text-lg">
+              <p className="text-muted text-lg">
                 Aucun plan disponible pour le moment.
               </p>
-              <p className="text-gray-500 text-sm mt-2">
+              <p className="text-muted text-sm mt-2">
                 Veuillez réessayer plus tard ou contacter le support.
               </p>
             </div>
@@ -108,7 +110,7 @@ export default function PricingPage() {
 
           {/* FAQ Section */}
           <div className="max-w-3xl mx-auto mt-20">
-            <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
+            <h2 className="text-3xl font-bold text-navy text-center mb-12">
               Questions fréquentes
             </h2>
             
@@ -141,7 +143,7 @@ export default function PricingPage() {
           </div>
 
           {/* CTA Section */}
-          <div className="mt-20 text-center bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-12 text-white">
+          <div className="mt-20 text-center bg-navy-dark rounded-2xl p-12 text-white">
             <h2 className="text-3xl font-bold mb-4">
               Prêt à transformer vos ambitions en réalité ?
             </h2>
@@ -149,8 +151,8 @@ export default function PricingPage() {
               Rejoignez des centaines d'entrepreneurs qui utilisent OsKaR pour atteindre leurs objectifs
             </p>
             <button
-              onClick={() => router.push(user ? '/dashboard' : '/auth/signup')}
-              className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors duration-200 shadow-lg"
+              onClick={() => router.push(user ? '/app/okr/dashboard' : '/auth/signup')}
+              className="bg-teal text-navy-dark px-8 py-4 rounded-lg font-bold text-lg hover:bg-teal-dark transition-colors duration-200 shadow-lg"
             >
               {user ? 'Accéder au tableau de bord' : 'Commencer gratuitement'}
             </button>
@@ -161,7 +163,7 @@ export default function PricingPage() {
             <div className="mt-12 text-center">
               <button
                 onClick={() => router.back()}
-                className="text-gray-600 hover:text-gray-900 font-medium"
+                className="text-muted hover:text-navy font-medium"
               >
                 ← Retour
               </button>
@@ -169,7 +171,7 @@ export default function PricingPage() {
           )}
         </div>
       </div>
-    </Layout>
+    </AppShell>
   );
 }
 
@@ -183,14 +185,14 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="border border-gray-200 rounded-lg overflow-hidden bg-white">
+    <div className="border border-line rounded-lg overflow-hidden bg-white">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
+        className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-surface transition-colors duration-200"
       >
-        <span className="font-semibold text-gray-900">{question}</span>
+        <span className="font-semibold text-navy">{question}</span>
         <svg
-          className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
+          className={`w-5 h-5 text-muted transition-transform duration-200 ${
             isOpen ? 'transform rotate-180' : ''
           }`}
           fill="none"
@@ -201,8 +203,8 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
         </svg>
       </button>
       {isOpen && (
-        <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-          <p className="text-gray-700">{answer}</p>
+        <div className="px-6 py-4 bg-surface border-t border-line">
+          <p className="text-ink">{answer}</p>
         </div>
       )}
     </div>

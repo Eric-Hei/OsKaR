@@ -46,7 +46,7 @@ const UpdatePasswordPage: React.FC = () => {
 
       // Rediriger vers le dashboard après 2 secondes
       setTimeout(() => {
-        router.push('/dashboard');
+        router.push('/app/okr/dashboard');
       }, 2000);
     } catch (err: any) {
       console.error('Erreur de mise à jour:', err);

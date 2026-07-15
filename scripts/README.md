@@ -132,7 +132,6 @@ SUPABASE_SERVICE_ROLE_KEY=votre_service_role_key  # Pour les scripts
 - [Guide des données de démo](../docs/DEMO_DATA.md)
 - [Guide de test](../docs/TESTING_GUIDE.md)
 - [Configuration Gemini](../GEMINI_API_SETUP.md)
-- [Migration Supabase](../docs/MIGRATION_SUPABASE.md)
 
 ---
 

@@ -13,11 +13,19 @@ export default function Document() {
         <meta name="apple-mobile-web-app-title" content="OsKaR" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="theme-color" content="#6366f1" />
+        <meta name="theme-color" content="#1e2d7d" />
+
+        {/* Police Outfit (design system OsKaR) */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet"
+        />
 
         {/* Favicons */}
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
+        <link rel="icon" type="image/png" href="/images/oskar/logo-oskar2.png" />
+        <link rel="apple-touch-icon" href="/images/oskar/logo-oskar2.png" />
 
         {/* PWA Manifest */}
         <link rel="manifest" href="/manifest.json" />

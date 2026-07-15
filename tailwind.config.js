@@ -8,6 +8,21 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // Palette OsKaR (hasenso.fr/oskar)
+        navy: {
+          DEFAULT: '#1e2d7d',
+          dark: '#151f5e',
+          light: '#2a3d99',
+        },
+        teal: {
+          DEFAULT: '#00d4b4',
+          dark: '#00b89c',
+          light: '#e0faf6',
+        },
+        ink: '#1a1a2e',
+        muted: '#6b7280',
+        surface: '#f5f6fa',
+        line: '#e2e4f0',
         primary: {
           50: '#f0f9ff',
           100: '#e0f2fe',
@@ -58,12 +73,25 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Outfit', 'Inter', 'system-ui', 'sans-serif'],
+        outfit: ['Outfit', 'system-ui', 'sans-serif'],
+      },
+      borderRadius: {
+        card: '12px',
+      },
+      boxShadow: {
+        card: '0 2px 16px rgba(30,45,125,0.08)',
+        'card-hover': '0 8px 32px rgba(30,45,125,0.14)',
+        'auth-modal': '0 24px 80px rgba(15,20,60,0.25)',
+      },
+      maxWidth: {
+        content: '1200px',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.3s ease-out',
         'bounce-gentle': 'bounceGentle 2s infinite',
+        wobble: 'wobble 0.7s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
@@ -77,6 +105,11 @@ module.exports = {
         bounceGentle: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-5px)' },
+        },
+        wobble: {
+          '0%, 100%': { transform: 'rotate(0deg)' },
+          '25%': { transform: 'rotate(-3deg)' },
+          '75%': { transform: 'rotate(3deg)' },
         },
       },
     },

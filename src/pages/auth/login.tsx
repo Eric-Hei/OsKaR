@@ -44,7 +44,7 @@ const LoginPage: React.FC = () => {
   // Si la session est déjà rétablie, rediriger sans attendre le chargement complet du profil
   useEffect(() => {
     if (authReady && isAuthenticated) {
-      router.push('/dashboard');
+      router.push('/app/okr/dashboard');
     }
   }, [authReady, isAuthenticated, router]);
 

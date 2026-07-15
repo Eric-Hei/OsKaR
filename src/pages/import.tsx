@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Layout } from '@/components/layout/Layout';
+import { OkrShell } from '@/components/layout/OkrShell';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -70,11 +70,11 @@ Lancer nouveau produit,Développer une nouvelle gamme,product,critical,2025,Fina
   }, [mapping]);
 
   return (
-    <Layout>
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <OkrShell title="Import" topbarTitle="Import CSV / Google Sheets" topbarSubtitle="Importez vos données en masse">
+      <div className="max-w-5xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Import CSV / Google Sheets</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold text-navy">Import CSV / Google Sheets</h1>
+          <p className="text-muted mt-2">
             Importez vos ambitions, objectifs, KR et actions depuis un fichier CSV
           </p>
         </div>
@@ -84,11 +84,11 @@ Lancer nouveau produit,Développer une nouvelle gamme,product,critical,2025,Fina
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-                  <FileSpreadsheet className="h-5 w-5 text-primary-600" />
+                <h3 className="font-semibold text-navy flex items-center gap-2">
+                  <FileSpreadsheet className="h-5 w-5 text-teal" />
                   Modèle CSV
                 </h3>
-                <p className="text-sm text-gray-600 mt-1">
+                <p className="text-sm text-muted mt-1">
                   Téléchargez un modèle pré-rempli pour voir le format attendu
                 </p>
               </div>
@@ -103,11 +103,11 @@ Lancer nouveau produit,Développer une nouvelle gamme,product,critical,2025,Fina
         {/* File upload */}
         <Card className="mb-6">
           <CardContent className="p-6">
-            <h3 className="font-semibold text-gray-900 mb-4">1. Sélectionner un fichier CSV</h3>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-              <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="font-semibold text-navy mb-4">1. Sélectionner un fichier CSV</h3>
+            <div className="border-2 border-dashed border-line rounded-lg p-8 text-center">
+              <Upload className="h-12 w-12 text-muted mx-auto mb-4" />
               <label className="cursor-pointer">
-                <span className="text-primary-600 hover:text-primary-700 font-medium">
+                <span className="text-teal hover:text-teal-dark font-medium">
                   Cliquez pour sélectionner un fichier
                 </span>
                 <input
@@ -118,7 +118,7 @@ Lancer nouveau produit,Développer une nouvelle gamme,product,critical,2025,Fina
                 />
               </label>
               {file && (
-                <div className="mt-4 text-sm text-gray-600">
+                <div className="mt-4 text-sm text-muted">
                   Fichier sélectionné: <span className="font-medium">{file.name}</span>
                   <br />
                   {rows.length} ligne(s) détectée(s)
@@ -132,19 +132,19 @@ Lancer nouveau produit,Développer une nouvelle gamme,product,critical,2025,Fina
         {headers.length > 0 && (
           <Card className="mb-6">
             <CardContent className="p-6">
-              <h3 className="font-semibold text-gray-900 mb-4">
+              <h3 className="font-semibold text-navy mb-4">
                 2. Vérifier le mapping automatique
               </h3>
-              <p className="text-sm text-gray-600 mb-4">
+              <p className="text-sm text-muted mb-4">
                 {mappedCount} colonne(s) mappée(s) automatiquement
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                {Object.entries(mapping).map(([key, value]) => 
+                {Object.entries(mapping).map(([key, value]) =>
                   value ? (
-                    <div key={key} className="flex items-center gap-2 bg-gray-50 p-2 rounded">
+                    <div key={key} className="flex items-center gap-2 bg-surface p-2 rounded">
                       <Badge variant="secondary" size="sm">{key}</Badge>
-                      <span className="text-gray-600">→</span>
-                      <span className="font-medium text-gray-900">{value}</span>
+                      <span className="text-muted">→</span>
+                      <span className="font-medium text-navy">{value}</span>
                     </div>
                   ) : null
                 )}
@@ -162,7 +162,7 @@ Lancer nouveau produit,Développer une nouvelle gamme,product,critical,2025,Fina
         {rows.length > 0 && (
           <Card className="mb-6">
             <CardContent className="p-6">
-              <h3 className="font-semibold text-gray-900 mb-4">3. Lancer l'import</h3>
+              <h3 className="font-semibold text-navy mb-4">3. Lancer l'import</h3>
               <Button
                 onClick={handleImport}
                 disabled={isProcessing || mappedCount === 0}
@@ -184,7 +184,7 @@ Lancer nouveau produit,Développer une nouvelle gamme,product,critical,2025,Fina
                 ) : (
                   <AlertCircle className="h-6 w-6 text-red-600" />
                 )}
-                <h3 className="font-semibold text-gray-900">
+                <h3 className="font-semibold text-navy">
                   {result.success ? 'Import réussi !' : 'Import terminé avec des erreurs'}
                 </h3>
               </div>
@@ -220,7 +220,7 @@ Lancer nouveau produit,Développer une nouvelle gamme,product,critical,2025,Fina
               )}
 
               <div className="mt-4 flex gap-2">
-                <Button onClick={() => window.location.href = '/management'} variant="outline">
+                <Button onClick={() => window.location.href = '/app/okr/management'} variant="outline">
                   Voir dans Gestion
                 </Button>
                 <Button onClick={() => { setFile(null); setRows([]); setHeaders([]); setMapping({}); setResult(null); }}>
@@ -231,7 +231,7 @@ Lancer nouveau produit,Développer une nouvelle gamme,product,critical,2025,Fina
           </Card>
         )}
       </div>
-    </Layout>
+    </OkrShell>
   );
 }
 

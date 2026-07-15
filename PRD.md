@@ -704,15 +704,11 @@ Devenir l'outil de référence pour la gestion d'objectifs des PME francophones,
 
 ## 📚 Documentation Technique
 
-### Nouveaux Documents Créés
+### Documents de Référence
 - `docs/PWA_SETUP.md` - Guide complet PWA
-- `docs/IMPLEMENTATION_RGPD_PWA_COLLAB.md` - Détails techniques
 - `docs/ROADMAP_PRIORITAIRE.md` - Roadmap priorisée
 - `docs/ANALYSE_GLOBALE.md` - Analyse complète de l'application
-- `docs/RESUME_FINAL.md` - Résumé des travaux
-- `docs/NEW_SERVICES_IMPLEMENTATION.md` - Documentation services Supabase
 - `docs/USAGE_NEW_SERVICES.md` - Guide d'utilisation des services
-- `docs/FIX_RLS_POLICIES.md` - Guide de correction des politiques RLS
 
 ### Pages Créées (Version 1.1-1.3)
 - `/check-in` - Check-in hebdomadaire guidé par l'IA

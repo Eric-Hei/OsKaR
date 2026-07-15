@@ -295,7 +295,6 @@ Vous avez maintenant :
 ---
 
 **Besoin d'aide ?**
-- Consultez `docs/IMPROVEMENTS_V2.md` pour les détails techniques
-- Consultez `docs/TROUBLESHOOTING_DATA_SYNC.md` pour le dépannage
+- Consultez `TECHNICAL_DOCS.md` pour les détails techniques
 - Utilisez `debugDataSync()` dans la console pour diagnostiquer les problèmes
 
