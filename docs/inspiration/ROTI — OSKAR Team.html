@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<!-- saved from url=(0034)https://hasenso.fr/oskar/roti.html -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROTI — OSKAR Team</title>
+<link href="./ROTI — OSKAR Team_files/css2" rel="stylesheet">
+<link rel="stylesheet" href="./ROTI — OSKAR Team_files/oskar.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Outfit',sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden;color:var(--navy,#1e2d7d);background:var(--bg,#f0f2f8);}
+
+/* ── Header ── */
+.tool-header{height:56px;background:#fff;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;padding:0 20px;gap:14px;flex-shrink:0;}
+.tool-header-back{display:flex;align-items:center;text-decoration:none;flex-shrink:0;}
+.tool-header-back img{height:30px;width:auto;object-fit:contain;}
+.tool-header-sep{color:#e2e8f0;font-size:1.2rem;font-weight:300;flex-shrink:0;}
+.tool-header h1{color:#1e293b;font-size:.95rem;font-weight:600;flex:1;}
+.tool-header-pill{margin-left:auto;background:var(--team,#ec4899);color:#fff;font-size:.78rem;font-weight:600;padding:3px 11px;border-radius:20px;flex-shrink:0;}
+.tool-header-back-link{display:flex;align-items:center;gap:5px;color:#94a3b8;font-size:.78rem;font-weight:500;text-decoration:none;flex-shrink:0;transition:color .15s;border-left:1px solid #e2e8f0;padding-left:14px;margin-left:4px;}
+.tool-header-back-link:hover{color:#1e2d7d;}
+
+/* ── Pbar ── */
+.pbar{background:#1e2d7d;padding:12px 24px;display:flex;align-items:center;gap:12px;flex-shrink:0;flex-wrap:wrap;}
+.pbar-label{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+.p-chips{display:flex;gap:7px;flex-wrap:wrap;align-items:center;}
+.p-chip{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;border:2px solid transparent;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.92rem;font-weight:500;background:#f1f5f9;color:#475569;transition:all .15s;}
+.p-chip.active{background:white;font-weight:600;}
+.p-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.add-p{display:flex;gap:7px;}
+.add-p input{font-family:'Outfit',sans-serif;font-size:.92rem;border:1.5px solid #cbd5e1;border-radius:8px;padding:6px 12px;width:140px;color:#1e2d7d;outline:none;}
+.add-p input:focus{border-color:#00d4b4;}
+.btn-teal{background:#00d4b4;color:#1e2d7d;border:none;border-radius:8px;padding:6px 13px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;font-size:.92rem;}
+.vsep{width:1px;height:28px;background:rgba(255,255,255,.2);flex-shrink:0;}
+
+/* ── Session label ── */
+.session-wrap{display:flex;align-items:center;gap:8px;margin-left:auto;}
+.session-label{font-size:.78rem;color:rgba(255,255,255,.5);font-weight:600;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+.session-input{font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;color:#1e2d7d;background:white;border:none;border-radius:8px;padding:5px 12px;outline:none;width:220px;}
+.session-input::placeholder{color:#94a3b8;font-weight:400;}
+
+/* ── Layout ── */
+.main{flex:1;display:flex;overflow:hidden;}
+
+/* ── Left panel ── */
+.left{width:280px;flex-shrink:0;background:white;border-right:1px solid #e2e8f0;display:flex;flex-direction:column;overflow:hidden;}
+.lh{padding:16px;border-bottom:1px solid #f1f5f9;}
+.lh-title{font-size:.8rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:6px;}
+.lh-name{margin-top:5px;font-size:.95rem;font-weight:600;display:flex;align-items:center;gap:7px;}
+.lh-dot{width:10px;height:10px;border-radius:50%;}
+.no-p{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#94a3b8;text-align:center;padding:24px;}
+.no-p p{font-size:.82rem;line-height:1.5;}
+.lbody{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:16px;}
+
+/* ── Star vote ── */
+.vote-section{}
+.vote-label{font-size:.72rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;}
+.stars-row{display:flex;gap:6px;justify-content:center;margin-bottom:12px;}
+.star-btn{background:none;border:none;cursor:pointer;padding:4px;transition:transform .15s;}
+.star-btn:hover{transform:scale(1.15);}
+.star-btn svg{display:block;transition:all .15s;}
+.star-desc{text-align:center;font-size:.8rem;color:#64748b;min-height:18px;margin-bottom:12px;font-style:italic;}
+.comment-label{font-size:.72rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+textarea.comment{width:100%;resize:none;height:66px;border:1.5px solid #e2e8f0;border-radius:8px;padding:8px 10px;font-family:'Outfit',sans-serif;font-size:.82rem;color:#1e2d7d;outline:none;background:#f8fafc;line-height:1.4;}
+textarea.comment:focus{border-color:#00d4b4;}
+.vote-status{margin-top:8px;font-size:.75rem;font-weight:600;text-align:center;padding:6px 10px;border-radius:8px;background:#f0fdf4;color:#15803d;display:none;}
+.vote-status.show{display:block;}
+
+/* ── Submit zone ── */
+.submit-zone{border-top:1px solid #f1f5f9;padding:14px 16px;display:flex;flex-direction:column;gap:8px;}
+.btn-vote{width:100%;background:#00d4b4;color:#1e2d7d;border:none;border-radius:10px;padding:11px;font-family:'Outfit',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .15s;}
+.btn-vote:hover{background:#00b89c;}
+.btn-vote:disabled{opacity:.35;cursor:not-allowed;}
+.btn-reveal{width:100%;background:#1e2d7d;color:white;border:none;border-radius:10px;padding:11px;font-family:'Outfit',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .15s;}
+.btn-reveal:hover{background:#162260;}
+.btn-reveal:disabled{opacity:.35;cursor:not-allowed;}
+.vote-tally{font-size:.75rem;text-align:center;color:#94a3b8;}
+
+/* ── Results panel ── */
+.results{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.results-header{padding:20px 28px 0;flex-shrink:0;}
+.results-title{font-size:1.05rem;font-weight:700;color:#1e2d7d;margin-bottom:4px;}
+.results-sub{font-size:.82rem;color:#94a3b8;}
+.results-body{flex:1;overflow-y:auto;padding:20px 28px;}
+
+/* ── Score hero ── */
+.score-hero{background:white;border-radius:16px;padding:28px;text-align:center;box-shadow:0 2px 12px rgba(30,45,125,.08);margin-bottom:20px;position:relative;overflow:hidden;}
+.score-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,212,180,.06) 0%,transparent 60%);pointer-events:none;}
+.score-big{font-size:4rem;font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:4px;transition:all .5s;}
+.score-max{font-size:1rem;font-weight:500;color:#94a3b8;margin-bottom:12px;}
+.score-stars{display:flex;justify-content:center;gap:4px;margin-bottom:10px;}
+.score-verdict{display:inline-block;font-size:.82rem;font-weight:700;padding:5px 16px;border-radius:20px;}
+.score-wait{color:#94a3b8;font-size:.9rem;padding:16px 0;}
+
+/* ── Distribution bars ── */
+.distrib{background:white;border-radius:16px;padding:20px 24px;box-shadow:0 2px 12px rgba(30,45,125,.08);margin-bottom:20px;}
+.distrib-title{font-size:.72rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;}
+.distrib-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.distrib-label{display:flex;align-items:center;gap:3px;width:72px;flex-shrink:0;}
+.distrib-bar-wrap{flex:1;background:#f1f5f9;border-radius:6px;height:14px;overflow:hidden;}
+.distrib-bar{height:100%;border-radius:6px;transition:width .6s cubic-bezier(.34,1.2,.64,1);width:0;}
+.distrib-count{font-size:.75rem;font-weight:700;color:#64748b;min-width:20px;text-align:right;}
+
+/* ── Voter cards ── */
+.voters-title{font-size:.72rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;}
+.voters-grid{display:flex;flex-wrap:wrap;gap:10px;}
+.voter-card{background:white;border-radius:12px;padding:14px 16px;box-shadow:0 2px 8px rgba(30,45,125,.07);display:flex;flex-direction:column;gap:6px;min-width:150px;flex:1;animation:popIn .3s cubic-bezier(.34,1.4,.64,1);}
+@keyframes popIn{from{transform:scale(.7) translateY(10px);opacity:0;}}
+.voter-card-top{display:flex;align-items:center;gap:8px;}
+.voter-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;color:white;flex-shrink:0;}
+.voter-name{font-size:.82rem;font-weight:700;color:#1e2d7d;}
+.voter-stars{display:flex;gap:2px;}
+.voter-comment{font-size:.72rem;color:#64748b;line-height:1.4;font-style:italic;border-left:2px solid #e2e8f0;padding-left:7px;margin-top:2px;}
+
+/* ── Waiting placeholders ── */
+.waiting-grid{display:flex;flex-wrap:wrap;gap:10px;}
+.waiting-card{background:white;border-radius:12px;padding:14px 16px;box-shadow:0 2px 8px rgba(30,45,125,.07);display:flex;align-items:center;gap:8px;min-width:130px;flex:1;}
+.waiting-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;color:white;flex-shrink:0;}
+.waiting-name{font-size:.82rem;font-weight:600;color:#94a3b8;}
+.waiting-dots{display:flex;gap:4px;margin-left:auto;}
+.waiting-dot{width:6px;height:6px;border-radius:50%;background:#e2e8f0;animation:pulse 1.4s ease-in-out infinite;}
+.waiting-dot:nth-child(2){animation-delay:.2s;}
+.waiting-dot:nth-child(3){animation-delay:.4s;}
+@keyframes pulse{0%,100%{opacity:.3;}50%{opacity:1;}}
+
+/* Reset btn */
+.btn-reset{width:100%;background:none;border:1.5px solid #e2e8f0;border-radius:10px;padding:8px;font-family:'Outfit',sans-serif;font-weight:600;font-size:.78rem;color:#94a3b8;cursor:pointer;transition:all .15s;margin-top:4px;}
+.btn-reset:hover{border-color:#ef4444;color:#ef4444;}
+
+/* Confirm delete popup */
+.confirm-pop-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;align-items:center;justify-content:center;}
+.confirm-pop-overlay.show{display:flex;}
+.confirm-pop{background:white;border-radius:12px;padding:22px 24px;max-width:320px;width:90%;box-shadow:0 12px 40px rgba(0,0,0,.2);animation:popIn .18s cubic-bezier(.34,1.56,.64,1);}
+.confirm-pop p{font-size:.85rem;color:#374151;line-height:1.5;margin-bottom:20px;}
+.confirm-pop-btns{display:flex;gap:8px;justify-content:flex-end;}
+.confirm-pop-cancel{background:#f1f5f9;color:#64748b;border:none;border-radius:8px;padding:7px 14px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:600;font-size:.82rem;}
+.confirm-pop-del{background:#ef4444;color:white;border:none;border-radius:8px;padding:7px 14px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;font-size:.82rem;}
+</style>
+<script src="chrome-extension://ajdpfmkffanmkhejnopjppegokpogffp/assets/prompt.js"></script></head>
+<body>
+
+<header class="tool-header">
+  <a class="tool-header-back" href="https://hasenso.fr/oskar/boite-a-outils.html"><img src="./ROTI — OSKAR Team_files/logo-oskar.png" alt="OSKAR"></a>
+  <span class="tool-header-sep">|</span>
+  <h1>ROTI — Return On Time Invested</h1>
+  <span class="tool-header-pill">Team</span>
+  <a class="tool-header-back-link" href="https://hasenso.fr/oskar/boite-a-outils.html">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><path d="M12 4L6 10l6 6"></path></svg>
+    Boîte à outils
+  </a>
+</header>
+
+<div class="pbar">
+  <span class="pbar-label">Participants</span>
+  <div class="p-chips" id="pchips"><button class="p-chip" style="border-color: transparent; color: rgb(245, 158, 11);"><span class="p-dot" style="background:#f59e0b"></span>Alice</button><button class="p-chip" style="border-color: transparent; color: rgb(59, 130, 246);"><span class="p-dot" style="background:#3b82f6"></span>Bruno</button><button class="p-chip" style="border-color: transparent; color: rgb(236, 72, 153);"><span class="p-dot" style="background:#ec4899"></span>Chloe</button></div>
+  <div class="add-p">
+    <input type="text" id="newName" placeholder="Prénom" maxlength="16">
+    <button class="btn-teal" id="btnAddP">+ Ajouter</button>
+  </div>
+  <div class="vsep"></div>
+  <div class="session-wrap">
+    <span class="session-label">Séance</span>
+    <input class="session-input" id="sessionInput" type="text" placeholder="Nom de la réunion…" maxlength="60">
+  </div>
+</div>
+
+<!-- Confirm reset -->
+<div class="confirm-pop-overlay" id="confirmReset">
+  <div class="confirm-pop">
+    <p>Réinitialiser tous les votes ? Cette action est irréversible.</p>
+    <div class="confirm-pop-btns">
+      <button class="confirm-pop-cancel" onclick="closeConfirmReset()">Annuler</button>
+      <button class="confirm-pop-del" onclick="doReset()">Réinitialiser</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="lh">
+      <div class="lh-title">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="8,2 10,6 14,6.5 11,9.5 11.8,14 8,12 4.2,14 5,9.5 2,6.5 6,6"></polygon></svg>
+        Mon vote
+      </div>
+      <div class="lh-name">
+        <div class="lh-dot" id="lhDot"></div>
+        <span id="lhName">— sélectionne ton prénom</span>
+      </div>
+    </div>
+
+    <div class="no-p" id="noP">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.3"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"></path></svg>
+      <p>Sélectionne ton prénom<br>dans la barre du haut.</p>
+    </div>
+
+    <div class="lbody" id="lbody" style="display:none;">
+      <div class="vote-section">
+        <div class="vote-label">Ta note pour cette séance</div>
+        <div class="stars-row" id="starsRow"></div>
+        <div class="star-desc" id="starDesc"></div>
+        <div class="comment-label">Commentaire (optionnel)</div>
+        <textarea class="comment" id="commentInput" placeholder="Ce qui t&#39;a le plus apporté, ou ce qu&#39;on pourrait améliorer…" maxlength="200"></textarea>
+        <div class="vote-status" id="voteStatus">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><polyline points="2,8 6,12 14,4"></polyline></svg>
+          Vote enregistré
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-zone" id="submitZone" style="display:none;">
+      <div class="vote-tally" id="voteTally">0 / 3 participants ont voté</div>
+      <button class="btn-vote" id="btnVote" onclick="submitVote()" disabled="">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"></polyline></svg>
+        Valider mon vote
+      </button>
+      <button class="btn-reveal" id="btnReveal" onclick="revealAll()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+        Révéler les résultats
+      </button>
+      <button class="btn-reset" onclick="openConfirmReset()">Réinitialiser la session</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results">
+    <div class="results-header">
+      <div class="results-title" id="resultsTitle">En attente des votes…</div>
+      <div class="results-sub" id="resultsSub">Les résultats s'afficheront après révélation.</div>
+    </div>
+    <div class="results-body" id="resultsBody"><div class="score-hero"><div class="score-wait">Les votes sont masqués jusqu'à la révélation<br><span style="font-size:1.5rem;margin-top:8px;display:block">🔒</span></div></div><div class="voters-title">Participants</div><div class="waiting-grid"><div class="waiting-card"><div class="waiting-avatar" style="background:#f59e0b">A</div><span class="waiting-name">Alice</span><div class="waiting-dots"><div class="waiting-dot"></div><div class="waiting-dot"></div><div class="waiting-dot"></div></div></div><div class="waiting-card"><div class="waiting-avatar" style="background:#3b82f6">B</div><span class="waiting-name">Bruno</span><div class="waiting-dots"><div class="waiting-dot"></div><div class="waiting-dot"></div><div class="waiting-dot"></div></div></div><div class="waiting-card"><div class="waiting-avatar" style="background:#ec4899">C</div><span class="waiting-name">Chloe</span><div class="waiting-dots"><div class="waiting-dot"></div><div class="waiting-dot"></div><div class="waiting-dot"></div></div></div></div></div>
+  </div>
+
+</div>
+
+<script>
+const PAL=[{c:'#f59e0b'},{c:'#3b82f6'},{c:'#ec4899'},{c:'#8b5cf6'},{c:'#10b981'},{c:'#f97316'},{c:'#06b6d4'},{c:'#e11d48'}];
+const STAR_LABELS=['','Perte de temps','Peu utile','Correct','Utile','Indispensable'];
+const STAR_COLORS=['','#ef4444','#f97316','#f59e0b','#22c55e','#10b981'];
+const VERDICTS=[
+  {min:0,label:'En attente…',bg:'#f1f5f9',color:'#64748b'},
+  {min:1,label:'À améliorer 😬',bg:'#fee2e2',color:'#b91c1c'},
+  {min:2,label:'Perfectible 🤔',bg:'#ffedd5',color:'#c2410c'},
+  {min:3,label:'Correct 👍',bg:'#fef9c3',color:'#a16207'},
+  {min:4,label:'Très bien ! 🎉',bg:'#dcfce7',color:'#15803d'},
+  {min:4.6,label:'Excellent ! 🔥',bg:'#d1fae5',color:'#047857'},
+];
+
+let people=[], activeId=null, revealed=false;
+
+function addParticipant(){
+  const inp=document.getElementById('newName');
+  const name=inp.value.trim();
+  if(!name||people.find(p=>p.name.toLowerCase()===name.toLowerCase())){inp.value='';return;}
+  const pal=PAL[people.length%PAL.length];
+  people.push({id:Date.now()+people.length,name,c:pal.c,star:0,comment:'',voted:false});
+  inp.value='';
+  renderChips();renderResults();
+}
+
+function renderChips(){
+  const el=document.getElementById('pchips');el.innerHTML='';
+  people.forEach(p=>{
+    const btn=document.createElement('button');
+    btn.className='p-chip'+(activeId===p.id?' active':'');
+    btn.style.borderColor=activeId===p.id?p.c:'transparent';
+    btn.style.color=p.c;
+    const voted=p.voted?' ✓':'';
+    btn.innerHTML='<span class="p-dot" style="background:'+p.c+'"></span>'+p.name+voted;
+    btn.addEventListener('click',()=>setActive(p.id));
+    el.appendChild(btn);
+  });
+}
+
+function setActive(id){
+  activeId=id;
+  renderChips();
+  const p=people.find(x=>x.id===id);
+  document.getElementById('noP').style.display='none';
+  document.getElementById('lbody').style.display='flex';
+  document.getElementById('submitZone').style.display='flex';
+  document.getElementById('lhName').textContent=p.name;
+  document.getElementById('lhDot').style.background=p.c;
+  renderStars(p.star);
+  document.getElementById('commentInput').value=p.comment||'';
+  document.getElementById('voteStatus').className='vote-status'+(p.voted?' show':'');
+  document.getElementById('btnVote').disabled=p.voted||p.star===0;
+  updateTally();
+}
+
+function renderStars(selected){
+  const row=document.getElementById('starsRow');row.innerHTML='';
+  for(let i=1;i<=5;i++){
+    const btn=document.createElement('button');btn.className='star-btn';
+    const filled=i<=selected;
+    btn.innerHTML=`<svg width="36" height="36" viewBox="0 0 24 24" fill="${filled?STAR_COLORS[selected]:'none'}" stroke="${filled?STAR_COLORS[selected]:'#cbd5e1'}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>`;
+    const v=i;
+    btn.addEventListener('mouseenter',()=>renderStarsHover(v));
+    btn.addEventListener('mouseleave',()=>renderStars(selected));
+    btn.addEventListener('click',()=>selectStar(v));
+    row.appendChild(btn);
+  }
+  document.getElementById('starDesc').textContent=selected?STAR_LABELS[selected]:'';
+}
+
+function renderStarsHover(h){
+  const row=document.getElementById('starsRow');
+  Array.from(row.children).forEach((btn,i)=>{
+    const filled=(i+1)<=h;
+    btn.innerHTML=`<svg width="36" height="36" viewBox="0 0 24 24" fill="${filled?STAR_COLORS[h]:'none'}" stroke="${filled?STAR_COLORS[h]:'#cbd5e1'}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>`;
+  });
+  document.getElementById('starDesc').textContent=STAR_LABELS[h];
+}
+
+function selectStar(v){
+  const p=people.find(x=>x.id===activeId);if(!p||p.voted)return;
+  p.star=v;
+  renderStars(v);
+  document.getElementById('btnVote').disabled=false;
+}
+
+function submitVote(){
+  const p=people.find(x=>x.id===activeId);if(!p||p.voted||p.star===0)return;
+  p.comment=document.getElementById('commentInput').value.trim();
+  p.voted=true;
+  document.getElementById('voteStatus').classList.add('show');
+  document.getElementById('btnVote').disabled=true;
+  renderChips();renderResults();updateTally();
+}
+
+function updateTally(){
+  const voted=people.filter(x=>x.voted).length;
+  const total=people.length;
+  document.getElementById('voteTally').textContent=voted+' / '+total+' participant'+(total>1?'s':'')+' ont voté';
+}
+
+function revealAll(){
+  if(people.filter(x=>x.voted).length===0)return;
+  revealed=true;
+  renderResults();
+}
+
+function renderResults(){
+  const body=document.getElementById('resultsBody');
+  const title=document.getElementById('resultsTitle');
+  const sub=document.getElementById('resultsSub');
+  const session=document.getElementById('sessionInput').value.trim();
+  updateTally();
+
+  if(!revealed){
+    // Waiting state
+    title.textContent='En attente des votes…';
+    sub.textContent=session?'Séance : '+session:'Les résultats s\'afficheront après révélation.';
+    body.innerHTML='';
+
+    // score placeholder
+    const hero=document.createElement('div');hero.className='score-hero';
+    hero.innerHTML='<div class="score-wait">Les votes sont masqués jusqu\'à la révélation<br><span style="font-size:1.5rem;margin-top:8px;display:block">🔒</span></div>';
+    body.appendChild(hero);
+
+    // waiting cards
+    if(people.length>0){
+      const wt=document.createElement('div');wt.className='voters-title';wt.textContent='Participants';
+      body.appendChild(wt);
+      const wg=document.createElement('div');wg.className='waiting-grid';
+      people.forEach(p=>{
+        const c=document.createElement('div');c.className='waiting-card';
+        c.innerHTML=`<div class="waiting-avatar" style="background:${p.c}">${p.name.charAt(0).toUpperCase()}</div><span class="waiting-name">${p.name}</span>${p.voted?'<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto"><polyline points="2,8 6,12 14,4"/></svg>':'<div class="waiting-dots"><div class="waiting-dot"></div><div class="waiting-dot"></div><div class="waiting-dot"></div></div>'}`;
+        wg.appendChild(c);
+      });
+      body.appendChild(wg);
+    }
+    return;
+  }
+
+  // Revealed
+  const voters=people.filter(x=>x.voted);
+  const avg=voters.length>0?(voters.reduce((s,x)=>s+x.star,0)/voters.length):0;
+  const avgR=Math.round(avg*10)/10;
+
+  const verdict=VERDICTS.slice().reverse().find(v=>avgR>=v.min)||VERDICTS[0];
+
+  title.textContent=session?'Résultats — '+session:'Résultats de la séance';
+  sub.textContent=voters.length+' vote'+(voters.length>1?'s':'')+' · moyenne '+avgR+'/5';
+
+  body.innerHTML='';
+
+  // Score hero
+  const hero=document.createElement('div');hero.className='score-hero';
+  const starsHtml=Array.from({length:5},(_,i)=>`<svg width="24" height="24" viewBox="0 0 24 24" fill="${i<Math.round(avg)?STAR_COLORS[Math.round(avg)]:'none'}" stroke="${i<Math.round(avg)?STAR_COLORS[Math.round(avg)]:'#e2e8f0'}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>`).join('');
+  hero.innerHTML=`
+    <div class="score-big" style="color:${STAR_COLORS[Math.round(avg)]||'#94a3b8'}">${avgR}</div>
+    <div class="score-max">/ 5</div>
+    <div class="score-stars">${starsHtml}</div>
+    <span class="score-verdict" style="background:${verdict.bg};color:${verdict.color}">${verdict.label}</span>
+  `;
+  body.appendChild(hero);
+
+  // Distribution
+  const distrib=document.createElement('div');distrib.className='distrib';
+  distrib.innerHTML='<div class="distrib-title">Distribution des votes</div>';
+  for(let s=5;s>=1;s--){
+    const count=voters.filter(x=>x.star===s).length;
+    const pct=voters.length?Math.round(count/voters.length*100):0;
+    const row=document.createElement('div');row.className='distrib-row';
+    const starsSmall=Array.from({length:5},(_,i)=>`<svg width="11" height="11" viewBox="0 0 24 24" fill="${i<s?STAR_COLORS[s]:'none'}" stroke="${i<s?STAR_COLORS[s]:'#e2e8f0'}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>`).join('');
+    row.innerHTML=`<div class="distrib-label">${starsSmall}</div><div class="distrib-bar-wrap"><div class="distrib-bar" style="background:${STAR_COLORS[s]};width:${pct}%"></div></div><div class="distrib-count">${count}</div>`;
+    distrib.appendChild(row);
+  }
+  body.appendChild(distrib);
+
+  // Voter cards
+  const vt=document.createElement('div');vt.className='voters-title';vt.textContent='Votes individuels';
+  body.appendChild(vt);
+  const vg=document.createElement('div');vg.className='voters-grid';
+  voters.forEach(p=>{
+    const c=document.createElement('div');c.className='voter-card';
+    const starsHtml2=Array.from({length:5},(_,i)=>`<svg width="13" height="13" viewBox="0 0 24 24" fill="${i<p.star?STAR_COLORS[p.star]:'none'}" stroke="${i<p.star?STAR_COLORS[p.star]:'#e2e8f0'}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>`).join('');
+    c.innerHTML=`
+      <div class="voter-card-top">
+        <div class="voter-avatar" style="background:${p.c}">${p.name.charAt(0).toUpperCase()}</div>
+        <div class="voter-name">${p.name}</div>
+      </div>
+      <div class="voter-stars">${starsHtml2}</div>
+      ${p.comment?`<div class="voter-comment">${p.comment}</div>`:''}
+    `;
+    vg.appendChild(c);
+  });
+
+  // Non-voters
+  const nonVoters=people.filter(x=>!x.voted);
+  if(nonVoters.length>0){
+    nonVoters.forEach(p=>{
+      const c=document.createElement('div');c.className='voter-card';c.style.opacity='.45';
+      c.innerHTML=`<div class="voter-card-top"><div class="voter-avatar" style="background:${p.c}">${p.name.charAt(0).toUpperCase()}</div><div class="voter-name">${p.name}</div><span style="margin-left:auto;font-size:.65rem;color:#94a3b8;font-style:italic">n'a pas voté</span></div>`;
+      vg.appendChild(c);
+    });
+  }
+  body.appendChild(vg);
+}
+
+function openConfirmReset(){document.getElementById('confirmReset').classList.add('show');}
+function closeConfirmReset(){document.getElementById('confirmReset').classList.remove('show');}
+function doReset(){
+  people.forEach(p=>{p.star=0;p.comment='';p.voted=false;});
+  revealed=false;activeId=null;
+  document.getElementById('noP').style.display='flex';
+  document.getElementById('lbody').style.display='none';
+  document.getElementById('submitZone').style.display='none';
+  document.getElementById('lhName').textContent='— sélectionne ton prénom';
+  document.getElementById('lhDot').style.background='transparent';
+  renderChips();renderResults();closeConfirmReset();
+}
+document.getElementById('confirmReset').addEventListener('click',e=>{if(e.target===document.getElementById('confirmReset'))closeConfirmReset();});
+
+document.getElementById('newName').addEventListener('keydown',e=>{if(e.key==='Enter')addParticipant();});
+document.getElementById('btnAddP').addEventListener('click',addParticipant);
+document.getElementById('commentInput').addEventListener('input',()=>{
+  const p=people.find(x=>x.id===activeId);if(p&&!p.voted)p.comment=document.getElementById('commentInput').value;
+});
+
+// Demo
+['Alice','Bruno','Chloe'].forEach(n=>{document.getElementById('newName').value=n;addParticipant();});
+document.getElementById('newName').value='';
+renderResults();
+</script>
+
+
+</body></html>

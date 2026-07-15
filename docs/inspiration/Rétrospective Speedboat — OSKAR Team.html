@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<!-- saved from url=(0039)https://hasenso.fr/oskar/speedboat.html -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rétrospective Speedboat — OSKAR Team</title>
+<link href="./Rétrospective Speedboat — OSKAR Team_files/css2" rel="stylesheet">
+<link rel="stylesheet" href="./Rétrospective Speedboat — OSKAR Team_files/oskar.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{height:100vh;display:flex;flex-direction:column;overflow:hidden;color:#1e2d7d;font-family:'Outfit',sans-serif;}
+
+/* ── HEADER ── */
+.tool-header{height:56px;background:#fff;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;padding:0 20px;gap:14px;flex-shrink:0;z-index:20;}
+.tool-header-back{display:flex;align-items:center;text-decoration:none;flex-shrink:0;}
+.tool-header-back img{height:30px;width:auto;}
+.tool-header-sep{color:#e2e8f0;font-size:1.2rem;font-weight:300;flex-shrink:0;}
+.tool-header h1{color:#1e2d7d;font-size:.95rem;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tool-header-pill{margin-left:auto;background:#ec4899;color:#fff;font-size:.78rem;font-weight:600;padding:3px 11px;border-radius:20px;flex-shrink:0;}
+.tool-header-back-link{display:flex;align-items:center;gap:5px;color:#64748b;font-size:.78rem;font-weight:500;text-decoration:none;flex-shrink:0;transition:color .15s;border-left:1px solid #e2e8f0;padding-left:14px;margin-left:4px;}
+.tool-header-back-link:hover{color:#1e2d7d;}
+.btn-instr{display:flex;align-items:center;gap:6px;background:#f1f5f9;border:1.5px solid #e2e8f0;color:#1e2d7d;font-size:.78rem;font-weight:600;padding:5px 13px;border-radius:20px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s;flex-shrink:0;}
+.btn-instr:hover{background:#e0f2fe;border-color:#7dd3fc;}
+.btn-instr.on{background:#1e2d7d;color:white;border-color:#1e2d7d;}
+/* Zone description shown under label when instructions mode is on */
+.dz-desc{position:absolute;top:42px;left:12px;font-size:.68rem;font-weight:500;line-height:1.5;color:#1e293b;background:rgba(255,255,255,.88);backdrop-filter:blur(6px);border-radius:8px;padding:7px 10px;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.1);opacity:0;transform:translateY(-4px);transition:opacity .2s,transform .2s;max-width:260px;}
+.instr-on .dz-desc{opacity:1;transform:none;}
+
+/* ── PBAR ── */
+.pbar{background:#1e2d7d;padding:10px 24px;display:flex;align-items:center;gap:12px;flex-shrink:0;flex-wrap:wrap;z-index:20;}
+.pbar-label{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+.p-chips{display:flex;gap:7px;flex-wrap:wrap;align-items:center;}
+.p-chip{display:flex;align-items:center;gap:6px;padding:5px 13px;border-radius:20px;border:2px solid transparent;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:500;background:#f1f5f9;color:#475569;transition:all .15s;}
+.p-chip.active{background:white;font-weight:600;}
+.p-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.add-p{display:flex;gap:7px;}
+.add-p input{font-family:'Outfit',sans-serif;font-size:.85rem;border:1.5px solid rgba(255,255,255,.2);border-radius:8px;padding:5px 11px;width:130px;color:#1e2d7d;outline:none;background:white;}
+.add-p input:focus{border-color:#00d4b4;}
+.btn-teal{background:#00d4b4;color:#1e2d7d;border:none;border-radius:8px;padding:5px 12px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;font-size:.85rem;}
+.vsep{width:1px;height:26px;background:rgba(255,255,255,.18);flex-shrink:0;}
+.admin-toggle{display:flex;align-items:center;gap:7px;margin-left:auto;}
+.admin-label{font-size:.75rem;font-weight:600;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;}
+.toggle-wrap{position:relative;width:38px;height:20px;cursor:pointer;}
+.toggle-wrap input{opacity:0;width:0;height:0;position:absolute;}
+.toggle-slider{position:absolute;inset:0;background:#334155;border-radius:20px;transition:background .2s;}
+.toggle-slider::before{content:'';position:absolute;width:14px;height:14px;left:3px;top:3px;background:white;border-radius:50%;transition:transform .2s;}
+.toggle-wrap input:checked+.toggle-slider{background:#00d4b4;}
+.toggle-wrap input:checked+.toggle-slider::before{transform:translateX(18px);}
+.btn-session{background:#ec4899;color:white;border:none;border-radius:8px;padding:6px 15px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;font-size:.85rem;display:flex;align-items:center;gap:5px;white-space:nowrap;}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;overflow:hidden;}
+
+/* ── LEFT PANEL ── */
+.left{width:264px;flex-shrink:0;background:white;border-right:1px solid #e2e8f0;display:flex;flex-direction:column;overflow:hidden;z-index:10;}
+.lh{padding:13px 15px 9px;border-bottom:1px solid #f1f5f9;flex-shrink:0;}
+.lh-title{font-size:.72rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:5px;}
+.lh-name{margin-top:4px;font-size:.88rem;font-weight:600;display:flex;align-items:center;gap:6px;}
+.lh-dot{width:9px;height:9px;border-radius:50%;}
+.lbody{flex:1;overflow-y:auto;padding:11px;display:flex;flex-direction:column;gap:9px;}
+.no-p{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;color:#94a3b8;text-align:center;padding:20px;}
+.no-p p{font-size:.8rem;line-height:1.55;}
+.zone-selector-lbl{font-size:.68rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+.zone-btn{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;border:1.5px solid #e2e8f0;background:white;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:600;color:#374151;transition:all .15s;text-align:left;width:100%;margin-bottom:3px;}
+.zone-btn:hover{background:#f8fafc;border-color:#cbd5e1;}
+.zone-btn.sel{border-color:var(--zc);background:var(--zb);color:var(--zc);}
+.z-swatch{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+.composer{background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:10px;padding:11px;display:flex;flex-direction:column;gap:7px;}
+.comp-lbl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;}
+.composer textarea{width:100%;resize:none;min-height:74px;border:1.5px solid #e2e8f0;border-radius:7px;padding:7px 9px;font-family:'Outfit',sans-serif;font-size:.82rem;color:#1e2d7d;outline:none;background:white;line-height:1.45;}
+.composer textarea:focus{border-color:#00d4b4;}
+.comp-foot{display:flex;align-items:center;justify-content:space-between;}
+.btn-sub{border:none;border-radius:7px;padding:5px 13px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;font-size:.78rem;}
+.queue-lbl{font-size:.68rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;padding:2px 0 3px;}
+.my-items{display:flex;flex-direction:column;gap:5px;}
+.my-item{background:white;border-radius:7px;padding:7px 9px;font-size:.78rem;line-height:1.4;color:#374151;box-shadow:0 1px 3px rgba(0,0,0,.06);position:relative;border-left:3px solid #e2e8f0;}
+.item-st{position:absolute;top:5px;right:7px;font-size:.62rem;font-weight:700;padding:2px 6px;border-radius:9px;}
+.item-st.pending{background:#f1f5f9;color:#94a3b8;}
+.item-st.placed{background:#dcfce7;color:#16a34a;}
+
+/* ── BOARD ── */
+.board-area{flex:1;overflow:hidden;display:flex;flex-direction:column;position:relative;}
+
+/* SCENE — image as background */
+.scene{
+  flex:1;position:relative;overflow:hidden;
+  background:#c8e8f5; /* fallback */
+}
+.scene-bg{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center center;
+  z-index:0;pointer-events:none;
+  /* Slight desaturation so cards pop */
+  filter:saturate(.92) brightness(1.02);
+}
+
+/* ── DROP ZONES — full quadrants ── */
+.drop-zones{position:absolute;inset:0;z-index:5;pointer-events:none;}
+.dz{
+  position:absolute;border:none;
+  background:transparent;
+  transition:background .2s;
+  pointer-events:all;overflow:hidden;
+}
+.dz:hover{background:rgba(255,255,255,.06)!important;}
+.dz.over{background:rgba(255,255,255,.08)!important;}
+
+/* Zone label pill */
+.dz-label{
+  font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;
+  white-space:nowrap;padding:4px 11px;border-radius:20px;
+  pointer-events:none;z-index:6;
+  backdrop-filter:blur(8px);
+  box-shadow:0 1px 6px rgba(0,0,0,.1);
+}
+
+/* ── CARDS on board ── */
+
+/* ── CARDS on board ── */
+.bcard{
+  position:absolute;background:white;border-radius:9px;
+  padding:9px 11px;font-family:'Outfit',sans-serif;
+  font-size:.74rem;line-height:1.42;color:#1e293b;
+  box-shadow:0 2px 10px rgba(0,0,0,.15);
+  cursor:grab;max-width:160px;min-width:110px;
+  z-index:12;user-select:none;
+  border-top:3px solid #e2e8f0;
+  animation:cardPop .25s cubic-bezier(.34,1.56,.64,1);
+}
+.bcard:hover{box-shadow:0 4px 18px rgba(0,0,0,.2);transform:rotate(-1deg) scale(1.04);}
+.bcard:active{cursor:grabbing;}
+@keyframes cardPop{from{opacity:0;transform:scale(.5) translateY(-10px);}to{opacity:1;transform:none;}}
+.bc-auth{font-size:.6rem;font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:3px;}
+.bc-dot{width:5px;height:5px;border-radius:50%;}
+.bc-heart{display:flex;align-items:center;gap:3px;margin-top:5px;font-size:.64rem;font-weight:700;color:#94a3b8;cursor:pointer;transition:color .15s;}
+.bc-heart:hover,.bc-heart.v{color:#f43f5e;}
+.bc-heart svg{transition:transform .15s;}
+.bc-heart:hover svg,.bc-heart.v svg{transform:scale(1.25);}
+.bc-ret{display:flex;align-items:center;gap:2px;margin-top:4px;font-size:.62rem;font-weight:700;color:#94a3b8;cursor:pointer;transition:color .15s;background:none;border:none;font-family:'Outfit',sans-serif;padding:0;}
+.bc-ret:hover{color:#f59e0b;}
+.bc-ret.on{color:#f59e0b;}
+.bc-admin-row{display:flex;align-items:center;gap:6px;margin-top:5px;}
+.bc-del{display:flex;align-items:center;gap:2px;font-size:.62rem;font-weight:700;color:#fca5a5;cursor:pointer;transition:color .15s;background:none;border:none;font-family:'Outfit',sans-serif;padding:0;margin-left:auto;}
+.bc-del:hover{color:#ef4444;}
+
+/* ── MODALS ── */
+@keyframes popIn{from{transform:scale(.86);opacity:0;}}
+.overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(4px);z-index:100;align-items:center;justify-content:center;}
+.overlay.show{display:flex;}
+.modal{background:white;border-radius:14px;padding:26px 28px;max-width:480px;width:92%;box-shadow:0 20px 60px rgba(0,0,0,.28);animation:popIn .2s cubic-bezier(.34,1.56,.64,1);}
+.modal-ttl{font-size:1rem;font-weight:700;color:#1e2d7d;margin-bottom:4px;}
+.modal-sub{font-size:.8rem;color:#64748b;line-height:1.55;margin-bottom:16px;}
+.modal-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:16px;}
+.stat{background:#f8fafc;border-radius:9px;padding:9px;text-align:center;}
+.stat-n{font-size:1.3rem;font-weight:700;}
+.stat-l{font-size:.64rem;color:#94a3b8;font-weight:500;margin-top:1px;}
+.mf-row{display:flex;gap:8px;justify-content:flex-end;}
+.btn-cancel{background:#f1f5f9;color:#64748b;border:none;border-radius:8px;padding:8px 16px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:600;font-size:.82rem;}
+.btn-confirm{background:#ec4899;color:white;border:none;border-radius:8px;padding:8px 16px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;font-size:.82rem;display:flex;align-items:center;gap:5px;}
+.cpop-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.32);z-index:200;align-items:center;justify-content:center;}
+.cpop-ov.show{display:flex;}
+.cpop{background:white;border-radius:11px;padding:20px 22px;max-width:300px;width:90%;box-shadow:0 10px 36px rgba(0,0,0,.2);animation:popIn .16s cubic-bezier(.34,1.56,.64,1);}
+.cpop p{font-size:.82rem;color:#374151;line-height:1.5;margin-bottom:14px;}
+.cpop-btns{display:flex;gap:7px;justify-content:flex-end;}
+.cpop-no{background:#f1f5f9;color:#64748b;border:none;border-radius:7px;padding:6px 13px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:600;font-size:.8rem;}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:#e2e8f0;border-radius:3px;}
+</style>
+<script src="chrome-extension://ajdpfmkffanmkhejnopjppegokpogffp/assets/prompt.js"></script></head>
+<body>
+
+<!-- HEADER -->
+<header class="tool-header">
+  <a class="tool-header-back" href="https://hasenso.fr/oskar/boite-a-outils.html"><img src="./Rétrospective Speedboat — OSKAR Team_files/logo-oskar.png" alt="OSKAR"></a>
+  <span class="tool-header-sep">|</span>
+  <h1>Rétrospective Speedboat</h1>
+  <span class="tool-header-pill">Team</span>
+  <a class="tool-header-back-link" href="https://hasenso.fr/oskar/boite-a-outils.html">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;flex-shrink:0;"><path d="M12 4L6 10l6 6"></path></svg>
+    Boîte à outils
+  </a>
+</header>
+
+<!-- PBAR -->
+<div class="pbar">
+  <span class="pbar-label">Participants</span>
+  <div class="p-chips" id="pchips"><div class="p-chip " onclick="selP(1)" style="">
+      <div class="p-dot" style="background:#0ea5e9;"></div>Alice
+      
+    </div><div class="p-chip " onclick="selP(2)" style="">
+      <div class="p-dot" style="background:#00d4b4;"></div>Bruno
+      
+    </div><div class="p-chip " onclick="selP(3)" style="">
+      <div class="p-dot" style="background:#ec4899;"></div>Chloe
+      
+    </div></div>
+  <div class="add-p">
+    <input type="text" id="newName" placeholder="Prénom" maxlength="16">
+    <button class="btn-teal" id="btnAddP">+ Ajouter</button>
+  </div>
+  <div class="vsep"></div>
+  <div class="admin-toggle">
+    <span class="admin-label">Admin</span>
+    <label class="toggle-wrap"><input type="checkbox" id="adminToggle"><div class="toggle-slider"></div></label>
+  </div>
+  <div class="vsep"></div>
+  <button class="btn-session" onclick="openSession()">
+    <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"></polyline></svg>
+    Clôturer
+  </button>
+</div>
+
+<!-- SESSION MODAL -->
+<div class="overlay" id="sessionOv">
+  <div class="modal">
+    <div class="modal-ttl">Clôturer la session</div>
+    <p class="modal-sub">Export du résumé de la rétrospective Speedboat.</p>
+    <div class="modal-stats" id="sessionStats"></div>
+    <div class="mf-row">
+      <button class="btn-cancel" onclick="closeSession()">Annuler</button>
+      <button class="btn-confirm" onclick="confirmSession()">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 7l4 4 4-4"></path><path d="M2 14h12"></path></svg>
+        Exporter &amp; terminer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- PUBLISH CONFIRM -->
+<div class="cpop-ov" id="cpopOv">
+  <div class="cpop">
+    <p>Placer cette carte sur le tableau ?<br>Elle sera visible par tous.</p>
+    <div class="cpop-btns">
+      <button class="cpop-no" onclick="closeCpop()">Annuler</button>
+      <button class="btn-teal" style="border:none;border-radius:7px;padding:6px 13px;cursor:pointer;font-family:&#39;Outfit&#39;,sans-serif;font-weight:700;font-size:.8rem;" onclick="doPublish()">Placer</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <!-- LEFT -->
+  <div class="left">
+    <div class="lh">
+      <div class="lh-title">
+        <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2a4 4 0 0 1 4 4c0 3-4 8-4 8S4 9 4 6a4 4 0 0 1 4-4z"></path><circle cx="8" cy="6" r="1.5"></circle></svg>
+        Mon espace
+      </div>
+      <div class="lh-name">
+        <div class="lh-dot" id="lhDot" style="background: rgb(226, 232, 240);"></div>
+        <span id="lhName">— sélectionne ton prénom</span>
+      </div>
+      <button class="btn-instr on" id="btnInstr" onclick="toggleInstr()" style="margin-top:10px;width:100%;justify-content:center;">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"></circle><line x1="5" y1="5" x2="11" y2="11"></line><line x1="11" y1="5" x2="5" y2="11"></line></svg>
+        Masquer les instructions
+      </button>
+    </div>
+    <div class="no-p" id="noP" style="display: flex;">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.28"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"></path></svg>
+      <p>Sélectionne ton prénom<br>dans la barre du haut.</p>
+    </div>
+    <div class="lbody" id="lbody" style="display:none;">
+      <div>
+        <div class="zone-selector-lbl">Zone du ticket</div>
+        <div id="zoneBtns"><button class="zone-btn sel" id="zbtn-vent" onclick="selZoneF(&#39;vent&#39;)" style="--zc:#0ea5e9;--zb:rgba(224,242,254,.08);">
+      <span class="z-swatch" style="background:#0ea5e9;"></span>Le Vent
+    </button><button class="zone-btn" id="zbtn-objectif" onclick="selZoneF(&#39;objectif&#39;)" style="--zc:#00d4b4;--zb:rgba(220,252,245,.08);">
+      <span class="z-swatch" style="background:#00d4b4;"></span>L'Île au trésor
+    </button><button class="zone-btn" id="zbtn-ancre" onclick="selZoneF(&#39;ancre&#39;)" style="--zc:#6366f1;--zb:rgba(238,242,255,.08);">
+      <span class="z-swatch" style="background:#6366f1;"></span>Les Ancres
+    </button><button class="zone-btn" id="zbtn-recif" onclick="selZoneF(&#39;recif&#39;)" style="--zc:#ec4899;--zb:rgba(255,228,240,.08);">
+      <span class="z-swatch" style="background:#ec4899;"></span>Le Récif
+    </button></div>
+      </div>
+      <div class="composer">
+        <div class="comp-lbl" id="compLbl" style="color: rgb(14, 165, 233);">Le Vent</div>
+        <textarea id="compTxt" maxlength="200" placeholder="Ce qui nous a aidés à avancer…"></textarea>
+        <div class="comp-foot">
+          <span style="font-size:.66rem;color:#94a3b8;">Ctrl+Entrée</span>
+          <button class="btn-sub" id="btnSub" onclick="addItem()" style="background: rgb(14, 165, 233); color: rgb(30, 45, 125);">Préparer</button>
+        </div>
+      </div>
+      <div id="mySection" style="display:none;">
+        <div class="queue-lbl">Mes tickets</div>
+        <div class="my-items" id="myList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOARD -->
+  <div class="board-area">
+    <div class="scene" id="scene">
+
+      <!-- Background image -->
+      <img class="scene-bg" src="./Rétrospective Speedboat — OSKAR Team_files/speedboat-bg.png" alt="" draggable="false">
+
+      <!-- Drop zones overlay -->
+      <div class="drop-zones instr-on" id="dropZones"><div class="dz" id="dz-vent" style="left: 0%; top: 0%; width: 50%; height: 50%; background: transparent;"><div class="dz-label" style="position:absolute;top:10px;left:12px;background:rgba(255,255,255,.82);color:#0ea5e9;border:1.5px solid #0ea5e944;">Le Vent</div>
+      <div class="dz-desc" style="position:absolute;top:38px;left:12px;">Ce qui nous a aidés à avancer — nos forces, accélérateurs et tout ce qui a favorisé l'élan de l'équipe.</div></div><div class="dz" id="dz-objectif" style="left: 50%; top: 0%; width: 50%; height: 50%; background: transparent;"><div class="dz-label" style="position:absolute;top:10px;right:12px;left:auto;background:rgba(255,255,255,.82);color:#00d4b4;border:1.5px solid #00d4b444;">L'Île au trésor</div>
+      <div class="dz-desc" style="position:absolute;top:38px;right:12px;left:auto;">Nos succès et fiertés — ce que l'équipe a accompli et dont elle est fière.</div></div><div class="dz" id="dz-ancre" style="left: 0%; top: 50%; width: 50%; height: 50%; background: transparent;"><div class="dz-label" style="position:absolute;bottom:10px;left:12px;top:auto;background:rgba(255,255,255,.82);color:#6366f1;border:1.5px solid #6366f144;">Les Ancres</div>
+      <div class="dz-desc" style="position:absolute;bottom:38px;left:12px;top:auto;">Ce qui nous ralentit ou nous retient — blocages, dettes, friction qui freinent l'équipe.</div></div><div class="dz" id="dz-recif" style="left: 50%; top: 50%; width: 50%; height: 50%; background: transparent;"><div class="dz-label" style="position:absolute;bottom:10px;right:12px;top:auto;left:auto;background:rgba(255,255,255,.82);color:#ec4899;border:1.5px solid #ec489944;">Le Récif</div>
+      <div class="dz-desc" style="position:absolute;bottom:38px;right:12px;top:auto;left:auto;">Les obstacles et problèmes rencontrés — ce qui a failli faire dérailler l'équipe.</div></div></div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+/*
+  ZONE POSITIONS — calibrated on the image composition (1536×1024).
+  The image shows:
+    - Wind swirls: top-left ~0-28% width, 5-55% height
+    - Island+treasure: top-right ~62-100% width, 5-60% height
+    - Reef rocks: bottom-left ~0-22% width, 55-100% height
+    - Anchors: bottom-right ~55-100% width, 58-100% height
+  
+  We leave the center (boat) clear.
+  All values in % of the scene container.
+*/
+const ZONES = [
+  {
+    id:'vent', name:'Le Vent',
+    color:'#0ea5e9', bg:'rgba(224,242,254,.08)',
+    desc:'Ce qui nous a aidés à avancer — nos forces, accélérateurs et tout ce qui a favorisé l\'élan de l\'équipe.',
+    ph:'Ce qui nous a aidés à avancer…',
+    left:'0%', top:'0%', width:'50%', height:'50%',
+    labelPos:'top:10px;left:12px;',
+  },
+  {
+    id:'objectif', name:"L'Île au trésor",
+    color:'#00d4b4', bg:'rgba(220,252,245,.08)',
+    desc:'Nos succès et fiertés — ce que l\'équipe a accompli et dont elle est fière.',
+    ph:'Un succès, quelque chose dont on est fiers…',
+    left:'50%', top:'0%', width:'50%', height:'50%',
+    labelPos:'top:10px;right:12px;left:auto;',
+  },
+  {
+    id:'ancre', name:'Les Ancres',
+    color:'#6366f1', bg:'rgba(238,242,255,.08)',
+    desc:'Ce qui nous ralentit ou nous retient — blocages, dettes, friction qui freinent l\'équipe.',
+    ph:'Ce qui nous ralentit ou nous retient…',
+    left:'0%', top:'50%', width:'50%', height:'50%',
+    labelPos:'bottom:10px;left:12px;top:auto;',
+  },
+  {
+    id:'recif', name:'Le Récif',
+    color:'#ec4899', bg:'rgba(255,228,240,.08)',
+    desc:'Les obstacles et problèmes rencontrés — ce qui a failli faire dérailler l\'équipe.',
+    ph:'Un obstacle ou problème rencontré…',
+    left:'50%', top:'50%', width:'50%', height:'50%',
+    labelPos:'bottom:10px;right:12px;top:auto;left:auto;',
+  },
+];
+
+const COLORS=['#0ea5e9','#00d4b4','#ec4899','#6366f1','#22c55e','#f59e0b','#8b5cf6','#14b8a6'];
+let people=[],items=[],activeId=null,selZone=ZONES[0].id,isAdmin=false,pendingId=null,nextId=1;
+
+/* ══ BUILD ══ */
+function buildZoneBtns(){
+  document.getElementById('zoneBtns').innerHTML=ZONES.map(z=>
+    `<button class="zone-btn ${z.id===selZone?'sel':''}" id="zbtn-${z.id}"
+      onclick="selZoneF('${z.id}')" style="--zc:${z.color};--zb:${z.bg};">
+      <span class="z-swatch" style="background:${z.color};"></span>${z.name}
+    </button>`
+  ).join('');
+}
+
+function buildDropZones(){
+  const dz=document.getElementById('dropZones'); dz.innerHTML='';
+  ZONES.forEach(z=>{
+    const el=document.createElement('div');
+    el.className='dz'; el.id='dz-'+z.id;
+    el.style.cssText=`left:${z.left};top:${z.top};width:${z.width};height:${z.height};`;
+    el.innerHTML=`<div class="dz-label" style="position:absolute;${z.labelPos}background:rgba(255,255,255,.82);color:${z.color};border:1.5px solid ${z.color}44;">${z.name}</div>
+      <div class="dz-desc" style="position:absolute;${z.labelPos.includes('bottom') ? z.labelPos.replace('bottom:10px','bottom:38px') : 'top:38px;'+z.labelPos.replace(/top:[^;]+;/,'')}">${z.desc}</div>`;
+    el.addEventListener('dragover',e=>{e.preventDefault();el.classList.add('over');});
+    el.addEventListener('dragleave',()=>el.classList.remove('over'));
+    el.addEventListener('drop',e=>{e.preventDefault();el.classList.remove('over');moveCard(parseInt(e.dataTransfer.getData('text/plain')),z.id,e);});
+    dz.appendChild(el);
+  });
+}
+
+/* ══ PARTICIPANTS ══ */
+function addP(){
+  const inp=document.getElementById('newName'),name=inp.value.trim();
+  if(!name||people.find(p=>p.name.toLowerCase()===name.toLowerCase())){inp.value='';return;}
+  people.push({id:nextId++,name,color:COLORS[people.length%COLORS.length]});
+  inp.value=''; renderChips(); renderLeft();
+}
+function selP(id){activeId=(activeId===id)?null:id; renderChips(); renderLeft(); renderBoard();}
+function renderChips(){
+  document.getElementById('pchips').innerHTML=people.map(p=>{
+    const a=p.id===activeId,cnt=items.filter(i=>i.authorId===p.id&&i.published).length;
+    return `<div class="p-chip ${a?'active':''}" onclick="selP(${p.id})" style="${a?'border-color:'+p.color+';':''}">
+      <div class="p-dot" style="background:${p.color};"></div>${p.name}
+      ${cnt?`<span style="font-size:.62rem;font-weight:700;background:#00d4b4;color:#1e2d7d;border-radius:5px;padding:1px 5px;margin-left:2px;">${cnt}</span>`:''}
+    </div>`;
+  }).join('');
+}
+
+/* ══ LEFT PANEL ══ */
+function renderLeft(){
+  const p=people.find(x=>x.id===activeId);
+  document.getElementById('noP').style.display=p?'none':'flex';
+  document.getElementById('lbody').style.display=p?'flex':'none';
+  document.getElementById('lhDot').style.background=p?p.color:'#e2e8f0';
+  document.getElementById('lhName').textContent=p?p.name:'— sélectionne ton prénom';
+  if(p) renderMyItems(p);
+}
+function renderMyItems(p){
+  const mine=items.filter(i=>i.authorId===p.id);
+  const sec=document.getElementById('mySection');
+  if(!mine.length){sec.style.display='none';return;}
+  sec.style.display='block';
+  document.getElementById('myList').innerHTML=mine.map(item=>{
+    const z=ZONES.find(x=>x.id===item.zoneId);
+    return `<div class="my-item" style="border-left-color:${z?z.color:'#e2e8f0'}">
+      <span class="item-st ${item.published?'placed':'pending'}">${item.published?'Placée':'Brouillon'}</span>
+      <div style="font-size:.65rem;font-weight:700;color:${z?z.color:'#94a3b8'};margin-bottom:2px;">${z?z.name:''}</div>
+      <div style="font-size:.8rem;color:#374151;line-height:1.4;">${item.text}</div>
+      ${!item.published?`<button onclick="openCpop(${item.id})" style="margin-top:5px;background:#1e2d7d;color:white;border:none;border-radius:6px;padding:3px 9px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.7rem;font-weight:600;">Placer</button>`:''}
+    </div>`;
+  }).join('');
+}
+function selZoneF(id){
+  selZone=id;const z=ZONES.find(x=>x.id===id);
+  document.querySelectorAll('.zone-btn').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('zbtn-'+id)?.classList.add('sel');
+  const lbl=document.getElementById('compLbl');
+  lbl.textContent=z?z.name:'';lbl.style.color=z?z.color:'#94a3b8';
+  document.getElementById('compTxt').placeholder=z?z.ph:'…';
+  const btn=document.getElementById('btnSub');
+  btn.style.background=z?z.color:'#1e2d7d';
+  btn.style.color=(z&&(z.id==='vent'||z.id==='objectif'))?'#1e2d7d':'white';
+}
+
+/* ══ ITEMS ══ */
+function addItem(){
+  if(!activeId)return;
+  const ta=document.getElementById('compTxt'),text=ta.value.trim();
+  if(!text)return;
+  items.push({id:nextId++,zoneId:selZone,text,authorId:activeId,votes:new Set(),validated:false,published:false,ts:Date.now(),posX:null,posY:null});
+  ta.value='';renderChips();renderLeft();renderBoard();
+}
+function openCpop(id){pendingId=id;document.getElementById('cpopOv').classList.add('show');}
+function closeCpop(){pendingId=null;document.getElementById('cpopOv').classList.remove('show');}
+function doPublish(){
+  const item=items.find(i=>i.id===pendingId);
+  if(item){
+    item.published=true;
+    const dzel=document.getElementById('dz-'+item.zoneId);
+    if(dzel){
+      const r=dzel.getBoundingClientRect(),s=document.getElementById('scene').getBoundingClientRect();
+      item.posX=(r.left-s.left)+16+Math.random()*Math.max(0,r.width-180);
+      item.posY=(r.top-s.top)+60+Math.random()*Math.max(0,r.height-100);
+    }
+  }
+  closeCpop();renderLeft();renderBoard();renderChips();
+}
+
+/* ══ RENDER BOARD ══ */
+function renderBoard(){
+  document.querySelectorAll('.bcard').forEach(el=>el.remove());
+  const scene=document.getElementById('scene');
+  items.filter(i=>i.published).forEach(item=>{
+    const p=people.find(x=>x.id===item.authorId),z=ZONES.find(x=>x.id===item.zoneId);
+    const voted=activeId&&item.votes.has(activeId),canVote=activeId&&item.authorId!==activeId;
+    const card=document.createElement('div');
+    card.className='bcard';card.id='bc-'+item.id;card.draggable=true;
+    card.style.cssText=`left:${item.posX||40}px;top:${item.posY||60}px;border-top-color:${z?z.color:'#e2e8f0'};${item.validated?'outline:2px solid #f59e0b;':''}`;
+    card.innerHTML=`
+      <div class="bc-auth" style="color:${p?p.color:'#94a3b8'}">
+        <div class="bc-dot" style="background:${p?p.color:'#94a3b8'};"></div>${p?p.name:'?'}
+        ${z?`<span style="margin-left:auto;font-size:.56rem;color:${z.color};font-weight:700;opacity:.8;">${z.name}</span>`:''}
+      </div>
+      <div style="font-size:.72rem;line-height:1.45;color:#1e293b;">${item.text}</div>
+      <div class="bc-heart ${voted?'v':''}" onclick="toggleVote(${item.id})" style="${!canVote?'opacity:.32;cursor:default;pointer-events:none;':''}">
+        <svg width="9" height="9" viewBox="0 0 24 24" fill="${voted?'currentColor':'none'}" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        ${item.votes.size}
+      </div>
+      ${isAdmin?`<div class="bc-admin-row">
+        <button class="bc-ret ${item.validated?'on':''}" onclick="toggleVal(${item.id})">
+          ${item.validated
+            ?'<svg width="8" height="8" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,3 13,13"/><polyline points="13,3 3,13"/></svg> Annuler'
+            :'<svg width="8" height="8" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"/></svg> Retenir'}
+        </button>
+        <button class="bc-del" onclick="deleteCard(${item.id})" title="Supprimer">
+          <svg width="8" height="8" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,4 14,4"/><path d="M5 4V2h6v2"/><rect x="3" y="4" width="10" height="10" rx="1"/><line x1="6" y1="7" x2="6" y2="11"/><line x1="10" y1="7" x2="10" y2="11"/></svg>
+          Suppr.
+        </button>
+      </div>`:''}`;
+    card.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',item.id.toString());setTimeout(()=>card.style.opacity='.4',0);});
+    card.addEventListener('dragend',()=>card.style.opacity='1');
+    scene.appendChild(card);
+  });
+  // Tint zones that have cards, transparent otherwise
+  ZONES.forEach(z=>{
+    const el=document.getElementById('dz-'+z.id);
+    if(!el) return;
+    const hasCards=items.some(i=>i.published&&i.zoneId===z.id);
+    el.style.background=hasCards?z.bg:'transparent';
+  });
+}
+function moveCard(id,zoneId,e){
+  const item=items.find(i=>i.id===id);if(!item)return;
+  item.zoneId=zoneId;
+  const s=document.getElementById('scene').getBoundingClientRect();
+  item.posX=e.clientX-s.left-66;item.posY=e.clientY-s.top-28;
+  renderBoard();renderLeft();
+}
+function toggleVote(id){
+  if(!activeId)return;
+  const item=items.find(i=>i.id===id);
+  if(!item||!item.published||item.authorId===activeId)return;
+  item.votes.has(activeId)?item.votes.delete(activeId):item.votes.add(activeId);
+  renderBoard();renderLeft();
+}
+function toggleVal(id){
+  if(!isAdmin)return;
+  const item=items.find(i=>i.id===id);if(!item)return;
+  item.validated=!item.validated;renderBoard();
+}
+function deleteCard(id){
+  if(!isAdmin)return;
+  items=items.filter(i=>i.id!==id);
+  renderBoard();renderLeft();renderChips();
+}
+
+let instrOn=true;
+function toggleInstr(){
+  instrOn=!instrOn;
+  document.getElementById('dropZones').classList.toggle('instr-on',instrOn);
+  const btn=document.getElementById('btnInstr');
+  btn.classList.toggle('on',instrOn);
+  btn.innerHTML=instrOn
+    ?`<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><line x1="5" y1="5" x2="11" y2="11"/><line x1="11" y1="5" x2="5" y2="11"/></svg> Masquer les instructions`
+    :`<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><line x1="8" y1="11" x2="8" y2="11.5"/><path d="M6 6a2 2 0 0 1 4 0c0 1.5-2 2-2 3"/></svg> Afficher les instructions`;
+}
+
+/* ══ SESSION ══ */
+function openSession(){
+  const pub=items.filter(i=>i.published);
+  document.getElementById('sessionStats').innerHTML=`
+    <div class="stat"><div class="stat-n">${pub.length}</div><div class="stat-l">Tickets</div></div>
+    <div class="stat"><div class="stat-n">${people.length}</div><div class="stat-l">Participants</div></div>
+    <div class="stat"><div class="stat-n">${pub.reduce((s,i)=>s+i.votes.size,0)}</div><div class="stat-l">Votes</div></div>
+    <div class="stat"><div class="stat-n" style="color:#f59e0b;">${pub.filter(i=>i.validated).length}</div><div class="stat-l">Retenus</div></div>`;
+  document.getElementById('sessionOv').classList.add('show');
+}
+function closeSession(){document.getElementById('sessionOv').classList.remove('show');}
+function confirmSession(){closeSession();exportSession();}
+function exportSession(){
+  const pub=items.filter(i=>i.published);
+  let txt='RETROSPECTIVE SPEEDBOAT — OSKAR — '+new Date().toLocaleDateString('fr-FR')+'\n'+'='.repeat(50)+'\n\n';
+  ZONES.forEach(z=>{
+    const pool=pub.filter(i=>i.zoneId===z.id).sort((a,b)=>b.votes.size-a.votes.size);
+    txt+=z.name.toUpperCase()+'\n'+'-'.repeat(28)+'\n';
+    if(!pool.length)txt+='  (aucune carte)\n';
+    pool.forEach(i=>{const p=people.find(x=>x.id===i.authorId);txt+=`${i.validated?'[✓] ':'    '}${i.text}  (${i.votes.size} vote${i.votes.size>1?'s':''} — ${p?p.name:'?'})\n`;});
+    txt+='\n';
+  });
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain;charset=utf-8'}));
+  a.download='retro-speedboat.txt';a.click();
+}
+
+/* ══ INIT ══ */
+document.getElementById('adminToggle').addEventListener('change',function(){isAdmin=this.checked;renderBoard();renderLeft();});
+document.getElementById('newName').addEventListener('keydown',e=>{if(e.key==='Enter')addP();});
+document.getElementById('btnAddP').addEventListener('click',addP);
+document.getElementById('compTxt').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey))addItem();});
+document.getElementById('sessionOv').addEventListener('click',e=>{if(e.target===document.getElementById('sessionOv'))closeSession();});
+document.getElementById('cpopOv').addEventListener('click',e=>{if(e.target===document.getElementById('cpopOv'))closeCpop();});
+
+buildZoneBtns();buildDropZones();selZoneF('vent');
+document.getElementById('dropZones').classList.add('instr-on');
+
+['Alice','Bruno','Chloe'].forEach(n=>{document.getElementById('newName').value=n;addP();});
+document.getElementById('newName').value='';
+activeId=null;renderChips();renderLeft();renderBoard();
+</script>
+
+
+</body></html>

@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<!-- saved from url=(0035)https://hasenso.fr/oskar/daily.html -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Stand-up — OSKAR Team</title>
+<link href="./Daily Stand-up — OSKAR Team_files/css2" rel="stylesheet">
+<link rel="stylesheet" href="./Daily Stand-up — OSKAR Team_files/oskar.css">
+<style>
+/* ── Header outil — harmonisé OSKAR ── */
+body { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+.tool-header {
+  height: 56px;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.tool-header-back {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.tool-header-back img {
+  height: 30px;
+  width: auto;
+  object-fit: contain;
+}
+.tool-header-sep {
+  color: var(--border);
+  font-size: 1.2rem;
+  font-weight: 300;
+  flex-shrink: 0;
+}
+.tool-header h1 {
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 600;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tool-header-pill {
+  margin-left: auto;
+  background: var(--team);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 3px 11px;
+  border-radius: 20px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.tool-header-back-link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 500;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: color 0.15s;
+  border-left: 1px solid var(--border);
+  padding-left: 14px;
+  margin-left: 4px;
+}
+.tool-header-back-link:hover { color: var(--navy); }
+
+:root{
+    --danger: #ef4444;
+    --danger-light: #fef2f2;
+    --warn: #f59e0b;
+}
+
+  body{
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column}
+
+  /* ── HEADER ── */
+  
+  
+  
+  
+  
+
+  /* ── LAYOUT ── */
+  .app { display: flex; flex: 1; overflow: hidden; }
+
+  /* ── SIDEBAR ── */
+  aside {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    max-width: var(--sidebar-w);
+    background: var(--white);
+    border-right: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .sidebar-header { padding: 12px 14px 10px; border-bottom: 1px solid #e2e8f0; }
+  .sidebar-title {
+    font-size: 11px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+  }
+
+  .name-selector select {
+    width: 100%;
+    font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 500;
+    padding: 6px 26px 6px 10px;
+    border: 1.5px solid #e2e8f0; border-radius: 8px;
+    background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238892b0' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 8px center;
+    color: var(--text); cursor: pointer; appearance: none;
+  }
+  .name-selector select:focus { outline: none; border-color: var(--teal); }
+
+  .add-name-area {
+    padding: 8px 14px; border-bottom: 1px solid #e2e8f0;
+    box-sizing: border-box; width: 100%;
+  }
+  .add-name-wrapper {
+    display: flex; align-items: center;
+    border: 1.5px solid #e2e8f0; border-radius: 8px;
+    background: var(--bg); overflow: hidden;
+    width: 100%;
+  }
+  .add-name-wrapper:focus-within { border-color: var(--teal); }
+  .add-name-area input {
+    flex: 1; min-width: 0;
+    font-family: 'Outfit', sans-serif; font-size: 13px;
+    padding: 6px 10px; border: none; background: transparent;
+    color: var(--text); outline: none;
+  }
+  .add-name-area input::placeholder { color: var(--muted); }
+  .btn-icon {
+    width: 32px; height: 32px; border: none; flex-shrink: 0;
+    background: var(--teal); color: white; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .btn-icon:hover { background: #00bda0; }
+
+  /* Liste participants — hauteur réduite, items compacts */
+  .participants-list { flex: 1; overflow-y: auto; padding: 4px 6px; }
+
+  .participant-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px; /* réduit de 10px à 6px */
+    border-radius: 8px; margin-bottom: 2px;
+    cursor: default; transition: all 0.2s;
+    border: 2px solid transparent; user-select: none;
+  }
+  .participant-item:hover { background: var(--bg); }
+  .participant-item.done { opacity: 0.5; }
+  /* Pas de text-decoration sur les terminés */
+  .participant-item.active { background: var(--teal-light); border-color: var(--teal); }
+  .participant-item.active .p-name { font-weight: 700; color: var(--navy); }
+
+  .p-avatar {
+    width: 28px; height: 28px; /* réduit de 34px */
+    border-radius: 50%; background: var(--navy); color: white;
+    font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: background 0.2s;
+  }
+  .participant-item.active .p-avatar { background: var(--teal); color: var(--navy); }
+  .participant-item.done .p-avatar { background: #cbd5e1; }
+
+  .p-info { flex: 1; min-width: 0; }
+  .p-name { font-size: 13px; font-weight: 500; }
+  .p-status { font-size: 10px; color: var(--muted); }
+
+  .drag-handle { color: #cbd5e1; cursor: grab; font-size: 14px; line-height: 1; }
+  .drag-handle:active { cursor: grabbing; }
+
+  .p-check {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid #cbd5e1; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 9px;
+  }
+  .done .p-check { background: #22c55e; border-color: #22c55e; color: white; }
+
+  .participant-item.drag-over { border-color: var(--teal); background: var(--teal-light); }
+
+  /* Sidebar footer */
+  .sidebar-footer { padding: 10px 14px; border-top: 1px solid #e2e8f0; }
+  .time-setting {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--muted); flex-wrap: wrap;
+  }
+  .time-setting label { font-weight: 500; }
+  /* Remplacement input number par select avec 30s */
+  .time-setting select {
+    font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600;
+    padding: 4px 24px 4px 8px; border: 1.5px solid #e2e8f0; border-radius: 8px;
+    background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%238892b0' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 6px center;
+    color: var(--navy); appearance: none; cursor: pointer;
+  }
+  .time-setting select:focus { outline: none; border-color: var(--teal); }
+
+  /* ── CENTRE ── */
+  main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+
+  /* Barre de progression — div séparée animée en JS via width */
+  .progress-fill {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 0%;
+    background: var(--teal);
+    opacity: 0.25;
+    /* Transition fluide CSS — 1s linear pour couvrir chaque seconde */
+    transition: width 1s linear, background 0.4s ease, opacity 0.4s ease;
+    z-index: 0;
+  }
+  .progress-fill.instant { transition: none; }
+  .progress-fill.paused-fill { background: var(--warn); }
+  .progress-fill.over-fill { background: var(--danger); opacity: 0.18; }
+
+  /* Fond global selon état */
+  main { background: #f0f2f8; transition: background 0.4s; }
+  main.state-over { background: var(--danger-light); }
+  main.state-next { background: var(--teal-light); }
+
+  @keyframes blink-bg {
+    from { opacity: 0.18; }
+    to { opacity: 0.35; }
+  }
+  .over-fill { animation: blink-bg 0.8s ease-in-out infinite alternate !important; }
+
+  /* Contenu centré */
+  .center-content {
+    position: relative; z-index: 2; flex: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+
+  /* ── ÉCRAN IDLE ── */
+  .screen-idle { text-align: center; padding: 40px; }
+  .idle-icon {
+    width: 72px; height: 72px; margin: 0 auto 24px;
+    background: rgba(0,212,180,0.12); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .idle-title { font-size: 28px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+  .idle-sub { font-size: 16px; color: var(--muted); margin-bottom: 32px; }
+  .btn-start {
+    background: var(--navy); color: white; border: none;
+    padding: 16px 40px; border-radius: 14px;
+    font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-start:hover { background: #162268; transform: translateY(-1px); }
+
+  /* ── ÉCRAN RUNNING ── */
+  .screen-running { text-align: center; padding: 32px; width: 100%; }
+  .current-name {
+    font-size: 64px; font-weight: 800; color: var(--navy);
+    letter-spacing: -2px; line-height: 1; margin-bottom: 4px;
+  }
+  .state-over .current-name { color: var(--danger); }
+
+  .timer-display {
+    font-size: 100px; font-weight: 300; color: var(--navy);
+    letter-spacing: -4px; line-height: 1;
+    font-variant-numeric: tabular-nums; margin: 16px 0;
+  }
+  .state-over .timer-display { color: var(--danger); }
+
+  /* Clignotement uniquement sur les 3 dernières secondes (pas en dépassement) */
+  .timer-blink { animation: blink-timer 0.5s ease-in-out infinite alternate; }
+  @keyframes blink-timer { from { opacity: 1; } to { opacity: 0.25; } }
+
+  .over-label { font-size: 18px; font-weight: 600; color: var(--danger); margin-bottom: 8px; display: none; }
+  .state-over .over-label { display: block; }
+
+  .controls {
+    display: flex; gap: 12px; justify-content: center; margin-top: 24px; flex-wrap: wrap;
+  }
+  .btn-ctrl {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 24px; border-radius: 12px;
+    font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 600;
+    border: none; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-ctrl svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .btn-pause { background: white; color: var(--navy); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .btn-pause:hover { background: #f8fafc; }
+  .btn-next { background: var(--navy); color: white; box-shadow: 0 4px 16px rgba(30,45,125,0.25); }
+  .btn-next:hover { background: #162268; transform: translateY(-1px); }
+  .btn-stop { background: white; color: var(--danger); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .btn-stop:hover { background: var(--danger-light); }
+
+  /* ── ÉCRAN NEXT ── */
+  .screen-next { text-align: center; padding: 32px; }
+  .next-call { font-size: 20px; font-weight: 500; color: var(--muted); margin-bottom: 8px; }
+  .next-name { font-size: 80px; font-weight: 800; color: var(--navy); letter-spacing: -3px; line-height: 1; margin-bottom: 4px; }
+  .next-suffix { font-size: 36px; font-weight: 600; color: var(--teal); margin-bottom: 32px; }
+  .btn-go {
+    background: var(--teal); color: var(--navy); border: none;
+    padding: 16px 48px; border-radius: 14px;
+    font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 20px rgba(0,212,180,0.35);
+  }
+  .btn-go:hover { background: #00bda0; transform: translateY(-1px); }
+
+  /* ── ÉCRAN FIN ── */
+  .screen-done { text-align: center; padding: 40px; }
+  .done-icon {
+    width: 80px; height: 80px; margin: 0 auto 24px;
+    background: rgba(34,197,94,0.12); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .done-title { font-size: 36px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+  .done-sub { font-size: 18px; color: var(--muted); margin-bottom: 32px; }
+  .btn-reset {
+    background: var(--navy); color: white; border: none;
+    padding: 14px 36px; border-radius: 12px;
+    font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-reset:hover { background: #162268; }
+
+  .you-badge {
+    display: inline-block; background: rgba(30,45,125,0.1); color: var(--navy);
+    font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px;
+    letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 16px;
+  }
+  .state-over .you-badge { background: rgba(239,68,68,0.1); color: var(--danger); }
+
+  .paused-overlay {
+    position: absolute; top: 16px; right: 20px;
+    background: var(--warn); color: white;
+    font-size: 12px; font-weight: 700; padding: 6px 14px;
+    border-radius: 20px; letter-spacing: 1px; text-transform: uppercase;
+    z-index: 5; display: none;
+  }
+  .state-paused .paused-overlay { display: block; }
+
+  .total-time {
+    position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+    font-size: 12px; color: var(--muted); font-weight: 500; z-index: 3;
+  }
+
+  /* ── MODALE CONFIRMATION ── */
+  .confirm-overlay {
+    position: fixed; inset: 0; background: rgba(15,20,50,0.45);
+    z-index: 100; display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  }
+  .confirm-overlay.visible { opacity: 1; pointer-events: all; }
+  .confirm-box {
+    background: white; border-radius: 16px; padding: 32px 36px;
+    text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    transform: translateY(8px); transition: transform 0.2s;
+    max-width: 320px; width: 90%;
+  }
+  .confirm-overlay.visible .confirm-box { transform: translateY(0); }
+  .confirm-box h3 { font-size: 20px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+  .confirm-box p { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+  .confirm-actions { display: flex; gap: 10px; justify-content: center; }
+  .btn-cancel {
+    padding: 10px 24px; border-radius: 10px; border: 1.5px solid #e2e8f0;
+    background: white; color: var(--text); font-family: 'Outfit', sans-serif;
+    font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.15s;
+  }
+  .btn-cancel:hover { background: var(--bg); }
+  .btn-confirm-stop {
+    padding: 10px 24px; border-radius: 10px; border: none;
+    background: var(--danger); color: white; font-family: 'Outfit', sans-serif;
+    font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.15s;
+  }
+  .btn-confirm-stop:hover { background: #dc2626; }
+
+  /* Scrollbar */
+  .participants-list::-webkit-scrollbar { width: 3px; }
+  .participants-list::-webkit-scrollbar-track { background: transparent; }
+  .participants-list::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 2px; }
+</style>
+<script src="chrome-extension://ajdpfmkffanmkhejnopjppegokpogffp/assets/prompt.js"></script></head>
+<body>
+
+<!-- ─── HEADER OSKAR ─── -->
+<header class="tool-header">
+  <a class="tool-header-back" href="https://hasenso.fr/oskar/boite-a-outils.html">
+    <img src="./Daily Stand-up — OSKAR Team_files/logo-oskar.png" alt="OSKAR">
+  </a>
+  <span class="tool-header-sep">|</span>
+  <h1>Daily Stand-up</h1>
+  <span class="tool-header-pill">Team</span>
+  <a class="tool-header-back-link" href="https://hasenso.fr/oskar/boite-a-outils.html">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;flex-shrink:0;"><path d="M12 4L6 10l6 6"></path></svg>
+    Boîte à outils
+  </a>
+</header>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside>
+    <div class="sidebar-header">
+      <div class="sidebar-title">Participants</div>
+      <div class="name-selector">
+        <select id="selfSelect" onchange="setSelf(this.value)"><option value="">— Mon prénom —</option><option value="Alice">Alice</option><option value="Bob">Bob</option><option value="Chloé">Chloé</option><option value="David">David</option><option value="Emma">Emma</option><option value="François">François</option><option value="Léa">Léa</option><option value="Marc">Marc</option><option value="Nina">Nina</option><option value="Olivier">Olivier</option><option value="Paul">Paul</option><option value="Sophie">Sophie</option></select>
+      </div>
+    </div>
+
+    <div class="add-name-area">
+      <div class="add-name-wrapper">
+        <input id="newNameInput" type="text" placeholder="Ajouter un prénom…" maxlength="30" onkeydown="if(event.key===&#39;Enter&#39;) addName()">
+        <button class="btn-icon" onclick="addName()" title="Ajouter">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14">
+            <line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="participants-list" id="participantsList"><div class="participant-item" draggable="true" data-opos="0">
+      <div class="drag-handle" title="Réorganiser">⠿</div>
+      <div class="p-avatar">A</div>
+      <div class="p-info">
+        <div class="p-name">Alice</div>
+        <div class="p-status"></div>
+      </div>
+      <div class="p-check"></div></div><div class="participant-item" draggable="true" data-opos="1">
+      <div class="drag-handle" title="Réorganiser">⠿</div>
+      <div class="p-avatar">B</div>
+      <div class="p-info">
+        <div class="p-name">Bob</div>
+        <div class="p-status"></div>
+      </div>
+      <div class="p-check"></div></div><div class="participant-item" draggable="true" data-opos="2">
+      <div class="drag-handle" title="Réorganiser">⠿</div>
+      <div class="p-avatar">C</div>
+      <div class="p-info">
+        <div class="p-name">Chloé</div>
+        <div class="p-status"></div>
+      </div>
+      <div class="p-check"></div></div><div class="participant-item" draggable="true" data-opos="3">
+      <div class="drag-handle" title="Réorganiser">⠿</div>
+      <div class="p-avatar">D</div>
+      <div class="p-info">
+        <div class="p-name">David</div>
+        <div class="p-status"></div>
+      </div>
+      <div class="p-check"></div></div><div class="participant-item" draggable="true" data-opos="4">
+      <div class="drag-handle" title="Réorganiser">⠿</div>
+      <div class="p-avatar">E</div>
+      <div class="p-info">
+        <div class="p-name">Emma</div>
+        <div class="p-status"></div>
+      </div>
+      <div class="p-check"></div></div><div class="participant-item" draggable="true" data-opos="5">
+      <div class="drag-handle" title="Réorganiser">⠿</div>
+      <div class="p-avatar">F</div>
+      <div class="p-info">
+        <div class="p-name">François</div>
+        <div class="p-status"></div>
+      </div>
+      <div class="p-check"></div></div><div class="participant-item" draggable="true" data-opos="6">
+      <div class="drag-handle" title="Réorganiser">⠿</div>
+      <div class="p-avatar">L</div>
+      <div class="p-info">
+        <div class="p-name">Léa</div>
+        <div class="p-status"></div>
+      </div>
+      <div class="p-check"></div></div><div class="participant-item" draggable="true" data-opos="7">
+      <div class="drag-handle" title="Réorganiser">⠿</div>
+      <div class="p-avatar">M</div>
+      <div class="p-info">
+        <div class="p-name">Marc</div>
+        <div class="p-status"></div>
+      </div>
+      <div class="p-check"></div></div><div class="participant-item" draggable="true" data-opos="8">
+      <div class="drag-handle" title="Réorganiser">⠿</div>
+      <div class="p-avatar">N</div>
+      <div class="p-info">
+        <div class="p-name">Nina</div>
+        <div class="p-status"></div>
+      </div>
+      <div class="p-check"></div></div><div class="participant-item" draggable="true" data-opos="9">
+      <div class="drag-handle" title="Réorganiser">⠿</div>
+      <div class="p-avatar">O</div>
+      <div class="p-info">
+        <div class="p-name">Olivier</div>
+        <div class="p-status"></div>
+      </div>
+      <div class="p-check"></div></div><div class="participant-item" draggable="true" data-opos="10">
+      <div class="drag-handle" title="Réorganiser">⠿</div>
+      <div class="p-avatar">P</div>
+      <div class="p-info">
+        <div class="p-name">Paul</div>
+        <div class="p-status"></div>
+      </div>
+      <div class="p-check"></div></div><div class="participant-item" draggable="true" data-opos="11">
+      <div class="drag-handle" title="Réorganiser">⠿</div>
+      <div class="p-avatar">S</div>
+      <div class="p-info">
+        <div class="p-name">Sophie</div>
+        <div class="p-status"></div>
+      </div>
+      <div class="p-check"></div></div></div>
+
+    <div class="sidebar-footer">
+      <div class="time-setting">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+          <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        <label>Temps / personne</label>
+        <select id="timeSetting">
+          <option value="30">30 sec</option>
+          <option value="60" selected="">1 min</option>
+          <option value="90">1 min 30</option>
+          <option value="120">2 min</option>
+          <option value="180">3 min</option>
+          <option value="300">5 min</option>
+        </select>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main id="mainArea" class="state-idle">
+    <!-- Barre de progression fluide via JS -->
+    <div class="progress-fill" id="progressFill"></div>
+    <div class="paused-overlay">⏸ Pause</div>
+
+    <div class="center-content" id="centerContent">
+      <div class="screen-idle">
+        <div class="idle-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00d4b4" stroke-width="2" width="36" height="36">
+            <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </div>
+        <div class="idle-title">Prêts pour le daily ?</div>
+        <div class="idle-sub">12 participants · 1 min / personne</div>
+        <button class="btn-start" onclick="startDaily()">▶ Lancer le daily</button>
+      </div></div>
+    <div class="total-time" id="totalTime"></div>
+  </main>
+</div>
+
+<!-- MODALE CONFIRMATION ARRÊT -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <h3>Arrêter le daily ?</h3>
+    <p>La session en cours sera annulée et toute la progression perdue.</p>
+    <div class="confirm-actions">
+      <button class="btn-cancel" onclick="closeConfirm()">Continuer</button>
+      <button class="btn-confirm-stop" onclick="confirmStop()">Arrêter</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STATE ──
+let participants = [];
+let order = [];
+let selfName = '';
+let currentIdx = -1;
+let totalSecs = 60;
+let elapsed = 0;       // secondes entières
+let startTimestamp = null; // timestamp de début du chrono (pour fluidité)
+let pausedAt = null;   // elapsed au moment de la pause
+let rafId = null;
+let appState = 'idle';
+let sessionStart = null;
+let dragSrc = null;
+let nextNamePending = '';
+
+// ── INIT ──
+const defaultNames = ['Alice','Bob','Chloé','David','Emma','François','Léa','Marc','Nina','Olivier','Paul','Sophie'];
+
+function init() {
+  const saved = localStorage.getItem('daily_names');
+  participants = saved ? JSON.parse(saved) : [...defaultNames];
+  order = participants.map((_,i) => i);
+  order.sort((a,b) => participants[a].localeCompare(participants[b]));
+  renderSidebar();
+  renderCenter();
+}
+
+function saveNames() { localStorage.setItem('daily_names', JSON.stringify(participants)); }
+
+function setSelf(name) { selfName = name; renderList(); }
+
+function addName() {
+  const input = document.getElementById('newNameInput');
+  const name = input.value.trim();
+  if (!name || participants.includes(name)) { input.value = ''; return; }
+  participants.push(name);
+  order.push(participants.length - 1);
+  order.sort((a,b) => participants[a].localeCompare(participants[b]));
+  saveNames();
+  renderSidebar();
+  document.getElementById('selfSelect').value = name;
+  setSelf(name);
+  input.value = '';
+}
+
+// ── SIDEBAR ──
+function renderSidebar() { renderSelect(); renderList(); }
+
+function renderSelect() {
+  const sel = document.getElementById('selfSelect');
+  sel.innerHTML = '<option value="">— Mon prénom —</option>';
+  [...participants].sort().forEach(n => {
+    const opt = document.createElement('option');
+    opt.value = n; opt.textContent = n;
+    if (n === selfName) opt.selected = true;
+    sel.appendChild(opt);
+  });
+}
+
+function renderList() {
+  const list = document.getElementById('participantsList');
+  list.innerHTML = '';
+
+  order.forEach((pIdx, oPos) => {
+    const name = participants[pIdx];
+    const isCurrent = (appState === 'running' || appState === 'paused' || appState === 'over') && oPos === currentIdx;
+    const isDone = (appState === 'running' || appState === 'paused' || appState === 'over') && oPos < currentIdx;
+    const isSelf = name === selfName;
+    const initial = name.charAt(0).toUpperCase();
+
+    const item = document.createElement('div');
+    item.className = 'participant-item' +
+      (isCurrent ? ' active' : '') +
+      (isDone ? ' done' : '') +
+      (isSelf ? ' self' : '');
+    item.draggable = (appState === 'idle');
+    item.dataset.opos = oPos;
+
+    item.innerHTML = `
+      <div class="drag-handle" title="Réorganiser">⠿</div>
+      <div class="p-avatar">${initial}</div>
+      <div class="p-info">
+        <div class="p-name">${name}${isSelf ? ' <span style="font-size:10px;color:var(--teal);font-weight:700;">vous</span>' : ''}</div>
+        <div class="p-status">${isCurrent ? '🎙 En cours…' : isDone ? 'Terminé ✓' : ''}</div>
+      </div>
+      <div class="p-check">${isDone ? '✓' : ''}</div>`;
+
+    item.addEventListener('dragstart', e => {
+      if (appState !== 'idle') { e.preventDefault(); return; }
+      dragSrc = oPos; item.style.opacity = '0.5';
+    });
+    item.addEventListener('dragend', () => { item.style.opacity = '1'; });
+    item.addEventListener('dragover', e => { e.preventDefault(); item.classList.add('drag-over'); });
+    item.addEventListener('dragleave', () => item.classList.remove('drag-over'));
+    item.addEventListener('drop', e => {
+      e.preventDefault(); item.classList.remove('drag-over');
+      if (dragSrc === null || dragSrc === oPos) return;
+      const moved = order.splice(dragSrc, 1)[0];
+      order.splice(oPos, 0, moved);
+      dragSrc = null; renderList();
+    });
+
+    list.appendChild(item);
+  });
+}
+
+// ── TIMER FLUIDE via RAF ──
+function getTotalSecs() {
+  return parseInt(document.getElementById('timeSetting').value);
+}
+
+function formatTime(s) {
+  const abs = Math.abs(s);
+  const m = Math.floor(abs / 60).toString().padStart(2,'0');
+  const sec = (abs % 60).toString().padStart(2,'0');
+  return (s < 0 ? '+' : '') + m + ':' + sec;
+}
+
+function startRAF() {
+  if (rafId) cancelAnimationFrame(rafId);
+  const tick = () => {
+    if (appState !== 'running' && appState !== 'over') {
+      rafId = null; // la boucle s'arrête proprement, rien à annuler
+      return;
+    }
+    const now = performance.now();
+    const elapsedMs = now - startTimestamp;
+    const elapsedSec = elapsedMs / 1000;
+    const total = getTotalSecs();
+    const prog = Math.min(1, elapsedSec / total);
+
+    // Mise à jour barre fluide
+    const fill = document.getElementById('progressFill');
+    if (fill) fill.style.width = (prog * 100) + '%';
+
+    // Mise à jour timer (chaque seconde entière)
+    const secInt = Math.floor(elapsedSec);
+    const remaining = total - secInt;
+
+    // Dépassement
+    if (remaining <= 0 && appState === 'running') {
+      appState = 'over';
+      setMainState('over');
+      renderList();
+    }
+
+    // Update affichage timer et classes
+    const timerEl = document.getElementById('timerDisplay');
+    if (timerEl) {
+      const dispRemaining = total - secInt;
+      timerEl.textContent = formatTime(dispRemaining <= 0 ? dispRemaining : dispRemaining);
+      // Clignotement 3 dernières secondes uniquement (pas en dépassement)
+      if (dispRemaining > 0 && dispRemaining <= 3) {
+        timerEl.classList.add('timer-blink');
+      } else {
+        timerEl.classList.remove('timer-blink');
+      }
+    }
+
+    // Durée totale
+    if (sessionStart) {
+      const totalEl = document.getElementById('totalTime');
+      if (totalEl) {
+        const dur = Math.round((performance.now() - sessionStart) / 1000);
+        totalEl.textContent = `Durée : ${formatTime(dur)} · ${currentIdx + 1} / ${order.length}`;
+      }
+    }
+
+    rafId = requestAnimationFrame(tick);
+  };
+  rafId = requestAnimationFrame(tick);
+}
+
+function stopRAF() {
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+}
+
+// ── NAVIGATION ──
+function startDaily() {
+  if (order.length === 0) return;
+  currentIdx = 0;
+  totalSecs = getTotalSecs();
+  sessionStart = performance.now();
+  startTimestamp = performance.now();
+  appState = 'running';
+  setMainState('running');
+
+  // Progress fill sans transition pour le départ à 0
+  const fill = document.getElementById('progressFill');
+  fill.classList.add('instant');
+  fill.style.width = '0%';
+  fill.classList.remove('paused-fill','over-fill');
+  requestAnimationFrame(() => fill.classList.remove('instant'));
+
+  renderList();
+  renderCenter();
+  startRAF();
+}
+
+function pauseResume() {
+  if (appState === 'running' || appState === 'over') {
+    // Capturer l'instant exact AVANT tout le reste
+    pausedAt = performance.now() - startTimestamp;
+    appState = 'paused';
+    stopRAF(); // cancelAnimationFrame — le frame en cours peut encore se terminer mais ne mettra plus à jour (guard dans tick)
+    setMainState('paused');
+    // Figer immédiatement le DOM sans attendre le prochain frame
+    const total = getTotalSecs();
+    const secInt = Math.floor(pausedAt / 1000);
+    const dispRemaining = total - secInt;
+    const timerEl = document.getElementById('timerDisplay');
+    if (timerEl) { timerEl.textContent = formatTime(dispRemaining); timerEl.classList.remove('timer-blink'); }
+    const fill = document.getElementById('progressFill');
+    if (fill) {
+      // Lire la largeur réellement affichée à l'écran (pas la valeur calculée)
+      const rendered = fill.getBoundingClientRect().width;
+      const parent = fill.parentElement.getBoundingClientRect().width;
+      const actualPct = parent > 0 ? (rendered / parent * 100) : 0;
+      fill.style.transition = 'none';
+      fill.style.width = actualPct + '%';
+      fill.classList.add('paused-fill');
+    }
+  } else if (appState === 'paused') {
+    startTimestamp = performance.now() - pausedAt;
+    pausedAt = null;
+    appState = 'running';
+    setMainState('running');
+    const fill = document.getElementById('progressFill');
+    if (fill) { fill.style.transition = ''; fill.classList.remove('paused-fill'); }
+    startRAF();
+  }
+  updatePauseButton();
+}
+
+function updatePauseButton() {
+  const btn = document.getElementById('pauseBtn');
+  if (!btn) return;
+  if (appState === 'paused') {
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polygon points="5 3 19 12 5 21 5 3"/></svg> Reprendre`;
+  } else {
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> Pause`;
+  }
+}
+
+function nextPerson() {
+  stopRAF();
+  if (currentIdx >= order.length - 1) {
+    appState = 'done';
+    setMainState('idle');
+    renderList();
+    renderCenter();
+    return;
+  }
+  nextNamePending = participants[order[currentIdx + 1]];
+  appState = 'next';
+  setMainState('next');
+  renderCenter();
+  renderList();
+}
+
+function goNext() {
+  currentIdx++;
+  totalSecs = getTotalSecs();
+  startTimestamp = performance.now();
+  pausedAt = null;
+  appState = 'running';
+  setMainState('running');
+
+  const fill = document.getElementById('progressFill');
+  fill.classList.add('instant');
+  fill.style.width = '0%';
+  fill.classList.remove('paused-fill','over-fill');
+  requestAnimationFrame(() => fill.classList.remove('instant'));
+
+  renderList();
+  renderCenter();
+  startRAF();
+}
+
+function stopDaily() {
+  stopRAF();
+  currentIdx = -1;
+  appState = 'idle';
+  setMainState('idle');
+  const fill = document.getElementById('progressFill');
+  if (fill) { fill.classList.add('instant'); fill.style.width = '0%'; fill.classList.remove('paused-fill','over-fill'); }
+  renderList();
+  renderCenter();
+}
+
+function setMainState(state) {
+  const main = document.getElementById('mainArea');
+  main.className = 'state-' + state;
+  // Couleur de la barre selon état
+  const fill = document.getElementById('progressFill');
+  if (!fill) return;
+  fill.classList.remove('paused-fill','over-fill');
+  if (state === 'over') fill.classList.add('over-fill');
+  if (state === 'paused') fill.classList.add('paused-fill');
+}
+
+// ── RENDER CENTER ──
+function renderCenter() {
+  const el = document.getElementById('centerContent');
+  const totalTime = document.getElementById('totalTime');
+
+  if (appState === 'idle') {
+    const timeLabel = document.getElementById('timeSetting');
+    const opt = timeLabel ? timeLabel.options[timeLabel.selectedIndex].text : '1 min';
+    el.innerHTML = `
+      <div class="screen-idle">
+        <div class="idle-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00d4b4" stroke-width="2" width="36" height="36">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <div class="idle-title">Prêts pour le daily ?</div>
+        <div class="idle-sub">${order.length} participant${order.length>1?'s':''} · ${opt} / personne</div>
+        <button class="btn-start" onclick="startDaily()">▶ Lancer le daily</button>
+      </div>`;
+    if (totalTime) totalTime.textContent = '';
+    return;
+  }
+
+  if (appState === 'done') {
+    const dur = sessionStart ? Math.round((performance.now() - sessionStart) / 1000) : 0;
+    el.innerHTML = `
+      <div class="screen-done">
+        <div class="done-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" width="40" height="40">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <div class="done-title">Daily terminé 🎉</div>
+        <div class="done-sub">Durée totale : ${formatTime(dur)}</div>
+        <button class="btn-reset" onclick="stopDaily()">Nouveau daily</button>
+      </div>`;
+    if (totalTime) totalTime.textContent = '';
+    return;
+  }
+
+  if (appState === 'next') {
+    el.innerHTML = `
+      <div class="screen-next">
+        <div class="next-call">C'est au tour de</div>
+        <div class="next-name">${nextNamePending}</div>
+        <div class="next-suffix">à toi !</div>
+        <button class="btn-go" onclick="goNext()">C'est parti ▶</button>
+      </div>`;
+    if (totalTime) totalTime.textContent = '';
+    return;
+  }
+
+  // running | paused | over
+  const name = participants[order[currentIdx]] || '';
+  const isSelf = name === selfName;
+  const total = getTotalSecs();
+  const secElapsed = pausedAt ? Math.floor(pausedAt / 1000) : 0;
+  const dispRemaining = total - secElapsed;
+
+  el.innerHTML = `
+    <div class="screen-running">
+      ${isSelf ? '<div class="you-badge">🎙 Vous parlez</div>' : '<div style="height:28px"></div>'}
+      <div class="current-name">${name}</div>
+      <div class="over-label">+ Temps dépassé</div>
+      <div class="timer-display" id="timerDisplay">${formatTime(dispRemaining)}</div>
+      <div class="controls">
+        <button class="btn-ctrl btn-stop" onclick="askStop()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+          </svg>
+          Arrêter
+        </button>
+        <button id="pauseBtn" class="btn-ctrl btn-pause" onclick="pauseResume()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+            <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+          </svg>
+          Pause
+        </button>
+        <button class="btn-ctrl btn-next" onclick="nextPerson()">
+          Suivant
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+      </div>
+    </div>`;
+}
+
+function askStop() {
+  document.getElementById('confirmOverlay').classList.add('visible');
+}
+function closeConfirm() {
+  document.getElementById('confirmOverlay').classList.remove('visible');
+}
+function confirmStop() {
+  closeConfirm();
+  stopDaily();
+}
+
+// Fermer sur clic overlay
+document.getElementById('confirmOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeConfirm();
+});
+
+
+document.addEventListener('keydown', e => {
+  if (['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)) return;
+  if (e.code === 'Space' && (appState === 'running' || appState === 'paused' || appState === 'over')) {
+    e.preventDefault(); pauseResume();
+  }
+  if (e.code === 'ArrowRight' && (appState === 'running' || appState === 'over')) nextPerson();
+  if (e.code === 'Enter' && appState === 'next') goNext();
+});
+
+init();
+</script>
+
+
+</body></html>

@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<!-- saved from url=(0041)https://hasenso.fr/oskar/competences.html -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compétences de l'équipe — OSKAR Team</title>
+<link href="./Compétences de l&#39;équipe — OSKAR Team_files/css2" rel="stylesheet">
+<link rel="stylesheet" href="./Compétences de l&#39;équipe — OSKAR Team_files/oskar.css">
+<script src="./Compétences de l&#39;équipe — OSKAR Team_files/chart.umd.min.js.télécharger"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{height:100vh;display:flex;flex-direction:column;overflow:hidden;color:var(--navy);}
+
+/* ── Header ── */
+.tool-header{height:56px;background:var(--white,#fff);border-bottom:1px solid var(--border,#e2e8f0);display:flex;align-items:center;padding:0 20px;gap:14px;flex-shrink:0;}
+.tool-header-back{display:flex;align-items:center;text-decoration:none;flex-shrink:0;}
+.tool-header-back img{height:30px;width:auto;object-fit:contain;}
+.tool-header-sep{color:var(--border,#e2e8f0);font-size:1.2rem;font-weight:300;flex-shrink:0;}
+.tool-header h1{color:var(--text,#1e2d7d);font-size:.95rem;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tool-header-pill{margin-left:auto;background:var(--team,#ec4899);color:#fff;font-size:.78rem;font-weight:600;padding:3px 11px;border-radius:20px;flex-shrink:0;white-space:nowrap;}
+.tool-header-back-link{display:flex;align-items:center;gap:5px;color:#64748b;font-size:.78rem;font-weight:500;text-decoration:none;flex-shrink:0;transition:color .15s;border-left:1px solid var(--border,#e2e8f0);padding-left:14px;margin-left:4px;}
+.tool-header-back-link:hover{color:var(--navy,#1e2d7d);}
+
+/* ── Pbar ── */
+.pbar{background:var(--navy,#1e2d7d);padding:11px 24px;display:flex;align-items:center;gap:12px;flex-shrink:0;flex-wrap:wrap;}
+.pbar-label{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+.p-chips{display:flex;gap:7px;flex-wrap:wrap;align-items:center;}
+.p-chip{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;border:2px solid transparent;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:500;background:#f1f5f9;color:#475569;transition:all .15s;}
+.p-chip.active{background:white;font-weight:600;}
+.p-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.p-chip .done-badge{font-size:.65rem;font-weight:700;background:#22c55e;color:white;border-radius:5px;padding:1px 5px;margin-left:2px;}
+.add-p{display:flex;gap:7px;}
+.add-p input{font-family:'Outfit',sans-serif;font-size:.9rem;border:1.5px solid #cbd5e1;border-radius:8px;padding:6px 12px;width:140px;color:var(--navy,#1e2d7d);outline:none;}
+.add-p input:focus{border-color:var(--teal,#00d4b4);}
+.btn-teal{background:var(--teal,#00d4b4);color:var(--navy,#1e2d7d);border:none;border-radius:8px;padding:6px 13px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;font-size:.9rem;}
+.vsep{width:1px;height:28px;background:rgba(255,255,255,.2);flex-shrink:0;}
+.btn-end{background:var(--team,#ec4899);color:white;border:none;border-radius:8px;padding:7px 16px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:6px;white-space:nowrap;margin-left:auto;}
+
+/* ── Main layout ── */
+.main{flex:1;display:flex;overflow:hidden;}
+
+/* ── Left panel ── */
+.left{width:300px;flex-shrink:0;background:white;border-right:1px solid #e2e8f0;display:flex;flex-direction:column;overflow:hidden;}
+.lh{padding:14px 16px 10px;border-bottom:1px solid #f1f5f9;flex-shrink:0;}
+.lh-title{font-size:.78rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:6px;}
+.lh-sub{margin-top:3px;font-size:.82rem;color:#94a3b8;}
+
+/* Skills config */
+.skills-config{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:8px;}
+.skill-row{display:flex;align-items:center;gap:7px;background:#f8fafc;border-radius:8px;padding:7px 10px;}
+.skill-drag{color:#cbd5e1;cursor:grab;font-size:.7rem;flex-shrink:0;}
+.skill-name-input{flex:1;font-family:'Outfit',sans-serif;font-size:.85rem;color:var(--navy,#1e2d7d);border:none;background:transparent;outline:none;font-weight:500;}
+.skill-del{width:20px;height:20px;border-radius:5px;background:none;border:none;cursor:pointer;color:#cbd5e1;font-size:.7rem;display:flex;align-items:center;justify-content:center;transition:color .15s;flex-shrink:0;}
+.skill-del:hover{color:#ef4444;}
+.add-skill-row{display:flex;gap:7px;padding:0 2px;}
+.add-skill-inp{flex:1;font-family:'Outfit',sans-serif;font-size:.85rem;border:1.5px dashed #cbd5e1;border-radius:8px;padding:7px 10px;color:var(--navy,#1e2d7d);outline:none;background:#f8fafc;}
+.add-skill-inp:focus{border-color:var(--teal,#00d4b4);border-style:solid;}
+.btn-add-skill{background:var(--navy,#1e2d7d);color:white;border:none;border-radius:8px;padding:7px 12px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;font-size:.82rem;white-space:nowrap;}
+
+/* ── Scoring panel ── */
+.scoring-area{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#f5f6fa;}
+
+/* Participant header */
+.scoring-topbar{padding:12px 20px;background:#f5f6fa;border-bottom:1px solid #e2e8f0;flex-shrink:0;display:flex;align-items:center;gap:10px;}
+.scoring-who{font-size:.9rem;font-weight:700;display:flex;align-items:center;gap:8px;}
+.scoring-who-dot{width:11px;height:11px;border-radius:50%;}
+.scoring-hint{font-size:.78rem;color:#94a3b8;margin-left:auto;}
+
+/* Scoring scroll */
+.scoring-scroll{flex:1;overflow-y:auto;padding:20px;}
+.no-participant{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:12px;color:#94a3b8;text-align:center;}
+.no-participant p{font-size:.85rem;line-height:1.5;}
+
+/* Score items */
+.score-items{display:flex;flex-direction:column;gap:12px;max-width:560px;margin:0 auto;}
+.score-item{background:white;border-radius:12px;padding:14px 18px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.score-label{font-size:.9rem;font-weight:600;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+.score-val{font-size:1.3rem;font-weight:800;color:var(--teal,#00d4b4);}
+.score-slider-wrap{display:flex;align-items:center;gap:10px;}
+.score-ticks{display:flex;gap:6px;flex:1;}
+.score-tick{flex:1;height:32px;border-radius:6px;border:2px solid #e2e8f0;background:#f8fafc;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:700;color:#94a3b8;transition:all .15s;display:flex;align-items:center;justify-content:center;}
+.score-tick:hover{border-color:#94a3b8;color:#475569;}
+.score-tick.on{color:white;border-color:transparent;}
+.score-minmax{font-size:.7rem;color:#cbd5e1;font-weight:600;white-space:nowrap;}
+
+/* ── Radar view ── */
+.radar-section{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.radar-topbar{padding:10px 20px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:10px;flex-shrink:0;background:#f5f6fa;}
+.radar-view-label{font-size:.78rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;}
+.view-btns{display:flex;gap:5px;}
+.view-btn{font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;padding:4px 12px;border-radius:20px;border:1.5px solid #e2e8f0;background:white;color:#64748b;cursor:pointer;transition:all .15s;}
+.view-btn.on{background:var(--navy,#1e2d7d);color:white;border-color:var(--navy,#1e2d7d);}
+.radar-scroll{flex:1;overflow-y:auto;padding:20px;display:flex;gap:20px;flex-wrap:wrap;align-content:flex-start;}
+
+/* Radar cards */
+.radar-card{background:white;border-radius:14px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.08);display:flex;flex-direction:column;align-items:center;gap:10px;width:280px;}
+.radar-card-title{font-size:.85rem;font-weight:700;display:flex;align-items:center;gap:7px;}
+.radar-card-dot{width:10px;height:10px;border-radius:50%;}
+.radar-card canvas{width:220px!important;height:220px!important;}
+
+/* Score table view */
+.score-table{width:100%;border-collapse:collapse;font-size:.82rem;}
+.score-table th{padding:8px 12px;text-align:left;font-size:.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid #f1f5f9;white-space:nowrap;}
+.score-table td{padding:8px 12px;border-bottom:1px solid #f8fafc;color:#374151;}
+.score-table tr:last-child td{border-bottom:none;}
+.score-table .p-name{display:flex;align-items:center;gap:6px;font-weight:600;}
+.score-pill{display:inline-block;padding:2px 8px;border-radius:10px;font-weight:700;font-size:.78rem;color:white;}
+.score-avg{font-weight:800;color:var(--navy,#1e2d7d);}
+.table-wrap{background:white;border-radius:14px;box-shadow:0 1px 4px rgba(0,0,0,.08);overflow:hidden;width:100%;}
+
+/* Modal */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(3px);z-index:100;align-items:center;justify-content:center;}
+.overlay.show{display:flex;}
+.modal{background:white;border-radius:16px;padding:32px 36px;max-width:460px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:pop .2s cubic-bezier(.34,1.56,.64,1);}
+@keyframes pop{from{transform:scale(.85);opacity:0;}}
+.modal h2{font-size:1.15rem;font-weight:700;margin-bottom:6px;}
+.modal p{font-size:.85rem;color:#64748b;margin-bottom:20px;line-height:1.5;}
+.modal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
+.stat{background:#f8fafc;border-radius:10px;padding:12px;text-align:center;}
+.stat-n{font-size:1.5rem;font-weight:700;}
+.stat-l{font-size:.7rem;color:#94a3b8;font-weight:500;margin-top:2px;}
+.modal-foot{display:flex;gap:10px;justify-content:flex-end;}
+.btn-cancel{background:#f1f5f9;color:#64748b;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:600;font-size:.85rem;}
+.btn-confirm{background:var(--team,#ec4899);color:white;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;font-size:.85rem;display:flex;align-items:center;gap:6px;}
+
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:#e2e8f0;border-radius:3px;}
+</style>
+<script src="chrome-extension://ajdpfmkffanmkhejnopjppegokpogffp/assets/prompt.js"></script></head>
+<body>
+
+<!-- HEADER -->
+<header class="tool-header">
+  <a class="tool-header-back" href="https://hasenso.fr/oskar/boite-a-outils.html"><img src="./Compétences de l&#39;équipe — OSKAR Team_files/logo-oskar.png" alt="OSKAR"></a>
+  <span class="tool-header-sep">|</span>
+  <h1>Compétences de l'équipe</h1>
+  <span class="tool-header-pill">Team</span>
+  <a class="tool-header-back-link" href="https://hasenso.fr/oskar/boite-a-outils.html">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;flex-shrink:0;"><path d="M12 4L6 10l6 6"></path></svg>
+    Boîte à outils
+  </a>
+</header>
+
+<!-- PBAR -->
+<div class="pbar">
+  <span class="pbar-label">Participants</span>
+  <div class="p-chips" id="pchips"><div class="p-chip " onclick="selectParticipant(8)" style="">
+      <div class="p-dot" style="background:#6366f1;"></div>
+      Alice
+      
+    </div><div class="p-chip " onclick="selectParticipant(9)" style="">
+      <div class="p-dot" style="background:#0ea5e9;"></div>
+      Bruno
+      
+    </div><div class="p-chip " onclick="selectParticipant(10)" style="">
+      <div class="p-dot" style="background:#ec4899;"></div>
+      Chloe
+      
+    </div></div>
+  <div class="add-p">
+    <input type="text" id="newName" placeholder="Prénom" maxlength="16">
+    <button class="btn-teal" id="btnAddP">+ Ajouter</button>
+  </div>
+  <div class="vsep"></div>
+  <button class="btn-end" onclick="openEndModal()">
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"></polyline></svg>
+    Résultats &amp; export
+  </button>
+</div>
+
+<!-- END MODAL -->
+<div class="overlay" id="endOverlay">
+  <div class="modal">
+    <h2>Résultats de la session</h2>
+    <p>Export du résumé des scores par compétence.</p>
+    <div class="modal-stats" id="endStats"></div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeEndModal()">Fermer</button>
+      <button class="btn-confirm" onclick="doExport()">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 7l4 4 4-4"></path><path d="M2 14h12"></path></svg>
+        Exporter
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- LEFT: skills config -->
+  <div class="left">
+    <div class="lh">
+      <div class="lh-title">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"></circle><path d="M8 5v3l2 2"></path></svg>
+        Compétences évaluées
+      </div>
+      <div class="lh-sub">Modifie la liste avant la session</div>
+    </div>
+    <div class="skills-config" id="skillsList">
+    <div class="skill-row" id="skillrow-1">
+      <span class="skill-drag">⠿</span>
+      <input class="skill-name-input" value="Communication" onchange="renameSkill(1, this.value)" maxlength="36">
+      <button class="skill-del" onclick="deleteSkill(1)" title="Supprimer">
+        <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,3 13,13"></polyline><polyline points="13,3 3,13"></polyline></svg>
+      </button>
+    </div>
+    <div class="skill-row" id="skillrow-2">
+      <span class="skill-drag">⠿</span>
+      <input class="skill-name-input" value="Autonomie" onchange="renameSkill(2, this.value)" maxlength="36">
+      <button class="skill-del" onclick="deleteSkill(2)" title="Supprimer">
+        <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,3 13,13"></polyline><polyline points="13,3 3,13"></polyline></svg>
+      </button>
+    </div>
+    <div class="skill-row" id="skillrow-3">
+      <span class="skill-drag">⠿</span>
+      <input class="skill-name-input" value="Entraide" onchange="renameSkill(3, this.value)" maxlength="36">
+      <button class="skill-del" onclick="deleteSkill(3)" title="Supprimer">
+        <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,3 13,13"></polyline><polyline points="13,3 3,13"></polyline></svg>
+      </button>
+    </div>
+    <div class="skill-row" id="skillrow-4">
+      <span class="skill-drag">⠿</span>
+      <input class="skill-name-input" value="Prise d&#39;initiative" onchange="renameSkill(4, this.value)" maxlength="36">
+      <button class="skill-del" onclick="deleteSkill(4)" title="Supprimer">
+        <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,3 13,13"></polyline><polyline points="13,3 3,13"></polyline></svg>
+      </button>
+    </div>
+    <div class="skill-row" id="skillrow-5">
+      <span class="skill-drag">⠿</span>
+      <input class="skill-name-input" value="Gestion du stress" onchange="renameSkill(5, this.value)" maxlength="36">
+      <button class="skill-del" onclick="deleteSkill(5)" title="Supprimer">
+        <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,3 13,13"></polyline><polyline points="13,3 3,13"></polyline></svg>
+      </button>
+    </div>
+    <div class="skill-row" id="skillrow-6">
+      <span class="skill-drag">⠿</span>
+      <input class="skill-name-input" value="Clarté des rôles" onchange="renameSkill(6, this.value)" maxlength="36">
+      <button class="skill-del" onclick="deleteSkill(6)" title="Supprimer">
+        <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,3 13,13"></polyline><polyline points="13,3 3,13"></polyline></svg>
+      </button>
+    </div>
+    <div class="skill-row" id="skillrow-7">
+      <span class="skill-drag">⠿</span>
+      <input class="skill-name-input" value="Adaptabilité" onchange="renameSkill(7, this.value)" maxlength="36">
+      <button class="skill-del" onclick="deleteSkill(7)" title="Supprimer">
+        <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,3 13,13"></polyline><polyline points="13,3 3,13"></polyline></svg>
+      </button>
+    </div></div>
+    <div style="padding:0 14px 14px;flex-shrink:0;">
+      <div class="add-skill-row">
+        <input class="add-skill-inp" id="newSkillInp" placeholder="Ajouter une compétence…" maxlength="36">
+        <button class="btn-add-skill" onclick="addSkill()">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: scoring + radar -->
+  <div class="scoring-area">
+
+    <!-- Scoring topbar -->
+    <div class="scoring-topbar" id="scoringTopbar">
+      <div class="scoring-who" id="scoringWho">
+        <div class="scoring-who-dot" id="scoringDot" style="background:#e2e8f0;"></div>
+        <span id="scoringName">— sélectionne ton prénom pour noter</span>
+      </div>
+      <span class="scoring-hint" id="progressHint"></span>
+    </div>
+
+    <!-- Two-pane: scoring left, radar right -->
+    <div style="flex:1;display:flex;overflow:hidden;">
+
+      <!-- Scoring pane -->
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;border-right:1px solid #e2e8f0;">
+        <div class="scoring-scroll" id="scoringScroll">
+          <div class="no-participant" id="noParticipant">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="opacity:.3"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"></path></svg>
+            <p>Sélectionne ton prénom<br>dans la barre du haut<br>pour te noter.</p>
+          </div>
+          <div class="score-items" id="scoreItems" style="display:none;"></div>
+        </div>
+      </div>
+
+      <!-- Radar pane -->
+      <div class="radar-section">
+        <div class="radar-topbar">
+          <span class="radar-view-label">Vue</span>
+          <div class="view-btns">
+            <button class="view-btn on" onclick="setView(&#39;radars&#39;)" id="btnViewRadar">Radars</button>
+            <button class="view-btn" onclick="setView(&#39;table&#39;)" id="btnViewTable">Tableau</button>
+          </div>
+        </div>
+        <div class="radar-scroll" id="radarScroll"><div class="radar-card" style="border-top: 3px solid var(--teal,#00d4b4);"><div class="radar-card-title">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="8,1 15,5 15,11 8,15 1,11 1,5"></polygon></svg>
+      Équipe (moyenne)
+    </div><canvas id="radar-agg" style="display: block; box-sizing: border-box; height: 220px; width: 220px;" width="220" height="220"></canvas></div><div class="radar-card" style="border-top: 3px solid rgb(99, 102, 241);"><div class="radar-card-title">
+      <div class="radar-card-dot" style="background:#6366f1;"></div>
+      Alice
+    </div><canvas id="radar-8" style="display: block; box-sizing: border-box; height: 220px; width: 220px;" width="220" height="220"></canvas></div><div class="radar-card" style="border-top: 3px solid rgb(14, 165, 233);"><div class="radar-card-title">
+      <div class="radar-card-dot" style="background:#0ea5e9;"></div>
+      Bruno
+    </div><canvas id="radar-9" style="display: block; box-sizing: border-box; height: 220px; width: 220px;" width="220" height="220"></canvas></div><div class="radar-card" style="border-top: 3px solid rgb(236, 72, 153);"><div class="radar-card-title">
+      <div class="radar-card-dot" style="background:#ec4899;"></div>
+      Chloe
+    </div><canvas id="radar-10" style="display: block; box-sizing: border-box; height: 220px; width: 220px;" width="220" height="220"></canvas></div></div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+const COLORS = ['#6366f1','#0ea5e9','#ec4899','#22c55e','#f59e0b','#ef4444','#8b5cf6','#14b8a6'];
+const DEFAULT_SKILLS = ['Communication','Autonomie','Entraide','Prise d\'initiative','Gestion du stress','Clarté des rôles','Adaptabilité'];
+
+let people = [];
+let skills = DEFAULT_SKILLS.map((name, i) => ({ id: i + 1, name }));
+let scores = new Map(); // personId -> { skillId -> 1..10 }
+let activeId = null;
+let currentView = 'radars';
+let nextId = DEFAULT_SKILLS.length + 1;
+let charts = new Map(); // personId -> Chart instance
+
+/* ── SKILLS ── */
+function renderSkillsList() {
+  const el = document.getElementById('skillsList');
+  el.innerHTML = skills.map((s, idx) => `
+    <div class="skill-row" id="skillrow-${s.id}">
+      <span class="skill-drag">⠿</span>
+      <input class="skill-name-input" value="${s.name}" onchange="renameSkill(${s.id}, this.value)" maxlength="36">
+      <button class="skill-del" onclick="deleteSkill(${s.id})" title="Supprimer">
+        <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,3 13,13"/><polyline points="13,3 3,13"/></svg>
+      </button>
+    </div>`).join('');
+}
+
+function addSkill() {
+  const inp = document.getElementById('newSkillInp');
+  const name = inp.value.trim();
+  if (!name || skills.length >= 10) return;
+  skills.push({ id: nextId++, name });
+  inp.value = '';
+  renderSkillsList();
+  renderScoring();
+  renderRadars();
+}
+
+function renameSkill(id, name) {
+  const s = skills.find(x => x.id === id);
+  if (s) s.name = name.trim() || s.name;
+  renderRadars();
+}
+
+function deleteSkill(id) {
+  if (skills.length <= 3) return;
+  skills = skills.filter(s => s.id !== id);
+  scores.forEach(map => map.delete(id));
+  renderSkillsList();
+  renderScoring();
+  renderRadars();
+}
+
+document.getElementById('newSkillInp').addEventListener('keydown', e => { if (e.key === 'Enter') addSkill(); });
+
+/* ── PARTICIPANTS ── */
+function addParticipant() {
+  const inp = document.getElementById('newName');
+  const name = inp.value.trim();
+  if (!name || people.find(p => p.name.toLowerCase() === name.toLowerCase())) { inp.value = ''; return; }
+  const color = COLORS[people.length % COLORS.length];
+  const id = nextId++;
+  people.push({ id, name, color });
+  scores.set(id, new Map());
+  inp.value = '';
+  renderChips();
+  renderRadars();
+}
+
+function selectParticipant(id) {
+  activeId = (activeId === id) ? null : id;
+  renderChips();
+  renderScoring();
+}
+
+function renderChips() {
+  const wrap = document.getElementById('pchips');
+  wrap.innerHTML = people.map(p => {
+    const active = p.id === activeId;
+    const filled = scores.get(p.id)?.size === skills.length && skills.length > 0;
+    return `<div class="p-chip ${active ? 'active' : ''}" onclick="selectParticipant(${p.id})" style="${active ? 'border-color:'+p.color+';' : ''}">
+      <div class="p-dot" style="background:${p.color};"></div>
+      ${p.name}
+      ${filled ? '<span class="done-badge">✓</span>' : ''}
+    </div>`;
+  }).join('');
+}
+
+/* ── SCORING ── */
+function renderScoring() {
+  const noP = document.getElementById('noParticipant');
+  const items = document.getElementById('scoreItems');
+  const dot = document.getElementById('scoringDot');
+  const nameEl = document.getElementById('scoringName');
+  const hint = document.getElementById('progressHint');
+  const p = people.find(x => x.id === activeId);
+  if (!p) {
+    noP.style.display = 'flex'; items.style.display = 'none';
+    dot.style.background = '#e2e8f0';
+    nameEl.textContent = '— sélectionne ton prénom pour noter';
+    hint.textContent = '';
+    return;
+  }
+  noP.style.display = 'none'; items.style.display = 'flex';
+  dot.style.background = p.color;
+  nameEl.textContent = p.name;
+
+  const myScores = scores.get(p.id) || new Map();
+  const done = myScores.size;
+  hint.textContent = `${done} / ${skills.length} notées`;
+
+  items.innerHTML = skills.map(s => {
+    const val = myScores.get(s.id) || 0;
+    return `<div class="score-item">
+      <div class="score-label">
+        <span>${s.name}</span>
+        <span class="score-val" id="sv-${p.id}-${s.id}">${val > 0 ? val : '—'}</span>
+      </div>
+      <div class="score-slider-wrap">
+        <span class="score-minmax">1</span>
+        <div class="score-ticks">${[1,2,3,4,5,6,7,8,9,10].map(n =>
+          `<div class="score-tick ${val === n ? 'on' : ''}" style="${val === n ? 'background:'+p.color+';border-color:'+p.color+';' : ''}" onclick="setScore(${s.id}, ${n})">${n}</div>`
+        ).join('')}</div>
+        <span class="score-minmax">10</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setScore(skillId, val) {
+  if (!activeId) return;
+  const map = scores.get(activeId);
+  if (!map) return;
+  map.set(skillId, val);
+  renderScoring();
+  renderChips();
+  renderRadars();
+}
+
+/* ── RADARS ── */
+function setView(v) {
+  currentView = v;
+  document.getElementById('btnViewRadar').classList.toggle('on', v === 'radars');
+  document.getElementById('btnViewTable').classList.toggle('on', v === 'table');
+  renderRadars();
+}
+
+function scoreColor(val) {
+  if (val >= 8) return '#22c55e';
+  if (val >= 5) return '#f59e0b';
+  return '#ef4444';
+}
+
+function renderRadars() {
+  const scroll = document.getElementById('radarScroll');
+
+  if (currentView === 'table') {
+    renderTable(scroll);
+    return;
+  }
+
+  // Destroy old charts
+  charts.forEach(c => c.destroy());
+  charts.clear();
+
+  if (people.length === 0 || skills.length === 0) {
+    scroll.innerHTML = `<div style="width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:10px;color:#d1d5db;text-align:center;">
+      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,2 22,8.5 22,15.5 12,22 2,15.5 2,8.5"/><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="8.5" x2="22" y2="8.5"/><line x1="2" y1="15.5" x2="22" y2="15.5"/></svg>
+      <p style="font-size:.82rem;line-height:1.5;">Les radars apparaîtront<br>au fur et à mesure des notes.</p>
+    </div>`;
+    return;
+  }
+
+  scroll.innerHTML = '';
+
+  // Aggregate radar
+  if (people.length > 1) {
+    const aggCard = document.createElement('div');
+    aggCard.className = 'radar-card';
+    aggCard.style.borderTop = '3px solid var(--teal,#00d4b4)';
+    aggCard.innerHTML = `<div class="radar-card-title">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="8,1 15,5 15,11 8,15 1,11 1,5"/></svg>
+      Équipe (moyenne)
+    </div><canvas id="radar-agg"></canvas>`;
+    scroll.appendChild(aggCard);
+
+    const avgData = skills.map(s => {
+      const vals = people.map(p => scores.get(p.id)?.get(s.id) || 0).filter(v => v > 0);
+      return vals.length > 0 ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
+    });
+    buildRadar('radar-agg', skills.map(s => s.name), avgData, '#00d4b4');
+  }
+
+  // Individual radars
+  people.forEach(p => {
+    const myScores = scores.get(p.id) || new Map();
+    const data = skills.map(s => myScores.get(s.id) || 0);
+    const card = document.createElement('div');
+    card.className = 'radar-card';
+    card.style.borderTop = `3px solid ${p.color}`;
+    card.innerHTML = `<div class="radar-card-title">
+      <div class="radar-card-dot" style="background:${p.color};"></div>
+      ${p.name}
+    </div><canvas id="radar-${p.id}"></canvas>`;
+    scroll.appendChild(card);
+    buildRadar('radar-' + p.id, skills.map(s => s.name), data, p.color);
+  });
+}
+
+function buildRadar(canvasId, labels, data, color) {
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+  const chart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels,
+      datasets: [{
+        data,
+        backgroundColor: color + '22',
+        borderColor: color,
+        borderWidth: 2,
+        pointBackgroundColor: color,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+      }]
+    },
+    options: {
+      responsive: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        r: {
+          min: 0, max: 10,
+          ticks: { stepSize: 2, font: { family: 'Outfit', size: 9 }, color: '#94a3b8', backdropColor: 'transparent' },
+          pointLabels: { font: { family: 'Outfit', size: 10, weight: '600' }, color: '#475569' },
+          grid: { color: '#f1f5f9' },
+          angleLines: { color: '#f1f5f9' },
+        }
+      }
+    }
+  });
+  charts.set(canvasId, chart);
+}
+
+function renderTable(scroll) {
+  charts.forEach(c => c.destroy());
+  charts.clear();
+
+  if (people.length === 0) { scroll.innerHTML = ''; return; }
+
+  let html = `<div class="table-wrap" style="width:100%;"><table class="score-table"><thead><tr>
+    <th>Compétence</th>
+    ${people.map(p => `<th><span class="p-name"><span style="width:8px;height:8px;border-radius:50%;background:${p.color};display:inline-block;"></span>${p.name}</span></th>`).join('')}
+    ${people.length > 1 ? '<th>Moy.</th>' : ''}
+  </tr></thead><tbody>`;
+
+  skills.forEach(s => {
+    html += `<tr><td style="font-weight:600;">${s.name}</td>`;
+    const vals = [];
+    people.forEach(p => {
+      const v = scores.get(p.id)?.get(s.id) || 0;
+      if (v > 0) vals.push(v);
+      html += `<td>${v > 0 ? `<span class="score-pill" style="background:${scoreColor(v)};">${v}</span>` : '<span style="color:#e2e8f0;">—</span>'}</td>`;
+    });
+    if (people.length > 1) {
+      const avg = vals.length > 0 ? (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1) : '—';
+      html += `<td class="score-avg">${avg !== '—' ? `<span class="score-pill" style="background:${scoreColor(parseFloat(avg))};">${avg}</span>` : '<span style="color:#e2e8f0;">—</span>'}</td>`;
+    }
+    html += '</tr>';
+  });
+
+  html += '</tbody></table></div>';
+  scroll.innerHTML = html;
+}
+
+/* ── EXPORT ── */
+function openEndModal() {
+  const filled = people.filter(p => (scores.get(p.id)?.size || 0) === skills.length && skills.length > 0).length;
+  const totalScores = [...scores.values()].reduce((s, m) => s + m.size, 0);
+  document.getElementById('endStats').innerHTML =
+    `<div class="stat"><div class="stat-n">${people.length}</div><div class="stat-l">Participants</div></div>` +
+    `<div class="stat"><div class="stat-n">${skills.length}</div><div class="stat-l">Compétences</div></div>` +
+    `<div class="stat"><div class="stat-n">${filled}</div><div class="stat-l">Fiches complètes</div></div>`;
+  document.getElementById('endOverlay').classList.add('show');
+}
+function closeEndModal() { document.getElementById('endOverlay').classList.remove('show'); }
+function doExport() {
+  closeEndModal();
+  let txt = 'COMPÉTENCES DE L\'ÉQUIPE — OSKAR — ' + new Date().toLocaleDateString('fr-FR') + '\n' + '='.repeat(48) + '\n\n';
+  skills.forEach(s => {
+    txt += s.name.toUpperCase() + '\n';
+    people.forEach(p => {
+      const v = scores.get(p.id)?.get(s.id);
+      txt += `  ${p.name.padEnd(16)} ${v ? v + '/10' : '—'}\n`;
+    });
+    const vals = people.map(p => scores.get(p.id)?.get(s.id)).filter(Boolean);
+    if (vals.length > 0) txt += `  ${'Moyenne'.padEnd(16)} ${(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1)}/10\n`;
+    txt += '\n';
+  });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([txt], { type: 'text/plain;charset=utf-8' }));
+  a.download = 'competences-equipe.txt'; a.click();
+}
+
+/* ── INIT ── */
+document.getElementById('newName').addEventListener('keydown', e => { if (e.key === 'Enter') addParticipant(); });
+document.getElementById('btnAddP').addEventListener('click', addParticipant);
+document.getElementById('endOverlay').addEventListener('click', e => { if (e.target === document.getElementById('endOverlay')) closeEndModal(); });
+
+renderSkillsList();
+renderRadars();
+
+// Demo
+['Alice','Bruno','Chloe'].forEach(n => { document.getElementById('newName').value = n; addParticipant(); });
+document.getElementById('newName').value = '';
+</script>
+
+
+</body></html>

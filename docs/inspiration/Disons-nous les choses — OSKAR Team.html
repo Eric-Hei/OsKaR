@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)https://hasenso.fr/oskar/disons.html -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Disons-nous les choses — OSKAR Team</title>
+<link href="./Disons-nous les choses — OSKAR Team_files/css2" rel="stylesheet">
+<link rel="stylesheet" href="./Disons-nous les choses — OSKAR Team_files/oskar.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{height:100vh;display:flex;flex-direction:column;overflow:hidden;color:var(--navy,#1e2d7d);}
+
+/* ── Header ── */
+.tool-header{height:56px;background:var(--white,#fff);border-bottom:1px solid var(--border,#e2e8f0);display:flex;align-items:center;padding:0 20px;gap:14px;flex-shrink:0;}
+.tool-header-back{display:flex;align-items:center;text-decoration:none;flex-shrink:0;}
+.tool-header-back img{height:30px;width:auto;object-fit:contain;}
+.tool-header-sep{color:var(--border,#e2e8f0);font-size:1.2rem;font-weight:300;flex-shrink:0;}
+.tool-header h1{color:var(--text,#1e2d7d);font-size:.95rem;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tool-header-pill{margin-left:auto;background:var(--team,#ec4899);color:#fff;font-size:.78rem;font-weight:600;padding:3px 11px;border-radius:20px;flex-shrink:0;white-space:nowrap;}
+.tool-header-back-link{display:flex;align-items:center;gap:5px;color:#64748b;font-size:.78rem;font-weight:500;text-decoration:none;flex-shrink:0;transition:color .15s;border-left:1px solid var(--border,#e2e8f0);padding-left:14px;margin-left:4px;}
+.tool-header-back-link:hover{color:var(--navy,#1e2d7d);}
+
+/* ── Pbar ── */
+.pbar{background:var(--navy,#1e2d7d);padding:11px 24px;display:flex;align-items:center;gap:12px;flex-shrink:0;flex-wrap:wrap;}
+.pbar-label{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+.p-chips{display:flex;gap:7px;flex-wrap:wrap;align-items:center;}
+.p-chip{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;border:2px solid transparent;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:500;background:#f1f5f9;color:#475569;transition:all .15s;}
+.p-chip.active{background:white;font-weight:600;}
+.p-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.add-p{display:flex;gap:7px;}
+.add-p input{font-family:'Outfit',sans-serif;font-size:.9rem;border:1.5px solid #cbd5e1;border-radius:8px;padding:6px 12px;width:140px;color:var(--navy,#1e2d7d);outline:none;}
+.add-p input:focus{border-color:var(--teal,#00d4b4);}
+.btn-teal{background:var(--teal,#00d4b4);color:var(--navy,#1e2d7d);border:none;border-radius:8px;padding:6px 13px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;font-size:.9rem;}
+.vsep{width:1px;height:28px;background:rgba(255,255,255,.2);flex-shrink:0;}
+
+/* Admin toggle */
+.admin-toggle{display:flex;align-items:center;gap:8px;margin-left:auto;}
+.admin-label{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.5px;}
+.toggle-wrap{position:relative;width:40px;height:22px;cursor:pointer;}
+.toggle-wrap input{opacity:0;width:0;height:0;position:absolute;}
+.toggle-slider{position:absolute;inset:0;background:#334155;border-radius:20px;transition:background .2s;}
+.toggle-slider:before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;background:white;border-radius:50%;transition:transform .2s;}
+.toggle-wrap input:checked+.toggle-slider{background:var(--teal,#00d4b4);}
+.toggle-wrap input:checked+.toggle-slider:before{transform:translateX(18px);}
+
+.btn-session{background:var(--team,#ec4899);color:white;border:none;border-radius:8px;padding:7px 16px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:6px;white-space:nowrap;}
+
+/* ── Main layout ── */
+.main{flex:1;display:flex;overflow:hidden;}
+
+/* ── Left panel ── */
+.left{width:280px;flex-shrink:0;background:white;border-right:1px solid #e2e8f0;display:flex;flex-direction:column;overflow:hidden;}
+.lh{padding:14px 16px 10px;border-bottom:1px solid #f1f5f9;flex-shrink:0;}
+.lh-title{font-size:.78rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:6px;}
+.lh-name{margin-top:4px;font-size:.9rem;font-weight:600;display:flex;align-items:center;gap:6px;}
+.lh-dot{width:10px;height:10px;border-radius:50%;}
+.lbody{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;}
+.no-p{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#94a3b8;text-align:center;padding:20px;}
+.no-p p{font-size:.82rem;line-height:1.5;}
+
+/* Composer — two tabs */
+.composer{background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:10px;overflow:hidden;}
+.tab-row{display:flex;border-bottom:1.5px solid #e2e8f0;}
+.tab-btn{flex:1;padding:9px 6px;font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:700;border:none;background:transparent;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:5px;color:#94a3b8;}
+.tab-btn.frein.on{background:#fff1f2;color:#e11d48;}
+.tab-btn.moteur.on{background:#f0fdf4;color:#16a34a;}
+.tab-inner{padding:12px;}
+.comp-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;}
+.comp-label.frein{color:#e11d48;}
+.comp-label.moteur{color:#16a34a;}
+.composer textarea{width:100%;resize:none;min-height:80px;border:1.5px solid #e2e8f0;border-radius:8px;padding:8px 10px;font-family:'Outfit',sans-serif;font-size:.85rem;color:var(--navy,#1e2d7d);outline:none;background:white;line-height:1.45;}
+.composer textarea:focus{border-color:var(--teal,#00d4b4);}
+.comp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
+.btn-submit{border:none;border-radius:8px;padding:6px 14px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;font-size:.82rem;white-space:nowrap;}
+.btn-submit.frein{background:#e11d48;color:white;}
+.btn-submit.moteur{background:#16a34a;color:white;}
+
+/* My items queue */
+.queue-label{font-size:.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;padding:2px 0 4px;}
+.my-items{display:flex;flex-direction:column;gap:6px;}
+.my-item{background:white;border-radius:8px;padding:8px 10px;font-size:.8rem;line-height:1.4;color:#374151;box-shadow:0 1px 3px rgba(0,0,0,.06);position:relative;}
+.my-item.frein{border-left:4px solid #fca5a5;}
+.my-item.moteur{border-left:4px solid #86efac;}
+.item-status{position:absolute;top:6px;right:8px;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:10px;}
+.item-status.pending{background:#f1f5f9;color:#94a3b8;}
+.item-status.published{background:#dcfce7;color:#16a34a;}
+
+/* ── Board ── */
+.board-area{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+
+/* Column headers */
+.col-headers{display:flex;flex-shrink:0;border-bottom:2px solid #e2e8f0;}
+.col-header{flex:1;display:flex;align-items:center;gap:8px;padding:11px 18px;font-size:.8rem;font-weight:700;}
+.col-header.frein{background:#fff1f2;color:#e11d48;border-right:1px solid #e2e8f0;}
+.col-header.moteur{background:#f0fdf4;color:#16a34a;}
+.col-header-count{font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:10px;}
+.col-header.frein .col-header-count{background:#fca5a5;color:#9f1239;}
+.col-header.moteur .col-header-count{background:#86efac;color:#14532d;}
+
+/* Columns */
+.board-columns{flex:1;display:flex;overflow:hidden;}
+.board-col{flex:1;overflow-y:auto;padding:14px;}
+.board-col.frein{background:#fff8f8;border-right:1px solid #e2e8f0;}
+.board-col.moteur{background:#f8fff8;}
+.board-col-inner{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-content:start;}
+
+/* Cards */
+.idea-card{background:white;border-radius:11px;padding:13px;box-shadow:0 1px 4px rgba(0,0,0,.07);display:flex;flex-direction:column;gap:9px;transition:box-shadow .15s,transform .1s;position:relative;}
+.idea-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.11);transform:translateY(-1px);}
+.idea-card.frein{border-left:3px solid #fca5a5;}
+.idea-card.moteur{border-left:3px solid #86efac;}
+.idea-card.top-voted.frein{border:2px solid #e11d48;box-shadow:0 2px 12px rgba(225,29,72,.15);}
+.idea-card.top-voted.moteur{border:2px solid #16a34a;box-shadow:0 2px 12px rgba(22,163,74,.15);}
+.top-badge{position:absolute;top:-8px;right:10px;font-size:.62rem;font-weight:800;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;}
+.top-badge.frein{background:#e11d48;color:white;}
+.top-badge.moteur{background:#16a34a;color:white;}
+.card-author{font-size:.72rem;font-weight:600;display:flex;align-items:center;gap:4px;}
+.card-author-dot{width:7px;height:7px;border-radius:50%;}
+.card-text{font-size:.85rem;line-height:1.5;color:#1e293b;flex:1;}
+.card-footer{display:flex;align-items:center;gap:8px;}
+
+/* Heart */
+.btn-heart{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;border:1.5px solid #e2e8f0;background:#f8fafc;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:700;color:#64748b;transition:all .2s;}
+.btn-heart:hover{border-color:#f43f5e;color:#f43f5e;background:#fff1f2;}
+.btn-heart.voted{background:#fff1f2;border-color:#fda4af;color:#f43f5e;}
+.btn-heart svg{transition:transform .15s;}
+.btn-heart:hover svg,.btn-heart.voted svg{transform:scale(1.2);}
+
+/* Admin validate */
+.btn-validate{margin-left:auto;display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:8px;border:1.5px solid #e2e8f0;background:white;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:700;color:#94a3b8;transition:all .2s;}
+.btn-validate:hover{border-color:#f59e0b;color:#b45309;background:#fef9c3;}
+.btn-validate.is-validated{border-color:#f59e0b;color:#b45309;background:#fef9c3;}
+.btn-validate.is-validated:hover{border-color:#ef4444;color:#dc2626;background:#fef2f2;}
+
+/* Empty hint */
+.col-hint{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#e2e8f0;text-align:center;padding:30px;pointer-events:none;flex:1;}
+.col-hint svg{width:36px;height:36px;}
+.col-hint p{font-size:.78rem;line-height:1.5;}
+.col-hint.frein{color:#fca5a5;}
+.col-hint.moteur{color:#86efac;}
+
+/* Confirm pop */
+.confirm-pop-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;align-items:center;justify-content:center;}
+.confirm-pop-overlay.show{display:flex;}
+.confirm-pop{background:white;border-radius:12px;padding:22px 24px;max-width:320px;width:90%;box-shadow:0 12px 40px rgba(0,0,0,.2);animation:pop .18s cubic-bezier(.34,1.56,.64,1);}
+@keyframes pop{from{transform:scale(.85);opacity:0;}}
+.confirm-pop p{font-size:.85rem;color:#374151;line-height:1.5;margin-bottom:16px;}
+.confirm-pop-btns{display:flex;gap:8px;justify-content:flex-end;}
+.confirm-pop-cancel{background:#f1f5f9;color:#64748b;border:none;border-radius:8px;padding:7px 14px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:600;font-size:.82rem;}
+
+/* Session modal */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(3px);z-index:100;align-items:center;justify-content:center;}
+.overlay.show{display:flex;}
+.modal{background:white;border-radius:16px;padding:32px 36px;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:pop .2s cubic-bezier(.34,1.56,.64,1);}
+.modal h2{font-size:1.15rem;font-weight:700;margin-bottom:6px;}
+.modal p{font-size:.85rem;color:#64748b;margin-bottom:20px;line-height:1.5;}
+.modal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
+.stat{background:#f8fafc;border-radius:10px;padding:12px;text-align:center;}
+.stat-n{font-size:1.5rem;font-weight:700;}
+.stat-l{font-size:.7rem;color:#94a3b8;font-weight:500;margin-top:2px;}
+.modal-foot{display:flex;gap:10px;justify-content:flex-end;}
+.btn-cancel{background:#f1f5f9;color:#64748b;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:600;font-size:.85rem;}
+.btn-confirm{background:var(--team,#ec4899);color:white;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;font-size:.85rem;display:flex;align-items:center;gap:6px;}
+
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:#e2e8f0;border-radius:3px;}
+</style>
+<script src="chrome-extension://ajdpfmkffanmkhejnopjppegokpogffp/assets/prompt.js"></script></head>
+<body>
+
+<!-- HEADER -->
+<header class="tool-header">
+  <a class="tool-header-back" href="https://hasenso.fr/oskar/boite-a-outils.html"><img src="./Disons-nous les choses — OSKAR Team_files/logo-oskar.png" alt="OSKAR"></a>
+  <span class="tool-header-sep">|</span>
+  <h1>Disons-nous les choses</h1>
+  <span class="tool-header-pill">Team</span>
+  <a class="tool-header-back-link" href="https://hasenso.fr/oskar/boite-a-outils.html">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;flex-shrink:0;"><path d="M12 4L6 10l6 6"></path></svg>
+    Boîte à outils
+  </a>
+</header>
+
+<!-- PBAR -->
+<div class="pbar">
+  <span class="pbar-label">Participants</span>
+  <div class="p-chips" id="pchips"><div class="p-chip " onclick="selectParticipant(1)" style="">
+      <div class="p-dot" style="background:#6366f1;"></div>Alice
+      
+    </div><div class="p-chip " onclick="selectParticipant(2)" style="">
+      <div class="p-dot" style="background:#0ea5e9;"></div>Bruno
+      
+    </div><div class="p-chip " onclick="selectParticipant(3)" style="">
+      <div class="p-dot" style="background:#ec4899;"></div>Chloe
+      
+    </div></div>
+  <div class="add-p">
+    <input type="text" id="newName" placeholder="Prénom" maxlength="16">
+    <button class="btn-teal" id="btnAddP">+ Ajouter</button>
+  </div>
+  <div class="vsep"></div>
+  <div class="admin-toggle">
+    <span class="admin-label">Mode admin</span>
+    <label class="toggle-wrap">
+      <input type="checkbox" id="adminToggle">
+      <div class="toggle-slider"></div>
+    </label>
+  </div>
+  <div class="vsep"></div>
+  <button class="btn-session" onclick="openSessionModal()">
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"></polyline></svg>
+    Clôturer la session
+  </button>
+</div>
+
+<!-- SESSION MODAL -->
+<div class="overlay" id="sessionOverlay">
+  <div class="modal">
+    <h2>Clôturer la session</h2>
+    <p>Export du résumé des freins et moteurs identifiés.</p>
+    <div class="modal-stats" id="sessionStats"></div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeSessionModal()">Annuler</button>
+      <button class="btn-confirm" onclick="confirmSession()">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 7l4 4 4-4"></path><path d="M2 14h12"></path></svg>
+        Exporter &amp; terminer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM PUBLISH -->
+<div class="confirm-pop-overlay" id="confirmPublishOverlay">
+  <div class="confirm-pop">
+    <p>Publier cette carte dans l'espace commun ?<br>Elle sera visible par tous les participants.</p>
+    <div class="confirm-pop-btns">
+      <button class="confirm-pop-cancel" onclick="closeConfirmPublish()">Annuler</button>
+      <button class="btn-teal" style="border:none;border-radius:8px;padding:7px 14px;cursor:pointer;font-family:&#39;Outfit&#39;,sans-serif;font-weight:700;font-size:.82rem;" onclick="doPublish()">Publier</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="lh">
+      <div class="lh-title">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2a4 4 0 0 1 4 4c0 3-4 8-4 8S4 9 4 6a4 4 0 0 1 4-4z"></path><circle cx="8" cy="6" r="1.5"></circle></svg>
+        Mon espace
+      </div>
+      <div class="lh-name">
+        <div class="lh-dot" id="lhDot" style="background: rgb(226, 232, 240);"></div>
+        <span id="lhName">— sélectionne ton prénom</span>
+      </div>
+    </div>
+
+    <div class="no-p" id="noP" style="display: flex;">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.3"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"></path></svg>
+      <p>Sélectionne ton prénom<br>dans la barre du haut.</p>
+    </div>
+
+    <div class="lbody" id="lbody" style="display:none;">
+      <!-- Composer -->
+      <div class="composer">
+        <div class="tab-row">
+          <button class="tab-btn frein on" id="tabFrein" onclick="selectTab(&#39;frein&#39;)">
+            <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"></circle><line x1="8" y1="5" x2="8" y2="9"></line><line x1="8" y1="11" x2="8" y2="11"></line></svg>
+            Frein
+          </button>
+          <button class="tab-btn moteur" id="tabMoteur" onclick="selectTab(&#39;moteur&#39;)">
+            <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="3,1 13,8 3,15"></polygon></svg>
+            Moteur
+          </button>
+        </div>
+        <div class="tab-inner">
+          <div class="comp-label" id="compLabel">Ce qui nous freine</div>
+          <textarea id="compText" placeholder="Décris ce qui freine l&#39;équipe…" maxlength="240"></textarea>
+          <div class="comp-footer">
+            <span style="font-size:.7rem;color:#94a3b8;">Ctrl+Entrée</span>
+            <button class="btn-submit frein" id="btnSubmit" onclick="addItem()">Soumettre</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- My items -->
+      <div id="myItemsSection" style="display:none;">
+        <div class="queue-label">Mes cartes</div>
+        <div class="my-items" id="myItemsList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOARD -->
+  <div class="board-area">
+    <!-- Column headers -->
+    <div class="col-headers">
+      <div class="col-header frein">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"></circle><line x1="8" y1="5" x2="8" y2="9"></line><line x1="8" y1="11" x2="8" y2="11"></line></svg>
+        Ce qui nous freine
+        <span class="col-header-count" id="countFrein">0</span>
+      </div>
+      <div class="col-header moteur">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="3,1 13,8 3,15"></polygon></svg>
+        Ce qui nous propulse
+        <span class="col-header-count" id="countMoteur">0</span>
+      </div>
+    </div>
+
+    <!-- Two columns -->
+    <div class="board-columns">
+      <div class="board-col frein" id="colFrein">
+        <div class="board-col-inner" id="innerFrein">
+        <div class="col-hint frein" id="hintFrein" style="display: flex;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12" y2="16"></line></svg>
+          <p>Les freins publiés<br>apparaîtront ici.</p>
+        </div>
+        </div>
+      </div>
+      <div class="board-col moteur" id="colMoteur">
+        <div class="board-col-inner" id="innerMoteur">
+        <div class="col-hint moteur" id="hintMoteur" style="display: flex;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polygon points="5,3 19,12 5,21"></polygon></svg>
+          <p>Les moteurs publiés<br>apparaîtront ici.</p>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const COLORS = ['#6366f1','#0ea5e9','#ec4899','#22c55e','#f59e0b','#ef4444','#8b5cf6','#14b8a6'];
+
+let people = [];
+let items = []; // {id, type:'frein'|'moteur', text, authorId, votes:Set, validated:bool, published:bool, ts}
+let activeId = null;
+let selectedTab = 'frein';
+let isAdmin = false;
+let pendingPublishId = null;
+let nextId = 1;
+
+/* ── PARTICIPANTS ── */
+function addParticipant() {
+  const inp = document.getElementById('newName');
+  const name = inp.value.trim();
+  if (!name || people.find(p => p.name.toLowerCase() === name.toLowerCase())) { inp.value=''; return; }
+  const color = COLORS[people.length % COLORS.length];
+  people.push({ id: nextId++, name, color });
+  inp.value = '';
+  renderChips(); renderLeft();
+}
+
+function selectParticipant(id) {
+  activeId = (activeId === id) ? null : id;
+  renderChips(); renderLeft(); renderBoard();
+}
+
+function renderChips() {
+  document.getElementById('pchips').innerHTML = people.map(p => {
+    const active = p.id === activeId;
+    const myCount = items.filter(i => i.authorId === p.id).length;
+    return `<div class="p-chip ${active ? 'active' : ''}" onclick="selectParticipant(${p.id})" style="${active ? 'border-color:'+p.color+';' : ''}">
+      <div class="p-dot" style="background:${p.color};"></div>${p.name}
+      ${myCount > 0 ? `<span style="font-size:.65rem;font-weight:700;background:var(--teal,#00d4b4);color:var(--navy,#1e2d7d);border-radius:5px;padding:1px 5px;margin-left:2px;">${myCount}</span>` : ''}
+    </div>`;
+  }).join('');
+}
+
+/* ── LEFT PANEL ── */
+function renderLeft() {
+  const p = people.find(x => x.id === activeId);
+  document.getElementById('noP').style.display = p ? 'none' : 'flex';
+  document.getElementById('lbody').style.display = p ? 'flex' : 'none';
+  document.getElementById('lhDot').style.background = p ? p.color : '#e2e8f0';
+  document.getElementById('lhName').textContent = p ? p.name : '— sélectionne ton prénom';
+  if (p) renderMyItems(p);
+}
+
+function renderMyItems(p) {
+  const mine = items.filter(i => i.authorId === p.id);
+  const sec = document.getElementById('myItemsSection');
+  if (mine.length === 0) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+  document.getElementById('myItemsList').innerHTML = mine.map(item => `
+    <div class="my-item ${item.type}">
+      <span class="item-status ${item.published ? 'published' : 'pending'}">${item.published ? 'Publiée' : 'Brouillon'}</span>
+      <div style="font-size:.7rem;font-weight:700;color:${item.type==='frein'?'#e11d48':'#16a34a'};margin-bottom:3px;">${item.type === 'frein' ? 'Frein' : 'Moteur'}</div>
+      <div style="font-size:.82rem;color:#374151;line-height:1.4;">${item.text}</div>
+      ${!item.published ? `<button onclick="openConfirmPublish(${item.id})" style="margin-top:6px;background:var(--navy,#1e2d7d);color:white;border:none;border-radius:7px;padding:4px 10px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:600;">
+        <svg width="9" height="9" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;margin-right:3px;"><path d="M8 2v9M4 7l4 4 4-4"/><path d="M2 14h12"/></svg>Publier
+      </button>` : ''}
+    </div>`).join('');
+}
+
+/* ── TAB ── */
+function selectTab(t) {
+  selectedTab = t;
+  document.getElementById('tabFrein').classList.toggle('on', t === 'frein');
+  document.getElementById('tabMoteur').classList.toggle('on', t === 'moteur');
+  const lbl = document.getElementById('compLabel');
+  lbl.textContent = t === 'frein' ? 'Ce qui nous freine' : 'Ce qui nous propulse';
+  lbl.className = 'comp-label ' + t;
+  document.getElementById('compText').placeholder = t === 'frein' ? 'Décris ce qui freine l\'équipe…' : 'Décris ce qui propulse l\'équipe…';
+  const btn = document.getElementById('btnSubmit');
+  btn.className = 'btn-submit ' + t;
+}
+
+/* ── ADD ITEM ── */
+function addItem() {
+  if (!activeId) return;
+  const ta = document.getElementById('compText');
+  const text = ta.value.trim();
+  if (!text) return;
+  items.push({ id: nextId++, type: selectedTab, text, authorId: activeId, votes: new Set(), validated: false, published: false, ts: Date.now() });
+  ta.value = '';
+  renderChips(); renderLeft(); renderBoard();
+}
+
+/* ── PUBLISH ── */
+function openConfirmPublish(id) { pendingPublishId = id; document.getElementById('confirmPublishOverlay').classList.add('show'); }
+function closeConfirmPublish() { pendingPublishId = null; document.getElementById('confirmPublishOverlay').classList.remove('show'); }
+function doPublish() {
+  const item = items.find(i => i.id === pendingPublishId);
+  if (item) item.published = true;
+  closeConfirmPublish();
+  renderLeft(); renderBoard();
+}
+
+/* ── VOTE ── */
+function toggleVote(id) {
+  if (!activeId) return;
+  const item = items.find(i => i.id === id);
+  if (!item || !item.published || item.authorId === activeId) return;
+  if (item.votes.has(activeId)) item.votes.delete(activeId);
+  else item.votes.add(activeId);
+  renderBoard(); renderLeft();
+}
+
+/* ── VALIDATE ── */
+function toggleValidate(id) {
+  if (!isAdmin) return;
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+  item.validated = !item.validated;
+  renderBoard();
+}
+
+/* ── RENDER BOARD ── */
+function renderBoard() {
+  ['frein','moteur'].forEach(type => {
+    const cap = type.charAt(0).toUpperCase() + type.slice(1);
+    const inner = document.getElementById('inner' + cap);
+    const hint = document.getElementById('hint' + cap);
+    const countEl = document.getElementById('count' + cap);
+
+    const pool = items.filter(i => i.published && i.type === type)
+      .sort((a, b) => b.votes.size - a.votes.size || b.ts - a.ts);
+
+    countEl.textContent = pool.length;
+    hint.style.display = pool.length === 0 ? 'flex' : 'none';
+
+    const maxVotes = pool.length > 0 ? Math.max(...pool.map(i => i.votes.size)) : 0;
+
+    // Remove old cards, keep hint
+    inner.querySelectorAll('.idea-card').forEach(el => el.remove());
+
+    pool.forEach(item => {
+      const p = people.find(x => x.id === item.authorId);
+      const voted = activeId && item.votes.has(activeId);
+      const isTop = maxVotes > 0 && item.votes.size === maxVotes;
+      const canVote = activeId && item.authorId !== activeId;
+
+      const card = document.createElement('div');
+      card.className = `idea-card ${type}${isTop ? ' top-voted' : ''}${item.validated ? ' validated' : ''}`;
+      card.id = 'card-' + item.id;
+      if (item.validated) card.style.outline = '2px solid #f59e0b';
+
+      card.innerHTML = `
+        ${isTop ? `<div class="top-badge ${type}">★ ${type === 'frein' ? 'Prioritaire' : 'Fort'}</div>` : ''}
+        ${item.validated ? '<div style="position:absolute;top:-8px;left:10px;background:#f59e0b;color:white;font-size:.62rem;font-weight:800;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;">Retenu</div>' : ''}
+        <div class="card-author" style="color:${p ? p.color : '#94a3b8'}">
+          <span class="card-author-dot" style="background:${p ? p.color : '#94a3b8'};"></span>
+          ${p ? p.name : '?'}
+        </div>
+        <div class="card-text">${item.text}</div>
+        <div class="card-footer">
+          <button class="btn-heart ${voted ? 'voted' : ''}" onclick="toggleVote(${item.id})" ${!canVote ? 'disabled style="opacity:.4;cursor:not-allowed;"' : ''}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="${voted ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            ${item.votes.size}
+          </button>
+          ${isAdmin ? `<button class="btn-validate ${item.validated ? 'is-validated' : ''}" onclick="toggleValidate(${item.id})">
+            ${item.validated
+              ? '<svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,3 13,13"/><polyline points="13,3 3,13"/></svg> Annuler'
+              : '<svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"/></svg> Retenir'}
+          </button>` : ''}
+        </div>`;
+      inner.appendChild(card);
+    });
+  });
+}
+
+/* ── ADMIN ── */
+document.getElementById('adminToggle').addEventListener('change', function() {
+  isAdmin = this.checked;
+  renderBoard();
+});
+
+/* ── SESSION MODAL ── */
+function openSessionModal() {
+  const published = items.filter(i => i.published);
+  const freins = published.filter(i => i.type === 'frein').length;
+  const moteurs = published.filter(i => i.type === 'moteur').length;
+  const totalVotes = published.reduce((s, i) => s + i.votes.size, 0);
+  document.getElementById('sessionStats').innerHTML =
+    `<div class="stat"><div class="stat-n" style="color:#e11d48;">${freins}</div><div class="stat-l">Freins</div></div>` +
+    `<div class="stat"><div class="stat-n" style="color:#16a34a;">${moteurs}</div><div class="stat-l">Moteurs</div></div>` +
+    `<div class="stat"><div class="stat-n">${totalVotes}</div><div class="stat-l">Votes</div></div>`;
+  document.getElementById('sessionOverlay').classList.add('show');
+}
+function closeSessionModal() { document.getElementById('sessionOverlay').classList.remove('show'); }
+function confirmSession() { closeSessionModal(); exportSession(); }
+
+/* ── EXPORT ── */
+function exportSession() {
+  const published = items.filter(i => i.published);
+  let txt = 'DISONS-NOUS LES CHOSES — OSKAR — ' + new Date().toLocaleDateString('fr-FR') + '\n' + '='.repeat(48) + '\n\n';
+
+  ['frein','moteur'].forEach(type => {
+    const label = type === 'frein' ? 'CE QUI NOUS FREINE' : 'CE QUI NOUS PROPULSE';
+    const pool = published.filter(i => i.type === type).sort((a, b) => b.votes.size - a.votes.size);
+    txt += label + '\n' + '-'.repeat(30) + '\n';
+    if (pool.length === 0) { txt += '  (aucune carte)\n'; }
+    pool.forEach(i => {
+      const p = people.find(x => x.id === i.authorId);
+      txt += `${i.validated?'[✓] ':'    '}${i.text}  (${i.votes.size} vote${i.votes.size>1?'s':''} — ${p?p.name:'?'})\n`;
+    });
+    txt += '\n';
+  });
+
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([txt], { type: 'text/plain;charset=utf-8' }));
+  a.download = 'disons-nous-les-choses.txt'; a.click();
+}
+
+/* ── INIT ── */
+document.getElementById('newName').addEventListener('keydown', e => { if (e.key === 'Enter') addParticipant(); });
+document.getElementById('btnAddP').addEventListener('click', addParticipant);
+document.getElementById('compText').addEventListener('keydown', e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) addItem(); });
+document.getElementById('confirmPublishOverlay').addEventListener('click', e => { if (e.target === document.getElementById('confirmPublishOverlay')) closeConfirmPublish(); });
+document.getElementById('sessionOverlay').addEventListener('click', e => { if (e.target === document.getElementById('sessionOverlay')) closeSessionModal(); });
+
+['Alice','Bruno','Chloe'].forEach(n => { document.getElementById('newName').value = n; addParticipant(); });
+document.getElementById('newName').value = '';
+activeId = null; renderChips(); renderLeft(); renderBoard();
+</script>
+
+
+</body></html>

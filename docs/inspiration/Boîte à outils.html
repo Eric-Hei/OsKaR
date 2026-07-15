@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<!-- saved from url=(0044)https://hasenso.fr/oskar/boite-a-outils.html -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="./Boîte à outils_files/css2" rel="stylesheet">
+  <link rel="stylesheet" href="./Boîte à outils_files/oskar.css">
+  <title>OSKAR — Boîte à outils</title>
+  <style>
+  /* ── NEW TOOL CARD DESIGN ── */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 22px;
+    padding: 0 0 32px;
+  }
+
+  .tool-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06), 0 0 0 1px rgba(0,0,0,.05);
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow .2s, transform .2s;
+  }
+  .tool-card:hover {
+    box-shadow: 0 8px 28px rgba(0,0,0,.12), 0 0 0 1px rgba(0,0,0,.06);
+    transform: translateY(-2px);
+  }
+
+  /* ── Banner ── */
+  .tc-banner {
+    position: relative;
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .tc-banner-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .tc-banner-bg svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .tc-banner-ico {
+    position: relative;
+    z-index: 1;
+    width: 64px;
+    height: 64px;
+    background: rgba(255,255,255,.22);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 12px rgba(0,0,0,.12);
+  }
+  .tc-banner-ico svg {
+    width: 34px;
+    height: 34px;
+    stroke: white;
+    fill: none;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .tc-banner-tag {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-size: 1.5rem;
+    line-height: 1;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,.2));
+  }
+
+  /* ── Body ── */
+  .tc-body {
+    padding: 18px 18px 14px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .tc-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e2d7d;
+    line-height: 1.25;
+  }
+  .tc-desc {
+    font-size: .82rem;
+    color: #64748b;
+    line-height: 1.55;
+    flex: 1;
+  }
+  .tc-meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+  .tc-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: .75rem;
+    color: #94a3b8;
+    font-weight: 500;
+  }
+  .tc-meta-item svg {
+    width: 13px; height: 13px; flex-shrink: 0;
+  }
+
+  /* ── Footer / CTA ── */
+  .tc-footer {
+    padding: 0 18px 18px;
+  }
+  .tc-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 11px 16px;
+    border-radius: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-size: .88rem;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: opacity .15s, transform .1s;
+  }
+  .tc-btn:hover { opacity: .9; transform: translateY(-1px); }
+  .tc-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+  /* Ghost card */
+  .tool-card.ghost {
+    border: 2px dashed #e2e8f0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .tool-card.ghost:hover {
+    border-color: #cbd5e1;
+    box-shadow: none;
+    transform: none;
+  }
+  .tool-card.ghost .tc-banner {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9) !important;
+  }
+  .tool-card.ghost .tc-banner-ico {
+    background: #f1f5f9;
+    box-shadow: none;
+  }
+  .tool-card.ghost .tc-banner-ico svg { stroke: #94a3b8; }
+  .tool-card.ghost .tc-banner-tag { background: rgba(148,163,184,.15); color: #94a3b8; }
+  .tool-card.ghost .tc-title { color: #64748b; }
+  .tool-card.ghost .tc-desc { color: #94a3b8; }
+  .tool-card.ghost .tc-meta-item { color: #cbd5e1; }
+  </style>
+<script src="chrome-extension://ajdpfmkffanmkhejnopjppegokpogffp/assets/prompt.js"></script></head>
+<body>
+<div class="app-shell">
+
+  <!-- ─── SIDEBAR ─── -->
+  <aside class="sidebar collapsed" id="sidebar">
+    <div class="sidebar-logo">
+      <img class="logo-full" src="./Boîte à outils_files/logo-oskar.png" alt="OSKAR">
+      <img class="logo-icon" src="./Boîte à outils_files/logo-oskar2.png" alt="OSKAR">
+    </div>
+    <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Réduire le menu">
+      <svg viewBox="0 0 12 12"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"></path></svg>
+    </button>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Navigation</div>
+      <a class="nav-item" href="https://hasenso.fr/oskar/index.html">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+        <span class="nav-label">Accueil</span>
+      </a>
+      <a class="nav-item" href="https://hasenso.fr/oskar/bilan.html">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path><rect x="9" y="3" width="6" height="4" rx="1"></rect><line x1="9" y1="12" x2="15" y2="12"></line><line x1="9" y1="16" x2="13" y2="16"></line></svg>
+        <span class="nav-label">Diagnostic</span>
+        <span class="nav-badge">Gratuit</span>
+      </a>
+      <div class="sidebar-section-label">Les 5 Piliers</div>
+      <a class="nav-item" href="https://hasenso.fr/oskar/vision.html">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path></svg>
+        <span class="nav-label">OSKAR Vision</span>
+      </a>
+      <a class="nav-item" href="https://hasenso.fr/oskar/fit.html">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"></path></svg>
+        <span class="nav-label">OSKAR Fit</span>
+      </a>
+      <a class="nav-item" href="https://hasenso.fr/oskar/finance.html">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"></path><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.077 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.077-2.354-1.253V5z" clip-rule="evenodd"></path></svg>
+        <span class="nav-label">OSKAR Finance</span>
+      </a>
+      <a class="nav-item" href="https://hasenso.fr/oskar/okr.html">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+        <span class="nav-label">OSKAR OKR</span>
+      </a>
+      <a class="nav-item" href="https://hasenso.fr/oskar/team.html">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"></path></svg>
+        <span class="nav-label">OSKAR Team</span>
+      </a>
+      <div class="sidebar-section-label">Ressources</div>
+      <a class="nav-item active" href="https://hasenso.fr/oskar/boite-a-outils.html">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="20" height="13" rx="2"></rect><path d="M16 9V7a4 4 0 00-8 0v2"></path><line x1="12" y1="13" x2="12" y2="17"></line></svg>
+        <span class="nav-label">Boîte à outils</span>
+      </a>
+      <a class="nav-item" href="https://hasenso.fr/oskar">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+        <span class="nav-label">À propos</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <a class="nav-item" href="https://hasenso.fr/oskar/boite-a-outils.html#" onclick="openAuth(); return false;">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+        <span class="nav-label">Se connecter</span>
+      </a>
+    </div>
+  </aside>
+
+  <div class="main-area" id="mainArea">
+
+    <header class="topbar">
+      <div>
+        <div class="topbar-title">Boîte à outils <span class="topbar-subtitle">— Rituels &amp; facilitation d'équipe</span></div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-outline" onclick="openAuth(&#39;login&#39;)">Connexion</button>
+        <button class="btn btn-primary" onclick="openAuth(&#39;register&#39;)">Commencer gratuitement →</button>
+      </div>
+    </header>
+
+    <main class="page-content">
+
+      <!-- HERO -->
+      <section class="module-hero">
+        <div class="module-hero-inner">
+          <div class="module-eyebrow team">OSKAR Team — Outils de facilitation</div>
+          <h1 class="module-title">Des rituels simples pour des<br>équipes qui <span class="team-accent">avancent ensemble</span></h1>
+          <p class="module-desc">Des outils clés en main pour animer vos réunions d'équipe, vos rétrospectives et vos sessions d'idéation — sans complexité, directement dans votre navigateur.</p>
+        </div>
+      </section>
+
+      <div class="tools-section-title">Choisissez votre outil</div>
+
+      <div class="tools-grid">
+
+        <!-- ── RÉTROSPECTIVE ── -->
+        <div class="tool-card">
+          <div class="tc-banner">
+            <div class="tc-banner-bg" style="background:linear-gradient(135deg,#1e2d7d,#3b52c4);">
+              <svg viewBox="0 0 320 130" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Diagonal lines -->
+                <line x1="-10" y1="60" x2="60" y2="-10" stroke="white" stroke-width="28" stroke-opacity=".07"></line>
+                <line x1="40" y1="160" x2="160" y2="40" stroke="white" stroke-width="28" stroke-opacity=".07"></line>
+                <line x1="110" y1="160" x2="230" y2="40" stroke="white" stroke-width="28" stroke-opacity=".07"></line>
+                <!-- Speech bubble shapes -->
+                <rect x="210" y="20" width="80" height="50" rx="12" fill="white" fill-opacity=".08"></rect>
+                <path d="M225 70 L220 82 L236 70" fill="white" fill-opacity=".08"></path>
+                <rect x="230" y="75" width="50" height="36" rx="10" fill="white" fill-opacity=".06"></rect>
+                <path d="M260 111 L268 122 L255 111" fill="white" fill-opacity=".06"></path>
+                <!-- 4 quadrant hint -->
+                <rect x="14" y="14" width="28" height="20" rx="4" fill="white" fill-opacity=".1"></rect>
+                <rect x="46" y="14" width="28" height="20" rx="4" fill="white" fill-opacity=".1"></rect>
+                <rect x="14" y="38" width="28" height="20" rx="4" fill="white" fill-opacity=".1"></rect>
+                <rect x="46" y="38" width="28" height="20" rx="4" fill="white" fill-opacity=".1"></rect>
+              </svg>
+            </div>
+            <div class="tc-banner-ico">
+              <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path><line x1="8" y1="10" x2="16" y2="10"></line><line x1="8" y1="14" x2="13" y2="14"></line></svg>
+            </div>
+          </div>
+          <div class="tc-body">
+            <div class="tc-title">Rétrospective d'équipe</div>
+            <div class="tc-desc">Un format structuré en 4 quadrants pour faire le point : ce qui fonctionne, ce qu'on démarre, ce qu'on réduit, et les questions ouvertes.</div>
+            <div class="tc-meta">
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15.5 14"></polyline></svg>45 – 60 min</span>
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"></path></svg>3 – 20 participants</span>
+            </div>
+          </div>
+          <div class="tc-footer">
+            <a href="https://hasenso.fr/oskar/retro.html" class="tc-btn" style="background:linear-gradient(135deg,#1e2d7d,#3b52c4);">
+              Lancer la rétro
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- ── SPEEDBOAT ── -->
+        <div class="tool-card">
+          <div class="tc-banner">
+            <div class="tc-banner-bg" style="background:linear-gradient(135deg,#0369a1,#00d4b4);">
+              <svg viewBox="0 0 320 130" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Wave shapes -->
+                <path d="M-20 90 Q40 70 100 90 Q160 110 220 90 Q280 70 340 90" stroke="white" stroke-opacity=".12" stroke-width="3" fill="none"></path>
+                <path d="M-20 108 Q40 88 100 108 Q160 128 220 108 Q280 88 340 108" stroke="white" stroke-opacity=".1" stroke-width="3" fill="none"></path>
+                <path d="M-20 125 Q40 105 100 125 Q160 145 220 125 Q280 105 340 125" stroke="white" stroke-opacity=".08" stroke-width="3" fill="none"></path>
+                <!-- Sail triangle -->
+                <path d="M220 100 L220 20 L290 95 Z" fill="white" fill-opacity=".1"></path>
+                <path d="M220 100 L220 35 L170 95 Z" fill="white" fill-opacity=".07"></path>
+                <!-- Mast -->
+                <line x1="220" y1="15" x2="220" y2="102" stroke="white" stroke-opacity=".15" stroke-width="2.5"></line>
+                <!-- Horizon line -->
+                <line x1="0" y1="85" x2="320" y2="85" stroke="white" stroke-opacity=".08" stroke-width="1.5"></line>
+              </svg>
+            </div>
+            <div class="tc-banner-ico">
+              <svg viewBox="0 0 24 24"><path d="M3 17c3-2 5-5 9-5s6 3 9 5"></path><path d="M12 3v6"></path><path d="M9 6l3-3 3 3"></path><path d="M5 20h14"></path><path d="M6 17v3M18 17v3"></path></svg>
+            </div>
+          </div>
+          <div class="tc-body">
+            <div class="tc-title">Rétrospective Speedboat</div>
+            <div class="tc-desc">Un voilier qui file vers son île au trésor. Chaque participant place ses tickets sur le tableau : vent, ancres, récifs, succès.</div>
+            <div class="tc-meta">
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15.5 14"></polyline></svg>45 – 60 min</span>
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"></path></svg>3 – 15 participants</span>
+            </div>
+          </div>
+          <div class="tc-footer">
+            <a href="https://hasenso.fr/oskar/speedboat.html" class="tc-btn" style="background:linear-gradient(135deg,#0369a1,#00d4b4);">
+              Lancer le Speedboat
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- ── EN MODE RÉCRÉ ── -->
+        <div class="tool-card">
+          <div class="tc-banner">
+            <div class="tc-banner-bg" style="background:linear-gradient(135deg,#be185d,#f472b6);">
+              <svg viewBox="0 0 320 130" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Confetti dots -->
+                <circle cx="30" cy="25" r="8" fill="white" fill-opacity=".15"></circle>
+                <circle cx="270" cy="105" r="12" fill="white" fill-opacity=".12"></circle>
+                <circle cx="290" cy="30" r="6" fill="white" fill-opacity=".1"></circle>
+                <circle cx="60" cy="100" r="5" fill="white" fill-opacity=".12"></circle>
+                <!-- Star shapes -->
+                <path d="M240 25 L242 32 L249 32 L243 36 L245 43 L240 39 L235 43 L237 36 L231 32 L238 32 Z" fill="white" fill-opacity=".18"></path>
+                <path d="M70 50 L71.5 55 L77 55 L72.5 58 L74 63 L70 60 L66 63 L67.5 58 L63 55 L68.5 55 Z" fill="white" fill-opacity=".15"></path>
+                <!-- Diagonal ribbon -->
+                <path d="M0 0 L50 0 L320 130 L270 130 Z" fill="white" fill-opacity=".06"></path>
+                <!-- Small squares confetti -->
+                <rect x="140" y="15" width="10" height="10" rx="2" fill="white" fill-opacity=".12" transform="rotate(20 145 20)"></rect>
+                <rect x="200" y="80" width="8" height="8" rx="2" fill="white" fill-opacity=".1" transform="rotate(-15 204 84)"></rect>
+                <rect x="100" y="65" width="7" height="7" rx="1.5" fill="white" fill-opacity=".1" transform="rotate(35 103 68)"></rect>
+              </svg>
+            </div>
+            <div class="tc-banner-ico">
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+            </div>
+          </div>
+          <div class="tc-body">
+            <div class="tc-title">En mode récré !</div>
+            <div class="tc-desc">Une rétrospective légère autour de photos partagées par l'équipe. Déposer, révéler, commenter — pour renforcer la cohésion avec bonne humeur.</div>
+            <div class="tc-meta">
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15.5 14"></polyline></svg>20 – 40 min</span>
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"></path></svg>Toute l'équipe</span>
+            </div>
+          </div>
+          <div class="tc-footer">
+            <a href="https://hasenso.fr/oskar/recre.html" class="tc-btn" style="background:linear-gradient(135deg,#be185d,#f472b6);">
+              C'est parti !
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- ── DAILY ── -->
+        <div class="tool-card">
+          <div class="tc-banner">
+            <div class="tc-banner-bg" style="background:linear-gradient(135deg,#0369a1,#38bdf8);">
+              <svg viewBox="0 0 320 130" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Large clock ring -->
+                <circle cx="260" cy="65" r="65" stroke="white" stroke-opacity=".1" stroke-width="18"></circle>
+                <circle cx="260" cy="65" r="42" stroke="white" stroke-opacity=".08" stroke-width="10"></circle>
+                <!-- Clock hands -->
+                <line x1="260" y1="65" x2="260" y2="30" stroke="white" stroke-opacity=".2" stroke-width="3" stroke-linecap="round"></line>
+                <line x1="260" y1="65" x2="285" y2="80" stroke="white" stroke-opacity=".2" stroke-width="3" stroke-linecap="round"></line>
+                <!-- Timeline dots left -->
+                <circle cx="40" cy="50" r="6" fill="white" fill-opacity=".2"></circle>
+                <line x1="40" y1="56" x2="40" y2="80" stroke="white" stroke-opacity=".12" stroke-width="1.5"></line>
+                <circle cx="40" cy="83" r="5" fill="white" fill-opacity=".15"></circle>
+                <line x1="40" y1="89" x2="40" y2="110" stroke="white" stroke-opacity=".1" stroke-width="1.5"></line>
+                <circle cx="40" cy="113" r="4" fill="white" fill-opacity=".1"></circle>
+                <!-- Labels hint -->
+                <rect x="54" y="44" width="60" height="10" rx="3" fill="white" fill-opacity=".1"></rect>
+                <rect x="54" y="77" width="45" height="10" rx="3" fill="white" fill-opacity=".08"></rect>
+                <rect x="54" y="107" width="52" height="10" rx="3" fill="white" fill-opacity=".07"></rect>
+              </svg>
+            </div>
+            <div class="tc-banner-ico">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+          </div>
+          <div class="tc-body">
+            <div class="tc-title">Daily standup</div>
+            <div class="tc-desc">Un tour de table structuré en 3 questions : ce que j'ai fait, ce que je fais, mes blocages. Avec minuteur par personne pour rester dans les temps.</div>
+            <div class="tc-meta">
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15.5 14"></polyline></svg>20 min max</span>
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"></path></svg>3 – 20 participants</span>
+            </div>
+          </div>
+          <div class="tc-footer">
+            <a href="https://hasenso.fr/oskar/daily.html" class="tc-btn" style="background:linear-gradient(135deg,#0369a1,#38bdf8);">
+              Lancer le daily
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- ── PLANNING POKER ── -->
+        <div class="tool-card">
+          <div class="tc-banner">
+            <div class="tc-banner-bg" style="background:linear-gradient(135deg,#5b21b6,#818cf8);">
+              <svg viewBox="0 0 320 130" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Fanned poker cards -->
+                <rect x="155" y="20" width="52" height="76" rx="7" fill="white" fill-opacity=".08" transform="rotate(-20 181 58)"></rect>
+                <rect x="175" y="18" width="52" height="76" rx="7" fill="white" fill-opacity=".1" transform="rotate(-8 201 56)"></rect>
+                <rect x="192" y="20" width="52" height="76" rx="7" fill="white" fill-opacity=".13" transform="rotate(4 218 58)"></rect>
+                <rect x="208" y="24" width="52" height="76" rx="7" fill="white" fill-opacity=".1" transform="rotate(16 234 62)"></rect>
+                <!-- Fibonacci numbers hint -->
+                <text x="194" y="55" font-family="serif" font-size="18" fill="white" fill-opacity=".25" text-anchor="middle">1</text>
+                <text x="210" y="58" font-family="serif" font-size="18" fill="white" fill-opacity=".3" text-anchor="middle">3</text>
+                <text x="228" y="62" font-family="serif" font-size="18" fill="white" fill-opacity=".25" text-anchor="middle">8</text>
+                <!-- Left side dots -->
+                <circle cx="50" cy="40" r="22" stroke="white" stroke-opacity=".08" stroke-width="12"></circle>
+                <circle cx="80" cy="90" r="16" stroke="white" stroke-opacity=".07" stroke-width="8"></circle>
+              </svg>
+            </div>
+            <div class="tc-banner-ico">
+              <svg viewBox="0 0 24 24"><rect x="2" y="4" width="12" height="16" rx="2"></rect><path d="M14 8h4l4 4v8h-8V8z"></path><line x1="6" y1="10" x2="10" y2="10"></line><line x1="6" y1="14" x2="10" y2="14"></line></svg>
+            </div>
+          </div>
+          <div class="tc-body">
+            <div class="tc-title">Planning Poker</div>
+            <div class="tc-desc">Estimez vos tâches en équipe avec des cartes de la suite de Fibonacci. Chaque participant vote en secret, puis on révèle — et on discute les écarts.</div>
+            <div class="tc-meta">
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15.5 14"></polyline></svg>30 – 60 min</span>
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"></path></svg>3 – 10 participants</span>
+            </div>
+          </div>
+          <div class="tc-footer">
+            <a href="https://hasenso.fr/oskar/planning-poker.html" class="tc-btn" style="background:linear-gradient(135deg,#5b21b6,#818cf8);">
+              Lancer le planning poker
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- ── BRAINSTORMING ── -->
+        <div class="tool-card">
+          <div class="tc-banner">
+            <div class="tc-banner-bg" style="background:linear-gradient(135deg,#0d9466,#00d4b4);">
+              <svg viewBox="0 0 320 130" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Post-it notes scattered -->
+                <rect x="20" y="15" width="44" height="38" rx="4" fill="white" fill-opacity=".14" transform="rotate(-8 42 34)"></rect>
+                <rect x="75" y="62" width="44" height="38" rx="4" fill="white" fill-opacity=".1" transform="rotate(5 97 81)"></rect>
+                <rect x="140" y="20" width="44" height="38" rx="4" fill="white" fill-opacity=".12" transform="rotate(10 162 39)"></rect>
+                <rect x="195" y="68" width="44" height="38" rx="4" fill="white" fill-opacity=".11" transform="rotate(-6 217 87)"></rect>
+                <rect x="255" y="18" width="44" height="38" rx="4" fill="white" fill-opacity=".13" transform="rotate(4 277 37)"></rect>
+                <rect x="50" y="80" width="36" height="30" rx="4" fill="white" fill-opacity=".08" transform="rotate(-12 68 95)"></rect>
+                <rect x="235" y="75" width="36" height="30" rx="4" fill="white" fill-opacity=".08" transform="rotate(8 253 90)"></rect>
+                <!-- Lines on notes -->
+                <line x1="27" y1="30" x2="55" y2="30" stroke="white" stroke-opacity=".12" stroke-width="2" transform="rotate(-8 41 30)"></line>
+                <line x1="27" y1="38" x2="50" y2="38" stroke="white" stroke-opacity=".1" stroke-width="2" transform="rotate(-8 38 38)"></line>
+                <line x1="148" y1="34" x2="176" y2="34" stroke="white" stroke-opacity=".12" stroke-width="2" transform="rotate(10 162 34)"></line>
+              </svg>
+            </div>
+            <div class="tc-banner-ico">
+              <svg viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3a6 6 0 016 6c0 2.5-1.3 4.7-3.3 6H9.3A6 6 0 0112 3z"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+            </div>
+          </div>
+          <div class="tc-body">
+            <div class="tc-title">Brainstorming</div>
+            <div class="tc-desc">Un espace de post-its libres pour générer des idées ensemble. Chaque participant prépare ses idées en privé, puis les révèle une à une sur un canvas partagé.</div>
+            <div class="tc-meta">
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15.5 14"></polyline></svg>30 – 60 min</span>
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"></path></svg>2 – 20 participants</span>
+            </div>
+          </div>
+          <div class="tc-footer">
+            <a href="https://hasenso.fr/oskar/brainstorm.html" class="tc-btn" style="background:linear-gradient(135deg,#0d9466,#00d4b4);">
+              Lancer le brainstorming
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- ── ROTI ── -->
+        <div class="tool-card">
+          <div class="tc-banner">
+            <div class="tc-banner-bg" style="background:linear-gradient(135deg,#b45309,#fbbf24);">
+              <svg viewBox="0 0 320 130" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- 5 stars row -->
+                <path d="M38 72 L40.5 79 L48 79 L42 83 L44.5 90 L38 86 L31.5 90 L34 83 L28 79 L35.5 79 Z" fill="white" fill-opacity=".22"></path>
+                <path d="M78 72 L80.5 79 L88 79 L82 83 L84.5 90 L78 86 L71.5 90 L74 83 L68 79 L75.5 79 Z" fill="white" fill-opacity=".22"></path>
+                <path d="M118 72 L120.5 79 L128 79 L122 83 L124.5 90 L118 86 L111.5 90 L114 83 L108 79 L115.5 79 Z" fill="white" fill-opacity=".22"></path>
+                <path d="M158 72 L160.5 79 L168 79 L162 83 L164.5 90 L158 86 L151.5 90 L154 83 L148 79 L155.5 79 Z" fill="white" fill-opacity=".22"></path>
+                <path d="M198 72 L200.5 79 L208 79 L202 83 L204.5 90 L198 86 L191.5 90 L194 83 L188 79 L195.5 79 Z" fill="white" fill-opacity=".12"></path>
+                <!-- ROI arc top right -->
+                <path d="M260 10 Q310 10 310 60 Q310 110 260 120" stroke="white" stroke-opacity=".1" stroke-width="20" fill="none"></path>
+                <path d="M270 22 Q305 22 305 60 Q305 98 270 108" stroke="white" stroke-opacity=".07" stroke-width="10" fill="none"></path>
+                <!-- Small bar chart hint -->
+                <rect x="24" y="30" width="10" height="28" rx="2" fill="white" fill-opacity=".12"></rect>
+                <rect x="38" y="20" width="10" height="38" rx="2" fill="white" fill-opacity=".14"></rect>
+                <rect x="52" y="26" width="10" height="32" rx="2" fill="white" fill-opacity=".1"></rect>
+              </svg>
+            </div>
+            <div class="tc-banner-ico">
+              <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10"></path><path d="M12 2a10 10 0 0 0-10 10"></path><path d="M12 12 m-6.5 3.5 a8 8 0 0 1 0-7"></path><path d="M12 12 l4-5"></path><circle cx="12" cy="12" r="2"></circle><path d="M12 18 a6 6 0 0 0 5.2-3"></path><path d="M12 18 a6 6 0 0 1-5.2-3"></path></svg>
+            </div>
+          </div>
+          <div class="tc-body">
+            <div class="tc-title">ROTI</div>
+            <div class="tc-desc">Return On Time Invested — chaque participant note la séance de 1 à 5 étoiles en secret. Révélation simultanée, score moyen et distribution des votes en un clin d'œil.</div>
+            <div class="tc-meta">
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15.5 14"></polyline></svg>5 – 10 min</span>
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"></path></svg>Toute l'équipe</span>
+            </div>
+          </div>
+          <div class="tc-footer">
+            <a href="https://hasenso.fr/oskar/roti.html" class="tc-btn" style="background:linear-gradient(135deg,#b45309,#fbbf24);">
+              Lancer le ROTI
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- ── TEAM MOOD ── -->
+        <div class="tool-card">
+          <div class="tc-banner">
+            <div class="tc-banner-bg" style="background:linear-gradient(135deg,#4338ca,#818cf8);">
+              <svg viewBox="0 0 320 130" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Radar chart centered right -->
+                <polygon points="260,20 302,48 286,95 234,95 218,48" stroke="white" stroke-opacity=".15" stroke-width="1.5" fill="white" fill-opacity=".05"></polygon>
+                <polygon points="260,35 290,55 278,85 242,85 230,55" stroke="white" stroke-opacity=".12" stroke-width="1" fill="white" fill-opacity=".04"></polygon>
+                <polygon points="260,48 278,62 270,78 250,78 242,62" stroke="white" stroke-opacity=".1" stroke-width="1" fill="white" fill-opacity=".06"></polygon>
+                <!-- Radar axis lines -->
+                <line x1="260" y1="20" x2="260" y2="95" stroke="white" stroke-opacity=".08" stroke-width="1"></line>
+                <line x1="260" y1="57" x2="302" y2="48" stroke="white" stroke-opacity=".08" stroke-width="1"></line>
+                <line x1="260" y1="57" x2="286" y2="95" stroke="white" stroke-opacity=".08" stroke-width="1"></line>
+                <line x1="260" y1="57" x2="234" y2="95" stroke="white" stroke-opacity=".08" stroke-width="1"></line>
+                <line x1="260" y1="57" x2="218" y2="48" stroke="white" stroke-opacity=".08" stroke-width="1"></line>
+                <!-- Data polygon filled -->
+                <polygon points="260,30 295,54 280,90 240,90 225,54" stroke="white" stroke-opacity=".2" stroke-width="1.5" fill="white" fill-opacity=".1"></polygon>
+                <!-- Left smiley faces -->
+                <circle cx="45" cy="45" r="22" stroke="white" stroke-opacity=".12" stroke-width="2" fill="none"></circle>
+                <circle cx="38" cy="39" r="2.5" fill="white" fill-opacity=".2"></circle>
+                <circle cx="52" cy="39" r="2.5" fill="white" fill-opacity=".2"></circle>
+                <path d="M37 50 Q45 58 53 50" stroke="white" stroke-opacity=".2" stroke-width="2" fill="none" stroke-linecap="round"></path>
+                <circle cx="100" cy="90" r="16" stroke="white" stroke-opacity=".08" stroke-width="2" fill="none"></circle>
+                <circle cx="95" cy="86" r="2" fill="white" fill-opacity=".15"></circle>
+                <circle cx="105" cy="86" r="2" fill="white" fill-opacity=".15"></circle>
+                <path d="M93 95 Q100 101 107 95" stroke="white" stroke-opacity=".15" stroke-width="1.5" fill="none" stroke-linecap="round"></path>
+              </svg>
+            </div>
+            <div class="tc-banner-ico">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+            </div>
+          </div>
+          <div class="tc-body">
+            <div class="tc-title">Team Mood</div>
+            <div class="tc-desc">Évaluez l'état de votre équipe sur 5 dimensions — énergie, charge, sens, liens, épanouissement. Chacun note en privé, on agrège sur un radar.</div>
+            <div class="tc-meta">
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15.5 14"></polyline></svg>30 – 45 min</span>
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"></path></svg>3 – 15 participants</span>
+            </div>
+          </div>
+          <div class="tc-footer">
+            <a href="https://hasenso.fr/oskar/team-mood.html" class="tc-btn" style="background:linear-gradient(135deg,#4338ca,#818cf8);">
+              Lancer le Team Mood
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- ── BOÎTE À IDÉES ── -->
+        <div class="tool-card">
+          <div class="tc-banner">
+            <div class="tc-banner-bg" style="background:linear-gradient(135deg,#b45309,#f59e0b);">
+              <svg viewBox="0 0 320 130" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="240" cy="65" r="55" fill="white" fill-opacity=".06"></circle>
+                <circle cx="240" cy="65" r="35" fill="white" fill-opacity=".07"></circle>
+                <line x1="240" y1="5" x2="240" y2="20" stroke="white" stroke-opacity=".18" stroke-width="3" stroke-linecap="round"></line>
+                <line x1="280" y1="15" x2="271" y2="27" stroke="white" stroke-opacity=".15" stroke-width="3" stroke-linecap="round"></line>
+                <line x1="303" y1="48" x2="290" y2="53" stroke="white" stroke-opacity=".15" stroke-width="3" stroke-linecap="round"></line>
+                <line x1="303" y1="82" x2="290" y2="77" stroke="white" stroke-opacity=".15" stroke-width="3" stroke-linecap="round"></line>
+                <line x1="280" y1="112" x2="271" y2="100" stroke="white" stroke-opacity=".15" stroke-width="3" stroke-linecap="round"></line>
+                <line x1="200" y1="112" x2="209" y2="100" stroke="white" stroke-opacity=".15" stroke-width="3" stroke-linecap="round"></line>
+                <line x1="177" y1="82" x2="190" y2="77" stroke="white" stroke-opacity=".15" stroke-width="3" stroke-linecap="round"></line>
+                <line x1="177" y1="48" x2="190" y2="53" stroke="white" stroke-opacity=".15" stroke-width="3" stroke-linecap="round"></line>
+                <circle cx="50" cy="30" r="5" fill="white" fill-opacity=".15"></circle>
+                <circle cx="80" cy="55" r="4" fill="white" fill-opacity=".12"></circle>
+                <circle cx="35" cy="70" r="6" fill="white" fill-opacity=".1"></circle>
+                <circle cx="100" cy="95" r="4" fill="white" fill-opacity=".12"></circle>
+                <path d="M50 110 Q55 80 60 50" stroke="white" stroke-opacity=".1" stroke-width="2" fill="none" stroke-dasharray="4 4"></path>
+              </svg>
+            </div>
+            <div class="tc-banner-ico">
+              <svg viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M12 2a7 7 0 017 7c0 2.5-1.3 4.7-3.3 6H8.3A7 7 0 0112 2z"></path></svg>
+            </div>
+          </div>
+          <div class="tc-body">
+            <div class="tc-title">Boîte à idées</div>
+            <div class="tc-desc">Chacun soumet ses idées, les publie dans l'espace commun et l'équipe vote avec des cœurs. L'admin retient les meilleures en réunion.</div>
+            <div class="tc-meta">
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15.5 14"></polyline></svg>30 – 45 min</span>
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"></path></svg>Toute l'équipe</span>
+            </div>
+          </div>
+          <div class="tc-footer">
+            <a href="https://hasenso.fr/oskar/idees.html" class="tc-btn" style="background:linear-gradient(135deg,#b45309,#f59e0b);">
+              Ouvrir la boîte à idées
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- ── DISONS-NOUS LES CHOSES ── -->
+        <div class="tool-card">
+          <div class="tc-banner">
+            <div class="tc-banner-bg" style="background:linear-gradient(135deg,#be123c,#f43f5e);">
+              <svg viewBox="0 0 320 130" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Two column shapes -->
+                <rect x="50" y="25" width="80" height="80" rx="8" fill="white" fill-opacity=".07"></rect>
+                <rect x="190" y="25" width="80" height="80" rx="8" fill="white" fill-opacity=".07"></rect>
+                <!-- Divider -->
+                <line x1="160" y1="15" x2="160" y2="115" stroke="white" stroke-opacity=".12" stroke-width="2" stroke-dasharray="5 4"></line>
+                <!-- Down arrow left (brake) -->
+                <line x1="90" y1="48" x2="90" y2="80" stroke="white" stroke-opacity=".22" stroke-width="3" stroke-linecap="round"></line>
+                <path d="M78 70 L90 84 L102 70" stroke="white" stroke-opacity=".22" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                <!-- Up arrow right (engine) -->
+                <line x1="230" y1="82" x2="230" y2="50" stroke="white" stroke-opacity=".22" stroke-width="3" stroke-linecap="round"></line>
+                <path d="M218 60 L230 46 L242 60" stroke="white" stroke-opacity=".22" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                <!-- Lines in columns -->
+                <rect x="62" y="38" width="56" height="6" rx="3" fill="white" fill-opacity=".12"></rect>
+                <rect x="62" y="50" width="40" height="6" rx="3" fill="white" fill-opacity=".1"></rect>
+                <rect x="202" y="38" width="56" height="6" rx="3" fill="white" fill-opacity=".12"></rect>
+                <rect x="202" y="50" width="44" height="6" rx="3" fill="white" fill-opacity=".1"></rect>
+                <!-- Big quote mark right -->
+                <text x="272" y="100" font-size="60" fill="white" fill-opacity=".07" font-family="serif">"</text>
+              </svg>
+            </div>
+            <div class="tc-banner-ico">
+              <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path><line x1="9" y1="10" x2="15" y2="10"></line><line x1="9" y1="14" x2="13" y2="14"></line></svg>
+            </div>
+          </div>
+          <div class="tc-body">
+            <div class="tc-title">Disons-nous les choses</div>
+            <div class="tc-desc">Deux colonnes — Freins et Moteurs — pour nommer sans détour ce qui bloque et ce qui propulse. On vote, on priorise, on retient.</div>
+            <div class="tc-meta">
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15.5 14"></polyline></svg>30 – 60 min</span>
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"></path></svg>3 – 15 participants</span>
+            </div>
+          </div>
+          <div class="tc-footer">
+            <a href="https://hasenso.fr/oskar/disons.html" class="tc-btn" style="background:linear-gradient(135deg,#be123c,#f43f5e);">
+              Lancer la session
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- ── COMPÉTENCES ── -->
+        <div class="tool-card">
+          <div class="tc-banner">
+            <div class="tc-banner-bg" style="background:linear-gradient(135deg,#0369a1,#7dd3fc);">
+              <svg viewBox="0 0 320 130" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Hexagonal grid -->
+                <polygon points="260,18 295,37 295,75 260,94 225,75 225,37" stroke="white" stroke-opacity=".15" stroke-width="1.5" fill="white" fill-opacity=".04"></polygon>
+                <polygon points="260,32 287,47 287,77 260,92 233,77 233,47" stroke="white" stroke-opacity=".1" stroke-width="1" fill="none"></polygon>
+                <polygon points="260,46 279,57 279,79 260,90 241,79 241,57" stroke="white" stroke-opacity=".08" stroke-width="1" fill="none"></polygon>
+                <!-- Axis lines from center -->
+                <line x1="260" y1="56" x2="260" y2="18" stroke="white" stroke-opacity=".1" stroke-width="1"></line>
+                <line x1="260" y1="56" x2="295" y2="37" stroke="white" stroke-opacity=".1" stroke-width="1"></line>
+                <line x1="260" y1="56" x2="295" y2="75" stroke="white" stroke-opacity=".1" stroke-width="1"></line>
+                <line x1="260" y1="56" x2="260" y2="94" stroke="white" stroke-opacity=".1" stroke-width="1"></line>
+                <line x1="260" y1="56" x2="225" y2="75" stroke="white" stroke-opacity=".1" stroke-width="1"></line>
+                <line x1="260" y1="56" x2="225" y2="37" stroke="white" stroke-opacity=".1" stroke-width="1"></line>
+                <!-- Data shape -->
+                <polygon points="260,28 290,50 282,78 238,80 228,52 248,28" stroke="white" stroke-opacity=".25" stroke-width="1.5" fill="white" fill-opacity=".1"></polygon>
+                <!-- Left bar chart -->
+                <rect x="20" y="75" width="14" height="40" rx="3" fill="white" fill-opacity=".14"></rect>
+                <rect x="40" y="55" width="14" height="60" rx="3" fill="white" fill-opacity=".16"></rect>
+                <rect x="60" y="65" width="14" height="50" rx="3" fill="white" fill-opacity=".12"></rect>
+                <rect x="80" y="45" width="14" height="70" rx="3" fill="white" fill-opacity=".18"></rect>
+                <rect x="100" y="60" width="14" height="55" rx="3" fill="white" fill-opacity=".14"></rect>
+                <!-- Axis -->
+                <line x1="16" y1="115" x2="120" y2="115" stroke="white" stroke-opacity=".15" stroke-width="1.5" stroke-linecap="round"></line>
+              </svg>
+            </div>
+            <div class="tc-banner-ico">
+              <svg viewBox="0 0 24 24"><polygon points="12,2 22,8.5 22,15.5 12,22 2,15.5 2,8.5"></polygon><line x1="12" y1="2" x2="12" y2="22"></line><line x1="2" y1="8.5" x2="22" y2="8.5"></line><line x1="2" y1="15.5" x2="22" y2="15.5"></line></svg>
+            </div>
+          </div>
+          <div class="tc-body">
+            <div class="tc-title">Compétences de l'équipe</div>
+            <div class="tc-desc">Chacun se note de 1 à 10 sur une liste de compétences configurables. Les radars individuels et le radar agrégé de l'équipe émergent en temps réel.</div>
+            <div class="tc-meta">
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15.5 14"></polyline></svg>20 – 40 min</span>
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"></path></svg>3 – 20 participants</span>
+            </div>
+          </div>
+          <div class="tc-footer">
+            <a href="https://hasenso.fr/oskar/competences.html" class="tc-btn" style="background:linear-gradient(135deg,#0369a1,#7dd3fc);">
+              Lancer l'évaluation
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- ── SUGGÉRER ── -->
+        <div class="tool-card ghost">
+          <div class="tc-banner">
+            <div class="tc-banner-bg" style="background:linear-gradient(135deg,#f1f5f9,#e2e8f0);">
+              <svg viewBox="0 0 320 130" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Dot grid pattern -->
+                <pattern id="dotgrid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <circle cx="10" cy="10" r="1.5" fill="#94a3b8" fill-opacity=".35"></circle>
+                </pattern>
+                <rect x="0" y="0" width="320" height="130" fill="url(#dotgrid)"></rect>
+                <!-- Central plus large -->
+                <line x1="155" y1="40" x2="155" y2="90" stroke="#94a3b8" stroke-opacity=".3" stroke-width="4" stroke-linecap="round"></line>
+                <line x1="130" y1="65" x2="180" y2="65" stroke="#94a3b8" stroke-opacity=".3" stroke-width="4" stroke-linecap="round"></line>
+                <!-- Outer circle -->
+                <circle cx="155" cy="65" r="34" stroke="#94a3b8" stroke-opacity=".15" stroke-width="2" stroke-dasharray="6 4"></circle>
+              </svg>
+            </div>
+            <div class="tc-banner-ico">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+            </div>
+          </div>
+          <div class="tc-body">
+            <div class="tc-title">Il manque un outil ?</div>
+            <div class="tc-desc">Vous avez un rituel d'équipe qui vous manque ici ? Dites-le nous — les meilleurs retours deviennent les prochains outils.</div>
+            <div class="tc-meta">
+              <span class="tc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path></svg>2 min pour suggérer</span>
+            </div>
+          </div>
+          <div class="tc-footer">
+            <button onclick="openSuggestModal()" class="tc-btn" style="background:#f1f5f9;color:#64748b;border:1.5px solid #e2e8f0;">
+              Suggérer un outil
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CTA BLOCK -->
+      <div class="cta-block cta-team">
+        <div class="cta-block-left">
+          <div class="cta-block-title">Une boîte à outils qui s'enrichit</div>
+          <div class="cta-block-sub">Ces outils font partie du module OSKAR Team, pensé pour que vos équipes progressent ensemble grâce à des rituels réguliers et structurés.</div>
+        </div>
+        <a href="https://hasenso.fr/oskar/team.html" class="btn btn-primary">Découvrir OSKAR Team →</a>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="auth-overlay" id="authOverlay" onclick="closeAuthOnBg(event)">
+  <div class="auth-modal">
+    <div class="auth-modal-header">
+      <h2>Rejoindre OSKAR</h2>
+      <p>Accédez à l'ensemble des modules et outils de la plateforme.</p>
+      <button class="auth-modal-close" onclick="closeAuth()">✕</button>
+    </div>
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tabRegister" onclick="switchTab(&#39;register&#39;)">Inscription</div>
+      <div class="auth-tab" id="tabLogin" onclick="switchTab(&#39;login&#39;)">Connexion</div>
+    </div>
+    <div class="auth-body" autocomplete="off">
+      <div class="auth-panel active" id="panelRegister">
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Prénom</label><input type="text" class="form-input" autocomplete="off" placeholder="Sophie"></div>
+          <div class="form-group"><label class="form-label">Nom</label><input type="text" class="form-input" autocomplete="off" placeholder="Martin"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Email professionnel</label><input type="email" class="form-input" autocomplete="off" placeholder="sophie@entreprise.fr"></div>
+        <div class="form-group"><label class="form-label">Organisation</label><input type="text" class="form-input" autocomplete="off" placeholder="Ma Startup / PME / Cabinet..."></div>
+        <div class="form-group"><label class="form-label">Mot de passe</label><input type="password" autocomplete="new-password" class="form-input" placeholder="••••••••"></div>
+        <button class="btn btn-primary auth-submit">Créer mon compte gratuit →</button>
+        <div class="auth-footer-note">En créant un compte, vous acceptez les <a href="https://hasenso.fr/oskar/boite-a-outils.html#">CGU</a> et la <a href="https://hasenso.fr/oskar/boite-a-outils.html#">politique de confidentialité</a>.</div>
+      </div>
+      <div class="auth-panel" id="panelLogin">
+        <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" autocomplete="off" placeholder="vous@entreprise.fr"></div>
+        <div class="form-group"><label class="form-label">Mot de passe</label><input type="password" autocomplete="new-password" class="form-input" placeholder="••••••••"></div>
+        <button class="btn btn-primary auth-submit">Se connecter →</button>
+        <div class="auth-divider">ou</div>
+        <div class="auth-footer-note">Pas encore de compte ? <a onclick="switchTab(&#39;register&#39;)" style="cursor:pointer">Inscrivez-vous gratuitement</a></div>
+        <div style="margin-top:10px;text-align:center"><a href="https://hasenso.fr/oskar/boite-a-outils.html#" style="font-size:14px;color:var(--text-muted)">Mot de passe oublié ?</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function openAuth(tab) { document.getElementById('authOverlay').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeAuth() { document.getElementById('authOverlay').classList.remove('open'); document.body.style.overflow=''; }
+function closeAuthOnBg(e) { if(e.target===document.getElementById('authOverlay')) closeAuth(); }
+function switchTab(tab) {
+  document.getElementById('panelRegister').classList.toggle('active',tab==='register');
+  document.getElementById('panelLogin').classList.toggle('active',tab==='login');
+  document.getElementById('tabRegister').classList.toggle('active',tab==='register');
+  document.getElementById('tabLogin').classList.toggle('active',tab==='login');
+}
+document.addEventListener('click',function(e){
+  var btn=e.target.closest('.auth-submit'); if(!btn) return;
+  var m=document.querySelector('.auth-modal');
+  if(m){m.innerHTML='<div style="padding:60px 32px;text-align:center"><div style="width:52px;height:52px;background:#e0faf6;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px"><svg viewBox="0 0 24 24" fill="none" stroke="#00846f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px"><polyline points="20 6 9 17 4 12"/></svg></div><p style="font-size:18.5px;font-weight:700;color:#1e2d7d;margin-bottom:12px">Plateforme en cours de réalisation</p><p style="font-size:15.5px;color:#6b7280;line-height:1.7">Veuillez vous rapprocher de votre coach<br>ou contact OSKAR.</p></div>';}
+  setTimeout(function(){var o=document.getElementById('authOverlay');if(o){o.classList.remove('open');document.body.style.overflow='';}},3000);
+});
+function toggleSidebar(){var s=document.getElementById('sidebar');var m=document.getElementById('mainArea');s.classList.toggle('collapsed');m.classList.toggle('expanded');}
+</script>
+
+<!-- SUGGEST MODAL -->
+<style>
+.suggest-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(3px);z-index:100;align-items:center;justify-content:center;}
+.suggest-overlay.open{display:flex;}
+</style>
+<div class="suggest-overlay" id="suggestOverlay" onclick="closeSuggestOnBg(event)">
+  <div class="auth-modal" style="max-width:480px;">
+    <div class="auth-modal-header">
+      <h2>Suggérer un outil</h2>
+      <p>Quel rituel ou outil vous manque dans cette boîte à outils ?</p>
+      <button class="auth-modal-close" onclick="closeSuggestModal()">✕</button>
+    </div>
+    <div class="auth-body" id="suggestBody">
+      <div class="form-group" style="margin-bottom:14px;"><label class="form-label">Nom de l'outil ou du rituel</label><input type="text" class="form-input" id="suggestName" placeholder="Ex : World Café, Check-in météo…" maxlength="80"></div>
+      <div class="form-group" style="margin-bottom:14px;"><label class="form-label">À quoi sert-il ? Comment ça marche ?</label><textarea class="form-input" id="suggestDesc" rows="4" style="resize:none;line-height:1.5;" placeholder="Décrivez brièvement le format…" maxlength="500"></textarea></div>
+      <div class="form-group" style="margin-bottom:20px;"><label class="form-label">Votre prénom (optionnel)</label><input type="text" class="form-input" id="suggestFrom" placeholder="Alice" maxlength="30"></div>
+      <button class="btn btn-primary" onclick="submitSuggestion()" style="width:100%;">Envoyer ma suggestion →</button>
+    </div>
+  </div>
+</div>
+<script>
+function openSuggestModal(){document.getElementById('suggestOverlay').classList.add('open');document.body.style.overflow='hidden';setTimeout(()=>document.getElementById('suggestName').focus(),50);}
+function closeSuggestModal(){document.getElementById('suggestOverlay').classList.remove('open');document.body.style.overflow='';}
+function closeSuggestOnBg(e){if(e.target===document.getElementById('suggestOverlay'))closeSuggestModal();}
+function submitSuggestion(){
+  const name=document.getElementById('suggestName').value.trim();
+  if(!name){document.getElementById('suggestName').focus();return;}
+  document.getElementById('suggestBody').innerHTML=`<div style="padding:40px 20px;text-align:center;"><div style="width:56px;height:56px;background:#e6faf7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0d9466" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><p style="font-size:1rem;font-weight:700;color:#1e2d7d;margin-bottom:10px;">Merci pour votre suggestion !</p><p style="font-size:.88rem;color:#6b7280;line-height:1.7;">« <strong>${name}</strong> » a bien été transmis.</p></div>`;
+  setTimeout(()=>closeSuggestModal(),3200);
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSuggestModal();});
+</script>
+
+
+</body></html>

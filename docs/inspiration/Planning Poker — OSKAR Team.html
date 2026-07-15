@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<!-- saved from url=(0044)https://hasenso.fr/oskar/planning-poker.html -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planning Poker — OSKAR Team</title>
+<link href="./Planning Poker — OSKAR Team_files/css2" rel="stylesheet">
+<link rel="stylesheet" href="./Planning Poker — OSKAR Team_files/oskar.css">
+<style>
+/* ── Header outil — harmonisé OSKAR ── */
+body { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+.tool-header {
+  height: 56px;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.tool-header-back {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.tool-header-back img {
+  height: 30px;
+  width: auto;
+  object-fit: contain;
+}
+.tool-header-sep {
+  color: var(--border);
+  font-size: 1.2rem;
+  font-weight: 300;
+  flex-shrink: 0;
+}
+.tool-header h1 {
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 600;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tool-header-pill {
+  margin-left: auto;
+  background: var(--team);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 3px 11px;
+  border-radius: 20px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.tool-header-back-link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 500;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: color 0.15s;
+  border-left: 1px solid var(--border);
+  padding-left: 14px;
+  margin-left: 4px;
+}
+.tool-header-back-link:hover { color: var(--navy); }
+
+/* ── Planning Poker — styles spécifiques ──
+   Toutes les variables viennent d'oskar.css.
+   Aucun inline style, aucune redéfinition de base. */
+
+/* ── Reset layout pleine hauteur (comme retro-v2) ── */
+body{ height: 100vh; display: flex; flex-direction: column; overflow: hidden}
+
+/* ── HEADER ── */
+
+
+
+
+
+
+/* ── PBAR ── */
+.pbar { background:var(--navy); border-bottom:none; padding: 12px 24px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; flex-wrap: wrap; }
+.pbar-label { font-size: .82rem; font-weight: 600; color:rgba(255,255,255,.55); text-transform: uppercase; letter-spacing: .5px; white-space: nowrap; }
+.p-chips { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; }
+.p-chip { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; border: 2px solid transparent; cursor: pointer; font-family: 'Outfit', sans-serif; font-size: .92rem; font-weight: 500; background: #f1f5f9; color: #475569; transition: all .15s; }
+.p-chip.active { background: white; font-weight: 600; border-color: var(--team); color: var(--team); }
+.add-p { display: flex; gap: 7px; }
+.add-p input { font-family: 'Outfit', sans-serif; font-size: .92rem; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 6px 12px; width: 140px; color: var(--navy); outline: none; }
+.add-p input:focus { border-color: var(--teal); }
+.btn-teal { background: var(--teal); color: var(--navy); border: none; border-radius: 8px; padding: 6px 13px; cursor: pointer; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: .92rem; }
+.vsep { width: 1px; height: 28px; background:rgba(255,255,255,.2); flex-shrink: 0; }
+
+/* ── CHRONO ── */
+.chrono-wrap { display: flex; align-items: center; gap: 9px; margin-left: auto; }
+.chrono-min { font-family: 'Outfit', sans-serif; font-size: .92rem; font-weight: 600; color: var(--navy); text-align: center; width: 58px; border: 1.5px solid #e2e8f0; border-radius: 7px; padding: 5px 7px; outline: none; background: #f8fafc; }
+.chrono-min:focus { border-color: var(--teal); }
+.chrono-label { font-size: .88rem; color: #64748b; }
+.chrono-display { font-family: 'Outfit', monospace; font-size: 1.15rem; font-weight: 700; color: var(--navy); letter-spacing: 2px; min-width: 66px; text-align: center; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 7px; padding: 5px 10px; transition: all .3s; }
+.chrono-display.warn { color: #d97706; border-color: #fbbf24; background: #fffbeb; }
+.chrono-display.danger { color: #dc2626; border-color: #fca5a5; background: #fef2f2; animation: blink .8s infinite; }
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.5;} }
+.chrono-btns { display: flex; gap: 5px; }
+.btn-chrono { background: #f1f5f9; border: 1.5px solid #e2e8f0; color: #475569; border-radius: 7px; padding: 5px 13px; cursor: pointer; font-family: 'Outfit', sans-serif; font-size: .88rem; font-weight: 600; display: flex; align-items: center; gap: 5px; transition: all .15s; }
+.btn-chrono:hover { border-color: var(--navy); color: var(--navy); }
+.btn-chrono.run { background: var(--teal); border-color: var(--teal); color: var(--navy); }
+
+/* ── MAIN LAYOUT ── */
+.main { flex: 1; display: flex; overflow: hidden; }
+
+/* ── LEFT PANEL ── */
+.left { width: 300px; flex-shrink: 0; background: white; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden; }
+.lh { padding: 16px 18px 12px; border-bottom: 1px solid #f1f5f9; }
+.lh-title { font-size: .88rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .5px; display: flex; align-items: center; gap: 7px; }
+.lbody{ flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px}
+
+/* ── ADMIN BLOCK ── */
+.admin-block { background: #fffdf0; border: 1.5px solid #fde68a; border-radius: 10px; padding: 14px; }
+.admin-title { font-size: .82rem; font-weight: 700; color: #a16207; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+.admin-row { margin-bottom: 10px; }
+.admin-row label { display: block; font-size: .82rem; font-weight: 600; color: #64748b; margin-bottom: 5px; }
+.admin-row select, .admin-row input[type="text"] { width: 100%; padding: 8px 11px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-family: 'Outfit', sans-serif; font-size: .92rem; outline: none; background: white; transition: border-color .15s; }
+.admin-row select:focus, .admin-row input:focus { border-color: #fde68a; }
+.admin-custom { display: none; margin-top: 8px; }
+
+.btn-reveal { width: 100%; padding: 11px; background: var(--navy); color: white; border: none; border-radius: 9px; font-family: 'Outfit', sans-serif; font-size: .95rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; margin-bottom: 7px; transition: background .15s; }
+.btn-reveal:hover { background: var(--navy-light); }
+.btn-reveal:disabled { opacity: .35; cursor: not-allowed; }
+.btn-reset-vote { width: 100%; padding: 10px; background: white; color: #ef4444; border: 1.5px solid #fecaca; border-radius: 9px; font-family: 'Outfit', sans-serif; font-size: .88rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; transition: all .15s; }
+.btn-reset-vote:hover { background: #fef2f2; border-color: #ef4444; }
+
+.admin-stats { font-size: .88rem; color: #94a3b8; text-align: center; margin-bottom: 10px; }
+.admin-stats strong { color: var(--navy); }
+
+/* ── NO PARTICIPANT PLACEHOLDER ── */
+.no-p { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: #94a3b8; text-align: center; padding: 20px; }
+.no-p p { font-size: .95rem; line-height: 1.5; }
+
+/* ── BOARD AREA ── */
+.board-area { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+
+/* Story bar */
+.story-bar { background: white; border-bottom: 1px solid #e2e8f0; padding: 12px 24px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.story-bar label { font-size: .82rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .5px; white-space: nowrap; }
+.story-bar input { flex: 1; border: none; font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 600; color: var(--navy); outline: none; background: transparent; }
+.story-bar input::placeholder { color: #cbd5e1; font-weight: 400; }
+
+/* Board content */
+.board-content { flex: 1; overflow-y: auto; display: flex; padding: 24px; gap: 24px; }
+
+/* ── VOTE ZONE ── */
+.vote-zone { flex: 1; display: flex; flex-direction: column; gap: 24px; }
+
+.zone-title { font-size: .82rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 14px; }
+
+/* Cards de vote — plus grandes */
+.cards-grid { display: flex; flex-wrap: wrap; gap: 14px; }
+.vote-card { width: 90px; height: 122px; border-radius: 12px; border: 2px solid #e2e8f0; background: white; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; font-weight: 800; color: var(--navy); cursor: pointer; transition: all .18s cubic-bezier(.34,1.56,.64,1); box-shadow: 0 2px 8px rgba(30,45,125,.08); position: relative; user-select: none; }
+.vote-card:hover { transform: translateY(-9px) scale(1.07); border-color: var(--navy); box-shadow: 0 12px 28px rgba(30,45,125,.2); }
+.vote-card.selected { background: var(--navy); border-color: var(--navy); color: white; transform: translateY(-11px) scale(1.1); box-shadow: 0 14px 32px rgba(30,45,125,.32); }
+.vote-card.selected::after { content: '✓'; position: absolute; bottom: 8px; right: 10px; font-size: .8rem; opacity: .6; }
+.vote-card.tshirt { font-size: 1.1rem; }
+.vote-card.locked { opacity: .38; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+/* Players grid */
+.players-grid { display: flex; flex-wrap: wrap; gap: 12px; }
+.player-card { background: white; border-radius: 12px; padding: 16px 20px; min-width: 130px; text-align: center; box-shadow: 0 1px 6px rgba(30,45,125,.07); border: 1.5px solid #e2e8f0; transition: all .2s; }
+.player-card.voted { border-color: #22c55e; background: #f0fdf4; }
+.player-card.is-me { border-color: var(--team); }
+.player-avatar { width: 46px; height: 46px; border-radius: 50%; background: var(--navy); color: white; font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 9px; }
+.player-card.voted .player-avatar { background: #22c55e; }
+.player-card.is-me .player-avatar { background: var(--team); }
+.player-name { font-size: .95rem; font-weight: 700; color: var(--navy); }
+.player-admin-tag { font-size: .72rem; color: #a16207; font-weight: 700; }
+.player-status { font-size: .82rem; color: #94a3b8; margin-top: 4px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+.dot-voted { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; display: inline-block; }
+.player-vote-value { font-size: 1.8rem; font-weight: 900; color: var(--navy); margin-top: 8px; }
+.player-card-back { width: 38px; height: 38px; background: var(--navy); border-radius: 7px; margin: 8px auto 0; position: relative; }
+.player-card-back::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 20px; height: 14px; border-radius: 3px; border: 2px solid rgba(255,255,255,.25); }
+
+/* ── RESULTS COLUMN ── */
+.results-col { width: 300px; flex-shrink: 0; display: flex; flex-direction: column; gap: 14px; }
+
+.results-placeholder { background: white; border-radius: 12px; border: 1.5px dashed #e2e8f0; padding: 36px 20px; text-align: center; color: #94a3b8; font-size: .95rem; }
+.results-placeholder svg { display: block; margin: 0 auto 12px; opacity: .2; }
+
+.results-card { background: white; border-radius: 12px; border: 1.5px solid var(--teal); box-shadow: 0 2px 14px rgba(0,212,180,.1); padding: 22px; display: none; }
+.results-card.visible { display: block; }
+
+.results-avg-wrap { text-align: center; padding: 14px 0 12px; }
+.results-avg { font-size: 3.5rem; font-weight: 900; color: var(--navy); line-height: 1; }
+.results-avg-label { font-size: .85rem; color: #94a3b8; font-weight: 500; margin-top: 4px; }
+
+.consensus-badge { border-radius: 9px; padding: 10px 14px; font-size: .92rem; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.cb-perfect { background: #e0faf6; border: 1.5px solid var(--teal); color: var(--navy); }
+.cb-good { background: #f0f9ff; border: 1.5px solid #7dd3fc; color: #0369a1; }
+.cb-diverge { background: #fef3c7; border: 1.5px solid #fde68a; color: #92400e; }
+
+.distrib-title { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #94a3b8; margin-bottom: 10px; }
+.distrib-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.distrib-item { background: #f8fafc; border-radius: 9px; padding: 9px 14px; text-align: center; flex: 1; min-width: 52px; }
+.distrib-val { font-size: 1.2rem; font-weight: 800; color: var(--navy); }
+.distrib-count { font-size: .78rem; color: #94a3b8; font-weight: 500; margin-top: 3px; }
+
+/* ── EMOJI REACTIONS ── */
+.reactions-card {
+  background: white; border-radius: 12px; border: 1.5px solid #e2e8f0;
+  padding: 16px; display: flex; flex-direction: column; gap: 12px;
+}
+.reactions-title {
+  font-size: .7rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .5px; color: #94a3b8;
+}
+.emoji-catalog-list {
+  max-height: 200px; overflow-y: auto; display: flex; flex-wrap: wrap;
+  gap: 4px; padding: 2px;
+  scrollbar-width: thin; scrollbar-color: #e2e8f0 transparent;
+}
+.emoji-catalog-list::-webkit-scrollbar { width: 4px; }
+.emoji-catalog-list::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 2px; }
+.emoji-catalog-item {
+  width: 36px; height: 36px; border-radius: 8px; border: 1.5px solid transparent;
+  background: #f8fafc; font-size: 1.2rem; cursor: pointer; display: flex;
+  align-items: center; justify-content: center; transition: all .12s; flex-shrink: 0;
+}
+.emoji-catalog-item:hover { background: #f0f2f8; border-color: #c7d2fe; transform: scale(1.18); }
+.emoji-catalog-item:active { transform: scale(.92); }
+
+/* Emoji volant sur le board */
+.flying-emoji {
+  position: fixed; pointer-events: none; z-index: 500;
+  font-size: 2.4rem; line-height: 1; user-select: none;
+  animation: fly-up var(--dur) ease-out forwards;
+}
+@keyframes fly-up {
+  0%   { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+  70%  { opacity: .9; }
+  100% { opacity: 0; transform: translateY(var(--dy)) scale(1.5) rotate(var(--rot)); }
+}
+
+/* ── MODALS ── */
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); backdrop-filter: blur(3px); z-index: 100; align-items: center; justify-content: center; }
+.overlay.show { display: flex; }
+.modal { background: white; border-radius: 16px; padding: 32px 36px; max-width: 420px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,.25); animation: pop .2s cubic-bezier(.34,1.56,.64,1); }
+@keyframes pop { from { transform: scale(.85); opacity: 0; } }
+.modal h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; color: var(--navy); }
+.modal p { font-size: .95rem; color: #64748b; margin-bottom: 22px; line-height: 1.6; }
+.modal-foot { display: flex; gap: 10px; justify-content: flex-end; }
+.btn-cancel { background: #f1f5f9; color: #64748b; border: none; border-radius: 9px; padding: 10px 20px; cursor: pointer; font-family: 'Outfit', sans-serif; font-weight: 600; font-size: .95rem; }
+.btn-confirm { background: #ef4444; color: white; border: none; border-radius: 9px; padding: 10px 20px; cursor: pointer; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: .95rem; }
+.btn-confirm:hover { background: #dc2626; }
+
+/* ── TOAST ── */
+.toast { position: fixed; bottom: 24px; right: 24px; background: var(--navy-dark); color: var(--teal); padding: 10px 18px; border-radius: 9px; font-size: .82rem; font-weight: 600; opacity: 0; transform: translateY(8px); transition: all .25s; pointer-events: none; z-index: 999; }
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* ── FIREWORKS ── */
+#fw-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 400; }
+</style>
+<script src="chrome-extension://ajdpfmkffanmkhejnopjppegokpogffp/assets/prompt.js"></script></head>
+<body>
+
+<!-- ─── HEADER OSKAR ─── -->
+<header class="tool-header">
+  <a class="tool-header-back" href="https://hasenso.fr/oskar/boite-a-outils.html">
+    <img src="./Planning Poker — OSKAR Team_files/logo-oskar.png" alt="OSKAR">
+  </a>
+  <span class="tool-header-sep">|</span>
+  <h1>Planning Poker</h1>
+  <span class="tool-header-pill" id="player-pill">4 participants</span>
+  <a class="tool-header-back-link" href="https://hasenso.fr/oskar/boite-a-outils.html">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;flex-shrink:0;"><path d="M12 4L6 10l6 6"></path></svg>
+    Boîte à outils
+  </a>
+</header>
+
+<!-- PBAR : participants + chrono -->
+<div class="pbar">
+  <span class="pbar-label">Participants</span>
+  <div class="p-chips" id="pchips"><button class="p-chip"><span class="p-dot" style="background:#f59e0b"></span>Alice</button><button class="p-chip"><span class="p-dot" style="background:#3b82f6"></span>Bruno</button><button class="p-chip"><span class="p-dot" style="background:#ec4899"></span>Chloé</button><button class="p-chip active"><span class="p-dot" style="background:#8b5cf6"></span>Christophe</button></div>
+  <div class="add-p">
+    <input type="text" id="newName" placeholder="Ajouter…" maxlength="20">
+    <button class="btn-teal" id="btnAddP">+</button>
+  </div>
+  <div class="vsep"></div>
+  <!-- Chrono identique retro-v2 -->
+  <div class="chrono-wrap">
+    <input class="chrono-min" type="number" id="chronoMin" value="2" min="1" max="60" title="Durée en minutes">
+    <span class="chrono-label">min</span>
+    <div class="chrono-display" id="chronoDisp">02:00</div>
+    <div class="chrono-btns">
+      <button class="btn-chrono" id="btnChronoGo" onclick="toggleChrono()">
+        <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><polygon points="3,1 13,8 3,15"></polygon></svg>
+        Démarrer
+      </button>
+      <button class="btn-chrono" onclick="resetChrono()">
+        <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 8A6 6 0 1 1 8 2"></path><polyline points="8,1 12,2 11,6"></polyline></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- LEFT PANEL -->
+  <div class="left">
+    <div class="lh">
+      <div class="lh-title">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="5" r="3"></circle><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"></path></svg>
+        Mon rôle
+      </div>
+    </div>
+    <div class="lbody" id="lbody">
+    <div style="text-align:center;padding:14px 0 10px;">
+      <div style="width:48px;height:48px;border-radius:50%;background:#8b5cf6;color:white;font-size:1.3rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;">C</div>
+      <div style="font-size:.92rem;font-weight:700;color:var(--navy);">Christophe</div>
+      <div style="font-size:.65rem;color:#a16207;font-weight:700;margin-top:2px;">Administrateur</div>
+    </div>
+    <div style="background:#f8fafc;border-radius:9px;padding:12px;text-align:center;border:1.5px solid #e2e8f0;">
+      <div style="font-size:.7rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;">Mon vote</div>
+      <div style="font-size:.82rem;color:#94a3b8;margin-top:4px;">Pas encore voté</div>
+    </div>
+  </div>
+
+    <!-- Admin block (toujours visible) -->
+    <div style="padding:12px;border-top:1px solid #f1f5f9;flex-shrink:0;">
+      <div class="admin-block">
+        <div class="admin-title">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1l2.06 4.17L15 6.18l-3.5 3.41.83 4.82L8 12.1l-4.33 2.31.83-4.82L1 6.18l4.94-.01z"></path></svg>
+          Admin — Christophe
+        </div>
+        <div class="admin-row">
+          <label>Suite de votes</label>
+          <select id="suite-select" onchange="onSuiteChange()">
+            <option value="fibonacci">Fibonacci (1,2,3,5,8,13,?)</option>
+            <option value="tshirt">T-Shirts (XS,S,M,L,XL,?)</option>
+            <option value="custom">Personnalisé…</option>
+          </select>
+          <div class="admin-custom" id="custom-wrap">
+            <input type="text" id="custom-values" placeholder="Ex : 0,1,2,4,8,16,?" style="margin-bottom:6px;">
+            <button class="btn-teal" style="width:100%;border-radius:8px;padding:5px;" onclick="applyCustom()">Appliquer</button>
+          </div>
+        </div>
+        <div class="admin-stats" id="admin-stats"><strong>0</strong> / 4 votes</div>
+        <button class="btn-reveal" id="reveal-btn" onclick="revealVotes()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"></path></svg>
+          Révéler les cartes
+        </button>
+        <button class="btn-reset-vote" onclick="askReset()">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 8A6 6 0 1 1 8 2"></path><polyline points="8,1 12,2 11,6"></polyline></svg>
+          Réinitialiser les votes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOARD AREA -->
+  <div class="board-area">
+
+    <!-- Story bar -->
+    <div class="story-bar">
+      <label>Story ›</label>
+      <input type="text" id="story-input" placeholder="Décrivez la fonctionnalité à estimer…">
+    </div>
+
+    <!-- Board content -->
+    <div class="board-content">
+
+      <!-- Vote zone -->
+      <div class="vote-zone">
+        <div>
+          <div class="zone-title">Voter</div>
+          <div class="cards-grid" id="cards-grid"><div class="vote-card">1</div><div class="vote-card">2</div><div class="vote-card">3</div><div class="vote-card">5</div><div class="vote-card">8</div><div class="vote-card">13</div><div class="vote-card">?</div></div>
+        </div>
+        <div>
+          <div class="zone-title">Participants</div>
+          <div class="players-grid" id="players-grid"><div class="player-card"><div class="player-avatar">A</div><div class="player-name">Alice</div><div class="player-status">En attente…</div></div><div class="player-card"><div class="player-avatar">B</div><div class="player-name">Bruno</div><div class="player-status">En attente…</div></div><div class="player-card"><div class="player-avatar">C</div><div class="player-name">Chloé</div><div class="player-status">En attente…</div></div><div class="player-card is-me"><div class="player-avatar">C</div><div class="player-name">Christophe<br><span class="player-admin-tag">admin</span></div><div class="player-status">En attente…</div></div></div>
+        </div>
+      </div>
+
+      <!-- Results column -->
+      <div class="results-col">
+        <div class="results-placeholder" id="results-placeholder">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"></path></svg>
+          Les résultats s'affichent après la révélation des cartes.
+        </div>
+        <div class="results-card" id="results-card">
+          <div class="results-avg-wrap">
+            <div class="results-avg" id="results-avg">—</div>
+            <div class="results-avg-label">Estimation moyenne</div>
+          </div>
+          <div id="consensus-badge" style="margin-bottom:12px;"></div>
+          <div class="distrib-title">Distribution</div>
+          <div class="distrib-grid" id="distrib-grid"></div>
+        </div>
+
+        <!-- Réactions émoji — toujours visible -->
+        <div class="reactions-card">
+          <div class="reactions-title">Réactions</div>
+          <div class="emoji-catalog-list" id="emoji-catalog-list"><button class="emoji-catalog-item" title="🔥">🔥</button><button class="emoji-catalog-item" title="👏">👏</button><button class="emoji-catalog-item" title="❤️">❤️</button><button class="emoji-catalog-item" title="👍">👍</button><button class="emoji-catalog-item" title="🎉">🎉</button><button class="emoji-catalog-item" title="😂">😂</button><button class="emoji-catalog-item" title="🚀">🚀</button><button class="emoji-catalog-item" title="💯">💯</button><button class="emoji-catalog-item" title="😍">😍</button><button class="emoji-catalog-item" title="⭐">⭐</button><button class="emoji-catalog-item" title="🙌">🙌</button><button class="emoji-catalog-item" title="💪">💪</button><button class="emoji-catalog-item" title="😎">😎</button><button class="emoji-catalog-item" title="🤔">🤔</button><button class="emoji-catalog-item" title="😅">😅</button><button class="emoji-catalog-item" title="🥳">🥳</button><button class="emoji-catalog-item" title="🤩">🤩</button><button class="emoji-catalog-item" title="👀">👀</button><button class="emoji-catalog-item" title="🎯">🎯</button><button class="emoji-catalog-item" title="✅">✅</button><button class="emoji-catalog-item" title="⚡">⚡</button><button class="emoji-catalog-item" title="💡">💡</button><button class="emoji-catalog-item" title="🤝">🤝</button><button class="emoji-catalog-item" title="🙏">🙏</button><button class="emoji-catalog-item" title="😬">😬</button><button class="emoji-catalog-item" title="🤯">🤯</button><button class="emoji-catalog-item" title="👎">👎</button><button class="emoji-catalog-item" title="😴">😴</button><button class="emoji-catalog-item" title="🐛">🐛</button><button class="emoji-catalog-item" title="💩">💩</button><button class="emoji-catalog-item" title="🦄">🦄</button><button class="emoji-catalog-item" title="🍕">🍕</button><button class="emoji-catalog-item" title="☕">☕</button><button class="emoji-catalog-item" title="🎸">🎸</button><button class="emoji-catalog-item" title="🏆">🏆</button><button class="emoji-catalog-item" title="💎">💎</button><button class="emoji-catalog-item" title="🔑">🔑</button><button class="emoji-catalog-item" title="🧩">🧩</button><button class="emoji-catalog-item" title="🌈">🌈</button><button class="emoji-catalog-item" title="🎨">🎨</button><button class="emoji-catalog-item" title="🏄">🏄</button><button class="emoji-catalog-item" title="🎤">🎤</button><button class="emoji-catalog-item" title="🎬">🎬</button><button class="emoji-catalog-item" title="📸">📸</button><button class="emoji-catalog-item" title="🧠">🧠</button><button class="emoji-catalog-item" title="🫶">🫶</button><button class="emoji-catalog-item" title="🥹">🥹</button><button class="emoji-catalog-item" title="😤">😤</button><button class="emoji-catalog-item" title="🤌">🤌</button><button class="emoji-catalog-item" title="🫠">🫠</button><button class="emoji-catalog-item" title="🤑">🤑</button><button class="emoji-catalog-item" title="🧊">🧊</button><button class="emoji-catalog-item" title="🌊">🌊</button><button class="emoji-catalog-item" title="🎲">🎲</button><button class="emoji-catalog-item" title="🎳">🎳</button><button class="emoji-catalog-item" title="🎻">🎻</button><button class="emoji-catalog-item" title="🪄">🪄</button><button class="emoji-catalog-item" title="🫡">🫡</button><button class="emoji-catalog-item" title="🤓">🤓</button><button class="emoji-catalog-item" title="🥸">🥸</button><button class="emoji-catalog-item" title="😇">😇</button><button class="emoji-catalog-item" title="🤪">🤪</button><button class="emoji-catalog-item" title="😵">😵</button><button class="emoji-catalog-item" title="🤢">🤢</button><button class="emoji-catalog-item" title="😱">😱</button><button class="emoji-catalog-item" title="👻">👻</button><button class="emoji-catalog-item" title="💀">💀</button><button class="emoji-catalog-item" title="🤖">🤖</button><button class="emoji-catalog-item" title="👾">👾</button><button class="emoji-catalog-item" title="🐉">🐉</button><button class="emoji-catalog-item" title="🌸">🌸</button><button class="emoji-catalog-item" title="🍀">🍀</button><button class="emoji-catalog-item" title="🌵">🌵</button><button class="emoji-catalog-item" title="🍺">🍺</button><button class="emoji-catalog-item" title="🧃">🧃</button><button class="emoji-catalog-item" title="🍰">🍰</button><button class="emoji-catalog-item" title="🎂">🎂</button><button class="emoji-catalog-item" title="🍫">🍫</button><button class="emoji-catalog-item" title="🌮">🌮</button><button class="emoji-catalog-item" title="🥑">🥑</button></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal reset -->
+<div class="overlay" id="resetOverlay">
+  <div class="modal">
+    <h2>Réinitialiser les votes ?</h2>
+    <p>Tous les votes en cours seront effacés. Les participants devront voter à nouveau sur cette story.</p>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+      <button class="btn-confirm" onclick="doReset()">Réinitialiser</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Fireworks -->
+<canvas id="fw-canvas"></canvas>
+
+<script>
+// ─── CONSTANTS ───────────────────────────────────
+const ADMIN = 'Christophe';
+const SUITES = {
+  fibonacci: ['1','2','3','5','8','13','?'],
+  tshirt:    ['XS','S','M','L','XL','?'],
+};
+const PAL = ['#f59e0b','#3b82f6','#ec4899','#8b5cf6','#10b981','#f97316','#06b6d4'];
+
+// ─── STATE ───────────────────────────────────────
+// votes : Map<personId, voteValue>  — une entrée par personne, pas par activeId
+let people  = [];   // [{id, name, c}]
+let activeId = null;
+let suite   = [...SUITES.fibonacci];
+let votes   = new Map();  // id (number) → string
+let revealed = false;
+
+// Chrono
+let cInit = 120, cRemain = 120, cRunning = false, cTimer = null;
+
+// ─── RENDER GLOBAL ────────────────────────────────
+// Appelé après chaque mutation d'état : re-dessine tout de façon cohérente.
+function renderAll() {
+  renderChips();
+  renderLeft();
+  renderCards();
+  renderPlayers();
+  updatePill();
+  updateAdminStats();
+}
+
+// ─── PARTICIPANTS ─────────────────────────────────
+function addParticipant() {
+  const inp  = document.getElementById('newName');
+  const name = inp.value.trim();
+  if (!name || people.find(p => p.name.toLowerCase() === name.toLowerCase())) {
+    inp.value = ''; return;
+  }
+  const newP = { id: Date.now() + people.length, name, c: PAL[people.length % PAL.length] };
+  people.push(newP);
+  inp.value = '';
+  // FIX : sélectionner automatiquement le nouveau participant
+  activeId = newP.id;
+  renderAll();
+}
+
+function renderChips() {
+  const el = document.getElementById('pchips');
+  el.innerHTML = '';
+  people.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'p-chip' + (activeId === p.id ? ' active' : '');
+    const dot = '<span class="p-dot" style="background:' + p.c + '"></span>';
+    // FIX : montrer un indicateur de vote sur la puce
+    const hasVoted = votes.has(p.id);
+    const badge = hasVoted && !revealed
+      ? '<span style="width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block;margin-left:3px;"></span>'
+      : '';
+    btn.innerHTML = dot + p.name + badge;
+    btn.addEventListener('click', () => setActive(p.id));
+    el.appendChild(btn);
+  });
+}
+
+function setActive(id) {
+  activeId = id;
+  renderAll();
+}
+
+// ─── LEFT PANEL ───────────────────────────────────
+function renderLeft() {
+  const p  = people.find(x => x.id === activeId);
+  const lb = document.getElementById('lbody');
+  // FIX : reconstruire proprement sans garder d'état résiduel
+  lb.innerHTML = '';
+
+  if (!p) {
+    lb.innerHTML = `
+      <div class="no-p" id="noP">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".3"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <p>Sélectionne ton prénom<br>ci-dessus pour voter</p>
+      </div>`;
+    return;
+  }
+
+  // FIX : lire le vote depuis votes.get(p.id), pas votes[activeId]
+  const myVote = votes.get(p.id);
+  const voteBlock = myVote
+    ? (revealed
+        ? '<div style="font-size:2rem;font-weight:900;color:var(--navy);margin-top:4px;">' + myVote + '</div>'
+        : '<div style="font-size:.85rem;font-weight:600;color:#22c55e;margin-top:4px;">✓ Voté — en attente de révélation</div>')
+    : '<div style="font-size:.82rem;color:#94a3b8;margin-top:4px;">Pas encore voté</div>';
+
+  lb.innerHTML = `
+    <div style="text-align:center;padding:14px 0 10px;">
+      <div style="width:48px;height:48px;border-radius:50%;background:${p.c};color:white;font-size:1.3rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;">${p.name[0].toUpperCase()}</div>
+      <div style="font-size:.92rem;font-weight:700;color:var(--navy);">${p.name}</div>
+      ${p.name === ADMIN ? '<div style="font-size:.65rem;color:#a16207;font-weight:700;margin-top:2px;">Administrateur</div>' : ''}
+    </div>
+    <div style="background:#f8fafc;border-radius:9px;padding:12px;text-align:center;border:1.5px solid ${myVote ? '#22c55e' : '#e2e8f0'};">
+      <div style="font-size:.7rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;">Mon vote</div>
+      ${voteBlock}
+    </div>
+  `;
+}
+
+// ─── SUITE ────────────────────────────────────────
+function onSuiteChange() {
+  const val = document.getElementById('suite-select').value;
+  document.getElementById('custom-wrap').style.display = val === 'custom' ? 'block' : 'none';
+  if (val !== 'custom') { suite = [...SUITES[val]]; silentReset(); }
+}
+
+function applyCustom() {
+  const raw  = document.getElementById('custom-values').value;
+  const vals = raw.split(',').map(s => s.trim()).filter(Boolean);
+  if (vals.length < 2) { showToast('Ajoute au moins 2 valeurs.'); return; }
+  suite = vals; silentReset();
+}
+
+// ─── CARDS ───────────────────────────────────────
+function renderCards() {
+  const grid = document.getElementById('cards-grid');
+  grid.innerHTML = '';
+  const isTshirt = document.getElementById('suite-select').value === 'tshirt';
+  // FIX : lire le vote via votes.get(activeId) pour la bonne personne
+  const myVote = activeId ? votes.get(activeId) : null;
+  suite.forEach(val => {
+    const card = document.createElement('div');
+    card.className = 'vote-card'
+      + (isTshirt ? ' tshirt' : '')
+      + (myVote === val ? ' selected' : '')
+      + (revealed || !activeId ? ' locked' : '');
+    card.textContent = val;
+    if (!revealed && activeId) card.addEventListener('click', () => castVote(val));
+    grid.appendChild(card);
+  });
+}
+
+function castVote(val) {
+  if (!activeId || revealed) return;
+  // FIX : stocker dans la Map avec la bonne clé
+  votes.set(activeId, val);
+  renderAll();
+}
+
+// ─── PLAYERS ─────────────────────────────────────
+function renderPlayers() {
+  const grid = document.getElementById('players-grid');
+  grid.innerHTML = '';
+  people.forEach(p => {
+    // FIX : votes.has() sur la Map pour vérifier si la personne a voté
+    const voted = votes.has(p.id);
+    const isMe  = p.id === activeId;
+    const card  = document.createElement('div');
+    card.className = 'player-card' + (voted ? ' voted' : '') + (isMe ? ' is-me' : '');
+
+    let voteHtml = '';
+    if (revealed && voted) {
+      voteHtml = '<div class="player-vote-value">' + votes.get(p.id) + '</div>';
+    } else if (voted) {
+      voteHtml = '<div class="player-card-back"></div>';
+    }
+
+    card.innerHTML =
+      '<div class="player-avatar">' + p.name[0].toUpperCase() + '</div>' +
+      '<div class="player-name">' + p.name +
+        (p.name === ADMIN ? '<br><span class="player-admin-tag">admin</span>' : '') +
+      '</div>' +
+      '<div class="player-status">' +
+        (voted ? '<span class="dot-voted"></span>A voté' : 'En attente…') +
+      '</div>' + voteHtml;
+    grid.appendChild(card);
+  });
+}
+
+function updatePill() {
+  const n = people.length;
+  document.getElementById('player-pill').textContent = n + ' participant' + (n > 1 ? 's' : '');
+}
+
+function updateAdminStats() {
+  const voted = votes.size;
+  const total = people.length;
+  document.getElementById('admin-stats').innerHTML =
+    '<strong>' + voted + '</strong> / ' + total + ' vote' + (total > 1 ? 's' : '');
+}
+
+// ─── REVEAL ──────────────────────────────────────
+function revealVotes() {
+  if (votes.size === 0) { showToast('Aucun vote à révéler.'); return; }
+  revealed = true;
+  pauseChrono();
+  document.getElementById('reveal-btn').disabled = true;
+  renderAll();
+  showResults();
+}
+
+function showResults() {
+  document.getElementById('results-placeholder').style.display = 'none';
+  document.getElementById('results-card').classList.add('visible');
+
+  const vals = [...votes.values()];
+
+  // ── FIX : exclure émojis et valeurs non-numériques de la moyenne ──
+  // Un émoji = au moins un caractère hors plan BMP (codePoint > 0xFFFF) ou dans les plages émoji
+  function isEmoji(str) {
+    return /\p{Emoji}/u.test(str) && !/^\d+$/.test(str.trim());
+  }
+  const numericVals = vals.filter(v => !isEmoji(v));
+  const nums = numericVals.map(v => parseFloat(v)).filter(v => !isNaN(v));
+
+  let avgText = '—';
+  if (nums.length > 0) {
+    const avg = nums.reduce((a, b) => a + b, 0) / nums.length;
+    avgText = Number.isInteger(avg) ? String(avg) : avg.toFixed(1);
+  }
+  document.getElementById('results-avg').textContent = avgText;
+
+  // Consensus (basé sur les valeurs numériques uniquement)
+  const badge  = document.getElementById('consensus-badge');
+  const numericSet = [...new Set(numericVals.filter(v => !isNaN(parseFloat(v))))];
+  const allSame = numericSet.length === 1 && nums.length > 1;
+  if (allSame) {
+    badge.innerHTML = '<div class="consensus-badge cb-perfect">🎉 Consensus parfait !</div>';
+    launchFireworks();
+  } else if (nums.length >= 2 && (Math.max(...nums) - Math.min(...nums)) <= 2) {
+    badge.innerHTML = '<div class="consensus-badge cb-good">👍 Bonne convergence</div>';
+  } else if (nums.length >= 2) {
+    badge.innerHTML = '<div class="consensus-badge cb-diverge">⚡ Discussion recommandée</div>';
+  } else {
+    badge.innerHTML = '';
+  }
+
+  // Distribution — afficher toutes les valeurs (y compris émojis perso)
+  const distrib = document.getElementById('distrib-grid');
+  distrib.innerHTML = '';
+  const counts = {};
+  vals.forEach(v => { counts[v] = (counts[v] || 0) + 1; });
+  Object.entries(counts)
+    .sort((a, b) => {
+      const na = parseFloat(a[0]), nb = parseFloat(b[0]);
+      return (!isNaN(na) && !isNaN(nb)) ? na - nb : a[0].localeCompare(b[0]);
+    })
+    .forEach(([val, count]) => {
+      distrib.innerHTML +=
+        '<div class="distrib-item"><div class="distrib-val">' + val + '</div>' +
+        '<div class="distrib-count">' + count + ' vote' + (count > 1 ? 's' : '') + '</div></div>';
+    });
+}
+
+// ─── EMOJI REACTIONS ─────────────────────────────
+// Catalogue d'émojis — affiché directement dans la liste scrollable
+const EMOJI_CATALOG = [
+  '🔥','👏','❤️','👍','🎉','😂','🚀','💯','😍','⭐',
+  '🙌','💪','😎','🤔','😅','🥳','🤩','👀','🎯','✅',
+  '⚡','💡','🤝','🙏','😬','🤯','👎','😴','🐛','💩',
+  '🦄','🍕','☕','🎸','🏆','💎','🔑','🧩','🌈','🎨',
+  '🏄','🎤','🎬','📸','🧠','🫶','🥹','😤','🤌','🫠',
+  '🤑','🧊','🌊','🎲','🎳','🎻','🪄','🫡','🤓','🥸',
+  '😇','🤪','😵','🤢','😱','👻','💀','🤖','👾','🐉',
+  '🌸','🍀','🌵','🍺','🧃','🍰','🎂','🍫','🌮','🥑',
+];
+
+function initEmojiPanel() {
+  const catalogEl = document.getElementById('emoji-catalog-list');
+  catalogEl.innerHTML = '';
+  EMOJI_CATALOG.forEach(em => {
+    const btn = document.createElement('button');
+    btn.className = 'emoji-catalog-item';
+    btn.textContent = em;
+    btn.title = em;
+    btn.addEventListener('click', () => shootEmojis(em, btn));
+    catalogEl.appendChild(btn);
+  });
+}
+
+// Lance N émojis volants depuis la position source vers la zone centrale
+function shootEmojis(emoji, sourceEl) {
+  const board = document.querySelector('.vote-zone');
+  const boardRect = board ? board.getBoundingClientRect() : { left: window.innerWidth/2, top: window.innerHeight/2, width: 400, height: 300 };
+
+  // Nombre aléatoire d'émojis : 5 à 10
+  const count = 5 + Math.floor(Math.random() * 6);
+  const sourceRect = sourceEl.getBoundingClientRect ? sourceEl.getBoundingClientRect() : { left: window.innerWidth - 200, top: window.innerHeight - 100, width: 40, height: 40 };
+
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'flying-emoji';
+      el.textContent = emoji;
+
+      // Position de départ : sur le bouton source (avec léger spread)
+      const startX = sourceRect.left + sourceRect.width / 2 + (Math.random() - 0.5) * 30;
+      const startY = sourceRect.top  + sourceRect.height / 2 + (Math.random() - 0.5) * 20;
+
+      // Destination : quelque part dans la zone des participants/cartes
+      const targetX = boardRect.left + 40 + Math.random() * (boardRect.width - 80);
+      const targetY = boardRect.top  + 40 + Math.random() * (boardRect.height * 0.7);
+
+      const dx = targetX - startX;
+      const dy = targetY - startY;
+      const dur = (1.6 + Math.random() * 1.2).toFixed(2) + 's';
+      const rot = (-30 + Math.random() * 60).toFixed(1) + 'deg';
+
+      el.style.left = startX + 'px';
+      el.style.top  = startY + 'px';
+      el.style.setProperty('--dur', dur);
+      el.style.setProperty('--dy',  dy + 'px');
+      el.style.setProperty('--rot', rot);
+      // Aussi animer horizontalement
+      el.style.transition = 'none';
+      el.style.transform  = 'translateX(0)';
+
+      // Hack : on anime en JS aussi le X car CSS custom property ne gère pas bien translateX dynamique
+      el.style.animation = 'none';
+      document.body.appendChild(el);
+
+      // Utilise Web Animations API pour un contrôle total
+      el.animate([
+        { transform: 'translate(0,0) scale(1) rotate(0deg)', opacity: 1 },
+        { transform: `translate(${dx * 0.4}px,${dy * 0.4}px) scale(1.3) rotate(${parseFloat(rot) * 0.5}deg)`, opacity: 1, offset: 0.5 },
+        { transform: `translate(${dx}px,${dy}px) scale(1.6) rotate(${rot})`, opacity: 0 },
+      ], {
+        duration: parseFloat(dur) * 1000,
+        easing: 'cubic-bezier(.25,.46,.45,.94)',
+        fill: 'forwards',
+      }).onfinish = () => el.remove();
+
+    }, i * 80 + Math.random() * 60);
+  }
+}
+
+// Appel init au chargement
+initEmojiPanel();
+
+// ─── CHRONO ──────────────────────────────────────
+function onChronoChange() {
+  const v = parseInt(document.getElementById('chronoMin').value) || 2;
+  cInit = v * 60; cRemain = cInit; resetChrono();
+}
+
+function toggleChrono() { cRunning ? pauseChrono() : startChrono(); }
+
+function startChrono() {
+  if (cRunning) return;
+  const v = parseInt(document.getElementById('chronoMin').value) || 2;
+  if (cRemain === 0) { cInit = v * 60; cRemain = cInit; }
+  cRunning = true;
+  const btn = document.getElementById('btnChronoGo');
+  btn.classList.add('run');
+  btn.innerHTML = '<svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><rect x="2" y="1" width="4" height="14"/><rect x="10" y="1" width="4" height="14"/></svg> Pause';
+  cTimer = setInterval(function() {
+    cRemain--;
+    if (cRemain <= 0) {
+      cRemain = 0; updChronoDisp(); pauseChrono();
+      document.getElementById('chronoDisp').classList.add('danger');
+      if (votes.size > 0 && !revealed) revealVotes();
+      return;
+    }
+    updChronoDisp();
+  }, 1000);
+}
+
+function pauseChrono() {
+  cRunning = false; clearInterval(cTimer);
+  const btn = document.getElementById('btnChronoGo');
+  btn.classList.remove('run');
+  btn.innerHTML = '<svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><polygon points="3,1 13,8 3,15"/></svg> Reprendre';
+}
+
+function resetChrono() {
+  clearInterval(cTimer); cRunning = false;
+  const v = parseInt(document.getElementById('chronoMin').value) || 2;
+  cInit = v * 60; cRemain = cInit;
+  const btn = document.getElementById('btnChronoGo');
+  btn.classList.remove('run');
+  btn.innerHTML = '<svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><polygon points="3,1 13,8 3,15"/></svg> Démarrer';
+  document.getElementById('chronoDisp').classList.remove('warn', 'danger');
+  updChronoDisp();
+}
+
+function updChronoDisp() {
+  const d = document.getElementById('chronoDisp');
+  const m = Math.floor(cRemain / 60), s = cRemain % 60;
+  d.textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  if (cInit > 0) {
+    const r = cRemain / cInit;
+    d.classList.toggle('warn',   r <= 0.25 && r > 0.1);
+    d.classList.toggle('danger', r <= 0.1);
+  }
+}
+
+// ─── RESET ───────────────────────────────────────
+function askReset() { document.getElementById('resetOverlay').classList.add('show'); }
+function closeModal() { document.getElementById('resetOverlay').classList.remove('show'); }
+
+function silentReset() {
+  votes = new Map();   // FIX : réinitialiser la Map, pas un objet {}
+  revealed = false;
+  document.getElementById('reveal-btn').disabled = false;
+  document.getElementById('results-card').classList.remove('visible');
+  document.getElementById('results-placeholder').style.display = '';
+  document.getElementById('consensus-badge').innerHTML = '';
+  renderAll();
+}
+
+function doReset() {
+  closeModal();
+  silentReset();
+  resetChrono();
+  showToast('Votes réinitialisés');
+}
+
+document.getElementById('resetOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ─── TOAST ───────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ─── FIREWORKS ───────────────────────────────────
+function launchFireworks() {
+  const canvas = document.getElementById('fw-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const colors = ['#00d4b4','#1e2d7d','#ec4899','#f59e0b','#22c55e','#ffffff'];
+  const particles = [];
+  function burst(x, y) {
+    for (let i = 0; i < 80; i++) {
+      const a = Math.random() * Math.PI * 2, sp = 2 + Math.random() * 7;
+      particles.push({ x, y, vx: Math.cos(a)*sp, vy: Math.sin(a)*sp,
+        life:1, decay:.014+Math.random()*.018, size:3+Math.random()*4,
+        color:colors[Math.floor(Math.random()*colors.length)] });
+    }
+  }
+  let n = 0;
+  const bi = setInterval(() => {
+    burst(120 + Math.random()*(canvas.width-240), 80 + Math.random()*(canvas.height/2));
+    if (++n >= 5) clearInterval(bi);
+  }, 280);
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = particles.length-1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx; p.y += p.vy; p.vy += 0.13; p.life -= p.decay;
+      if (p.life <= 0) { particles.splice(i, 1); continue; }
+      ctx.globalAlpha = p.life; ctx.fillStyle = p.color;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI*2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    if (particles.length > 0 || n < 5) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+
+// ─── INIT & LISTENERS ────────────────────────────
+document.getElementById('newName').addEventListener('keydown', e => { if (e.key==='Enter') addParticipant(); });
+document.getElementById('btnAddP').addEventListener('click', addParticipant);
+document.getElementById('chronoMin').addEventListener('change', onChronoChange);
+
+// Participants de démo — le dernier ajouté sera automatiquement sélectionné
+['Alice', 'Bruno', 'Chloé', ADMIN].forEach(n => {
+  document.getElementById('newName').value = n;
+  addParticipant();
+});
+document.getElementById('newName').value = '';
+updChronoDisp();
+</script>
+
+
+</body></html>

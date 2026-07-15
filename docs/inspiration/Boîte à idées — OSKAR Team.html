@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<!-- saved from url=(0035)https://hasenso.fr/oskar/idees.html -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boîte à idées — OSKAR Team</title>
+<link href="./Boîte à idées — OSKAR Team_files/css2" rel="stylesheet">
+<link rel="stylesheet" href="./Boîte à idées — OSKAR Team_files/oskar.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{height:100vh;display:flex;flex-direction:column;overflow:hidden;color:var(--navy);}
+
+/* ── Header ── */
+.tool-header{height:56px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:14px;flex-shrink:0;}
+.tool-header-back{display:flex;align-items:center;text-decoration:none;flex-shrink:0;}
+.tool-header-back img{height:30px;width:auto;object-fit:contain;}
+.tool-header-sep{color:var(--border);font-size:1.2rem;font-weight:300;flex-shrink:0;}
+.tool-header h1{color:var(--text);font-size:.95rem;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tool-header-pill{margin-left:auto;background:var(--team);color:#fff;font-size:.78rem;font-weight:600;padding:3px 11px;border-radius:20px;flex-shrink:0;white-space:nowrap;}
+.tool-header-back-link{display:flex;align-items:center;gap:5px;color:var(--text-muted);font-size:.78rem;font-weight:500;text-decoration:none;flex-shrink:0;transition:color .15s;border-left:1px solid var(--border);padding-left:14px;margin-left:4px;}
+.tool-header-back-link:hover{color:var(--navy);}
+
+/* ── Pbar ── */
+.pbar{background:var(--navy);border-bottom:none;padding:12px 24px;display:flex;align-items:center;gap:12px;flex-shrink:0;flex-wrap:wrap;}
+.pbar-label{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+.p-chips{display:flex;gap:7px;flex-wrap:wrap;align-items:center;}
+.p-chip{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;border:2px solid transparent;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.92rem;font-weight:500;background:#f1f5f9;color:#475569;transition:all .15s;}
+.p-chip.active{background:white;font-weight:600;}
+.p-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.add-p{display:flex;gap:7px;}
+.add-p input{font-family:'Outfit',sans-serif;font-size:.92rem;border:1.5px solid #cbd5e1;border-radius:8px;padding:6px 12px;width:140px;color:var(--navy);outline:none;}
+.add-p input:focus{border-color:var(--teal);}
+.btn-teal{background:var(--teal);color:var(--navy);border:none;border-radius:8px;padding:6px 13px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;font-size:.92rem;}
+.vsep{width:1px;height:28px;background:rgba(255,255,255,.2);flex-shrink:0;}
+
+/* Admin toggle */
+.admin-toggle{display:flex;align-items:center;gap:8px;margin-left:auto;}
+.admin-label{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.5px;}
+.toggle-wrap{position:relative;width:40px;height:22px;cursor:pointer;}
+.toggle-wrap input{opacity:0;width:0;height:0;position:absolute;}
+.toggle-slider{position:absolute;inset:0;background:#334155;border-radius:20px;transition:background .2s;}
+.toggle-slider:before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;background:white;border-radius:50%;transition:transform .2s;}
+.toggle-wrap input:checked+.toggle-slider{background:var(--teal);}
+.toggle-wrap input:checked+.toggle-slider:before{transform:translateX(18px);}
+
+/* Session btn */
+.btn-session{background:var(--team);color:white;border:none;border-radius:8px;padding:7px 16px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;font-size:.92rem;display:flex;align-items:center;gap:6px;white-space:nowrap;}
+
+/* ── Main layout ── */
+.main{flex:1;display:flex;overflow:hidden;}
+
+/* ── Left panel ── */
+.left{width:280px;flex-shrink:0;background:white;border-right:1px solid #e2e8f0;display:flex;flex-direction:column;overflow:hidden;}
+.lh{padding:14px 16px 10px;border-bottom:1px solid #f1f5f9;}
+.lh-title{font-size:.8rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:6px;}
+.lh-name{margin-top:4px;font-size:.9rem;font-weight:600;display:flex;align-items:center;gap:6px;}
+.lh-dot{width:10px;height:10px;border-radius:50%;}
+.lbody{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;}
+
+/* Composer */
+.composer{background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:10px;padding:14px;}
+.comp-label{font-size:.72rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;}
+.composer textarea{width:100%;resize:none;min-height:90px;border:1.5px solid #e2e8f0;border-radius:8px;padding:8px 10px;font-family:'Outfit',sans-serif;font-size:.85rem;color:var(--navy);outline:none;background:white;line-height:1.45;}
+.composer textarea:focus{border-color:var(--teal);}
+.comp-row{display:flex;gap:6px;margin-top:10px;align-items:center;justify-content:space-between;}
+
+/* Category selector */
+.cat-row{display:flex;gap:5px;flex-wrap:wrap;}
+.cat-btn{font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:600;padding:4px 10px;border-radius:20px;border:1.5px solid #e2e8f0;background:white;color:#64748b;cursor:pointer;transition:all .15s;}
+.cat-btn.on{color:white;border-color:transparent;}
+.cat-btn[data-c="process"].on{background:#6366f1;}
+.cat-btn[data-c="tools"].on{background:#0ea5e9;}
+.cat-btn[data-c="team"].on{background:#ec4899;}
+.cat-btn[data-c="client"].on{background:#22c55e;}
+.cat-btn[data-c="other"].on{background:#94a3b8;}
+
+.btn-submit{background:var(--navy);color:white;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:600;font-size:.82rem;white-space:nowrap;flex-shrink:0;}
+.btn-submit:disabled{opacity:.35;cursor:not-allowed;}
+
+/* My ideas queue */
+.queue-label{font-size:.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;padding:2px 0 4px;}
+.my-ideas{display:flex;flex-direction:column;gap:6px;}
+.my-idea-item{background:white;border-radius:8px;border-left:4px solid #cbd5e1;padding:8px 10px;font-size:.8rem;line-height:1.4;color:#374151;box-shadow:0 1px 3px rgba(0,0,0,.06);position:relative;}
+.my-idea-item .idea-cat-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;flex-shrink:0;}
+.my-idea-item .idea-status{position:absolute;top:6px;right:8px;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:10px;}
+.idea-status.pending{background:#f1f5f9;color:#94a3b8;}
+.idea-status.published{background:#dcfce7;color:#16a34a;}
+.idea-status.validated{background:#fef9c3;color:#b45309;}
+
+/* No participant */
+.no-p{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#94a3b8;text-align:center;padding:20px;}
+.no-p p{font-size:.82rem;line-height:1.5;}
+
+/* ── Board area ── */
+.board-area{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#f0f2f8;}
+
+/* Board topbar */
+.board-topbar{position:relative;padding:10px 16px;display:flex;align-items:center;gap:10px;background:#f0f2f8;border-bottom:1px solid #e2e8f0;flex-shrink:0;z-index:10;}
+.filter-label{font-size:.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+.filter-btns{display:flex;gap:5px;flex-wrap:wrap;}
+.filter-btn{font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;padding:4px 11px;border-radius:20px;border:1.5px solid #e2e8f0;background:white;color:#64748b;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px;}
+.filter-btn.on{background:var(--navy);color:white;border-color:var(--navy);}
+.filter-btn .f-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.sort-wrap{margin-left:auto;display:flex;align-items:center;gap:6px;}
+.sort-label{font-size:.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;}
+.sort-btn{font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;padding:4px 11px;border-radius:20px;border:1.5px solid #e2e8f0;background:white;color:#64748b;cursor:pointer;transition:all .15s;}
+.sort-btn.on{background:var(--navy);color:white;border-color:var(--navy);}
+.board-stats{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.bstat{font-size:.75rem;font-weight:600;color:#94a3b8;}
+.bstat span{color:var(--navy);}
+
+/* ── Two-column board layout ── */
+.board-columns{flex:1;display:flex;overflow:hidden;}
+
+/* Main pool column */
+.col-pool{flex:1;display:flex;flex-direction:column;overflow:hidden;transition:flex .35s cubic-bezier(.4,0,.2,1);}
+.col-pool-scroll{flex:1;overflow-y:auto;padding:16px;}
+
+/* Validated column (hidden by default, slides in) */
+.col-validated{width:0;flex-shrink:0;overflow:hidden;transition:width .35s cubic-bezier(.4,0,.2,1);background:#fffbeb;border-left:2px solid #fde68a;display:flex;flex-direction:column;}
+.col-validated.open{width:280px;}
+.col-val-header{padding:14px 16px 10px;border-bottom:1px solid #fde68a;flex-shrink:0;}
+.col-val-title{font-size:.78rem;font-weight:700;color:#b45309;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:6px;white-space:nowrap;}
+.col-val-count{background:#f59e0b;color:white;font-size:.65rem;font-weight:800;padding:2px 7px;border-radius:10px;margin-left:auto;}
+.col-val-scroll{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;}
+
+/* Validated mini-card */
+.val-card{background:white;border-radius:10px;padding:12px;border-left:3px solid #f59e0b;box-shadow:0 1px 4px rgba(0,0,0,.07);display:flex;flex-direction:column;gap:8px;animation:slideInRight .28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes slideInRight{from{transform:translateX(20px) scale(.95);opacity:0;}}
+.val-card-cat{font-size:.62rem;font-weight:700;color:white;padding:2px 7px;border-radius:10px;align-self:flex-start;}
+.val-card-text{font-size:.8rem;line-height:1.4;color:#1e293b;}
+.val-card-footer{display:flex;align-items:center;gap:6px;}
+.val-card-author{font-size:.68rem;font-weight:600;display:flex;align-items:center;gap:4px;}
+.val-card-votes{font-size:.7rem;font-weight:700;color:#f43f5e;display:flex;align-items:center;gap:3px;margin-left:auto;}
+.btn-unvalidate{background:none;border:1.5px solid #fde68a;border-radius:7px;padding:3px 8px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.68rem;font-weight:700;color:#b45309;transition:all .15s;white-space:nowrap;}
+.btn-unvalidate:hover{border-color:#ef4444;color:#dc2626;background:#fef2f2;}
+
+/* Empty validated hint */
+.val-hint{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#d97706;opacity:.4;text-align:center;padding:20px;pointer-events:none;}
+.val-hint svg{width:36px;height:36px;}
+.val-hint p{font-size:.75rem;line-height:1.5;}
+
+/* ── Cards grid ── */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;align-content:start;}
+
+/* Idea card */
+.idea-card-placeholder{display:none;}
+.idea-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.12);transform:translateY(-1px);}
+.idea-card.top-voted{border:2px solid var(--teal);box-shadow:0 2px 12px rgba(0,212,180,.2);}
+/* validated cards stay in pool but dimmed — they live in the right column now */
+.idea-card.validated-card{opacity:.45;pointer-events:none;}
+.card-header{display:flex;align-items:center;gap:7px;}
+.card-cat-badge{font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:20px;color:white;flex-shrink:0;}
+.card-cat-badge.process{background:#6366f1;}
+.card-cat-badge.tools{background:#0ea5e9;}
+.card-cat-badge.team{background:#ec4899;}
+.card-cat-badge.client{background:#22c55e;}
+.card-cat-badge.other{background:#94a3b8;}
+.card-author{font-size:.7rem;font-weight:600;color:#94a3b8;display:flex;align-items:center;gap:4px;margin-left:auto;}
+.card-author-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.card-text{font-size:.85rem;line-height:1.5;color:#1e293b;flex:1;}
+.card-footer{display:flex;align-items:center;gap:8px;}
+
+/* Heart vote button */
+.btn-heart{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;border:1.5px solid #e2e8f0;background:#f8fafc;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:700;color:#64748b;transition:all .2s;}
+.btn-heart:hover{border-color:#f43f5e;color:#f43f5e;background:#fff1f2;}
+.btn-heart.voted{background:#fff1f2;border-color:#fda4af;color:#f43f5e;}
+.btn-heart svg{transition:transform .15s;}
+.btn-heart:hover svg,.btn-heart.voted svg{transform:scale(1.2);}
+.heart-count{font-size:.88rem;font-weight:800;}
+
+/* Top voted badge */
+.top-badge{position:absolute;top:-8px;right:10px;background:var(--teal);color:var(--navy);font-size:.62rem;font-weight:800;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;}
+
+/* Admin validate btn */
+.btn-validate{margin-left:auto;display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:8px;border:1.5px solid #e2e8f0;background:white;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:700;color:#94a3b8;transition:all .2s;}
+.btn-validate:hover{border-color:#f59e0b;color:#b45309;background:#fef9c3;}
+
+/* Hint empty board */
+.board-hint{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#d1d5db;text-align:center;pointer-events:none;padding:40px;}
+.board-hint svg{width:52px;height:52px;}
+.board-hint p{font-size:.85rem;line-height:1.6;}
+
+/* ── Session modal ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(3px);z-index:100;align-items:center;justify-content:center;}
+.overlay.show{display:flex;}
+.modal{background:white;border-radius:16px;padding:32px 36px;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:pop .2s cubic-bezier(.34,1.56,.64,1);}
+@keyframes pop{from{transform:scale(.85);opacity:0;}}
+.modal h2{font-size:1.2rem;font-weight:700;margin-bottom:6px;}
+.modal p{font-size:.85rem;color:#64748b;margin-bottom:20px;line-height:1.5;}
+.modal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
+.stat{background:#f8fafc;border-radius:10px;padding:12px;text-align:center;}
+.stat-n{font-size:1.6rem;font-weight:700;}
+.stat-l{font-size:.72rem;color:#94a3b8;font-weight:500;margin-top:2px;}
+.modal-foot{display:flex;gap:10px;justify-content:flex-end;}
+.btn-cancel{background:#f1f5f9;color:#64748b;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:600;font-size:.85rem;}
+.btn-confirm{background:var(--team);color:white;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;font-size:.85rem;display:flex;align-items:center;gap:6px;}
+
+/* Validated list in modal */
+.validated-list{display:flex;flex-direction:column;gap:6px;margin-bottom:20px;max-height:160px;overflow-y:auto;}
+.val-item{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 12px;font-size:.82rem;color:#92400e;display:flex;align-items:flex-start;gap:6px;}
+.val-item-dot{width:6px;height:6px;border-radius:50%;background:#f59e0b;flex-shrink:0;margin-top:5px;}
+
+/* Confirm pop */
+.confirm-pop-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;align-items:center;justify-content:center;}
+.confirm-pop-overlay.show{display:flex;}
+.confirm-pop{background:white;border-radius:12px;padding:22px 24px;max-width:320px;width:90%;box-shadow:0 12px 40px rgba(0,0,0,.2);animation:pop .18s cubic-bezier(.34,1.56,.64,1);}
+.confirm-pop p{font-size:.85rem;color:#374151;line-height:1.5;margin-bottom:16px;}
+.confirm-pop-btns{display:flex;gap:8px;justify-content:flex-end;}
+.confirm-pop-cancel{background:#f1f5f9;color:#64748b;border:none;border-radius:8px;padding:7px 14px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:600;font-size:.82rem;}
+.confirm-pop-del{background:#ef4444;color:white;border:none;border-radius:8px;padding:7px 14px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;font-size:.82rem;}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:#e2e8f0;border-radius:3px;}
+
+/* ── Bulb burst animation ── */
+@keyframes bulbFloat{0%{transform:translateY(0) scale(1);opacity:1;}100%{transform:translateY(-50px) scale(.8);opacity:0;}}
+@keyframes bulbFloatBig{0%{transform:translate(-50%,-50%) scale(.4);opacity:1;}40%{opacity:1;}100%{transform:translate(-50%,-220%) scale(3);opacity:0;}}
+@keyframes cardPop{0%,100%{transform:translateY(0);}25%{transform:translateY(-5px) scale(1.04);}50%{transform:translateY(2px);}75%{transform:translateY(-2px) scale(1.02);}}
+.bulb-burst{position:absolute;pointer-events:none;animation:bulbFloat .6s ease-out forwards;z-index:200;}
+.bulb-burst.big{left:50% !important;bottom:50% !important;animation:bulbFloatBig .9s cubic-bezier(.22,1,.36,1) forwards;}
+.idea-card.pop{animation:cardPop .45s ease-in-out forwards !important;}
+/* idea-card needs relative + overflow:visible for burst */
+.idea-card{background:white;border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.08);display:flex;flex-direction:column;gap:10px;transition:box-shadow .15s,transform .1s,opacity .3s;position:relative;overflow:visible;}
+</style>
+<script src="chrome-extension://ajdpfmkffanmkhejnopjppegokpogffp/assets/prompt.js"></script></head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="tool-header">
+  <a class="tool-header-back" href="https://hasenso.fr/oskar/boite-a-outils.html">
+    <img src="./Boîte à idées — OSKAR Team_files/logo-oskar.png" alt="OSKAR">
+  </a>
+  <span class="tool-header-sep">|</span>
+  <h1>Boîte à idées</h1>
+  <span class="tool-header-pill">Team</span>
+  <a class="tool-header-back-link" href="https://hasenso.fr/oskar/boite-a-outils.html">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;flex-shrink:0;"><path d="M12 4L6 10l6 6"></path></svg>
+    Boîte à outils
+  </a>
+</header>
+
+<!-- ── PBAR ── -->
+<div class="pbar">
+  <span class="pbar-label">Participants</span>
+  <div class="p-chips" id="pchips"><div class="p-chip " onclick="selectParticipant(1)" style="">
+      <div class="p-dot" style="background:#6366f1;"></div>
+      Alice
+      
+    </div><div class="p-chip " onclick="selectParticipant(2)" style="">
+      <div class="p-dot" style="background:#0ea5e9;"></div>
+      Bruno
+      
+    </div><div class="p-chip " onclick="selectParticipant(3)" style="">
+      <div class="p-dot" style="background:#ec4899;"></div>
+      Chloe
+      
+    </div></div>
+  <div class="add-p">
+    <input type="text" id="newName" placeholder="Prénom" maxlength="16">
+    <button class="btn-teal" id="btnAddP">+ Ajouter</button>
+  </div>
+  <div class="vsep"></div>
+  <div class="admin-toggle">
+    <span class="admin-label">Mode admin</span>
+    <label class="toggle-wrap">
+      <input type="checkbox" id="adminToggle">
+      <div class="toggle-slider"></div>
+    </label>
+  </div>
+  <div class="vsep"></div>
+  <button class="btn-session" onclick="openSessionModal()">
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"></polyline></svg>
+    Clôturer la session
+  </button>
+</div>
+
+<!-- ── SESSION MODAL ── -->
+<div class="overlay" id="sessionOverlay">
+  <div class="modal">
+    <h2>Clôturer la session</h2>
+    <p>Résumé de la session. Les idées validées seront exportées.</p>
+    <div class="modal-stats" id="sessionStats"></div>
+    <div id="validatedSection" style="display:none;">
+      <div style="font-size:.78rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Idées retenues</div>
+      <div class="validated-list" id="validatedList"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeSessionModal()">Annuler</button>
+      <button class="btn-confirm" onclick="confirmSession()">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"></polyline></svg>
+        Exporter &amp; terminer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── CONFIRM PUBLISH OVERLAY ── -->
+<div class="confirm-pop-overlay" id="confirmPublishOverlay">
+  <div class="confirm-pop">
+    <p>Publier cette idée dans l'espace commun ?<br>Elle sera visible par tous les participants.</p>
+    <div class="confirm-pop-btns">
+      <button class="confirm-pop-cancel" onclick="closeConfirmPublish()">Annuler</button>
+      <button class="btn-teal" style="border:none;border-radius:8px;padding:7px 14px;cursor:pointer;font-family:&#39;Outfit&#39;,sans-serif;font-weight:700;font-size:.82rem;" onclick="doPublish()">Publier</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+  <!-- ── LEFT PANEL ── -->
+  <div class="left">
+    <div class="lh">
+      <div class="lh-title">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2a4 4 0 0 1 4 4c0 3-4 8-4 8S4 9 4 6a4 4 0 0 1 4-4z"></path><circle cx="8" cy="6" r="1.5"></circle></svg>
+        Mon espace
+      </div>
+      <div class="lh-name">
+        <div class="lh-dot" id="lhDot" style="background: rgb(226, 232, 240);"></div>
+        <span id="lhName">— sélectionne ton prénom</span>
+      </div>
+    </div>
+
+    <div class="no-p" id="noP" style="display: flex;">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.3"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"></path></svg>
+      <p>Sélectionne ton prénom<br>dans la barre du haut.</p>
+    </div>
+
+    <div class="lbody" id="lbody" style="display:none;">
+      <!-- Composer -->
+      <div class="composer">
+        <div class="comp-label">Nouvelle idée</div>
+        <textarea id="compText" placeholder="Décris ton idée…" maxlength="240"></textarea>
+        <div style="margin-top:8px;">
+          <div style="font-size:.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;">Catégorie</div>
+          <div class="cat-row" id="catRow">
+            <button class="cat-btn on" data-c="process">Processus</button>
+            <button class="cat-btn" data-c="tools">Outils</button>
+            <button class="cat-btn" data-c="team">Équipe</button>
+            <button class="cat-btn" data-c="client">Client</button>
+            <button class="cat-btn" data-c="other">Autre</button>
+          </div>
+        </div>
+        <div class="comp-row">
+          <span style="font-size:.7rem;color:#94a3b8;">Ctrl+Entrée pour soumettre</span>
+          <button class="btn-submit" id="btnSubmit" onclick="addIdea()">Soumettre</button>
+        </div>
+      </div>
+
+      <!-- Mes idées -->
+      <div id="myIdeasSection" style="display:none;">
+        <div class="queue-label">Mes idées</div>
+        <div class="my-ideas" id="myIdeasList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BOARD ── -->
+  <div class="board-area">
+    <!-- Topbar -->
+    <div class="board-topbar">
+      <span class="filter-label">Filtre</span>
+      <div class="filter-btns" id="filterBtns">
+        <button class="filter-btn on" data-f="all">Toutes</button>
+        <button class="filter-btn" data-f="process">
+          <span class="f-dot" style="background:#6366f1;"></span>Processus
+        </button>
+        <button class="filter-btn" data-f="tools">
+          <span class="f-dot" style="background:#0ea5e9;"></span>Outils
+        </button>
+        <button class="filter-btn" data-f="team">
+          <span class="f-dot" style="background:#ec4899;"></span>Équipe
+        </button>
+        <button class="filter-btn" data-f="client">
+          <span class="f-dot" style="background:#22c55e;"></span>Client
+        </button>
+        <button class="filter-btn" data-f="other">
+          <span class="f-dot" style="background:#94a3b8;"></span>Autre
+        </button>
+      </div>
+      <div class="sort-wrap">
+        <span class="sort-label">Tri</span>
+        <button class="sort-btn on" id="sortVotes" onclick="setSort(&#39;votes&#39;)">
+          <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor" style="display:inline;margin-right:3px;"><path d="M8 2l1.5 3 3.5.5-2.5 2.5.5 3.5L8 10l-3 1.5.5-3.5L3 5.5l3.5-.5z"></path></svg>
+          Popularité
+        </button>
+        <button class="sort-btn" id="sortDate" onclick="setSort(&#39;date&#39;)">Récence</button>
+      </div>
+      <div class="board-stats">
+        <span class="bstat"><span id="statTotal">0</span> idées</span>
+        <span class="bstat"><span id="statValidated">0</span> retenues</span>
+      </div>
+    </div>
+
+    <!-- Two-column area -->
+    <div class="board-columns">
+
+      <!-- Pool column -->
+      <div class="col-pool" id="colPool">
+        <div class="col-pool-scroll">
+          <div class="cards-grid" id="cardsGrid" style="display: none;"></div>
+          <div class="board-hint" id="boardHint" style="display: flex;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4l3 3"></path><path d="M8 3.5C9.2 3 10.5 2.7 12 2.7s2.8.3 4 .8"></path></svg>
+            <p>Les idées publiées par l'équipe<br>apparaîtront ici.<br>Vote pour celles qui t'inspirent !</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Validated column (slides in on admin mode) -->
+      <div class="col-validated" id="colValidated">
+        <div class="col-val-header">
+          <div class="col-val-title">
+            <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"></polyline></svg>
+            Idées retenues
+            <span class="col-val-count" id="valColCount">0</span>
+          </div>
+        </div>
+        <div class="col-val-scroll" id="colValScroll">
+          <div class="val-hint" id="valHint" style="display: flex;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            <p>Retiens les idées<br>depuis le tableau.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ─── STATE ─── */
+const COLORS = ['#6366f1','#0ea5e9','#ec4899','#22c55e','#f59e0b','#ef4444','#8b5cf6','#14b8a6'];
+const CAT_LABELS = {process:'Processus',tools:'Outils',team:'Équipe',client:'Client',other:'Autre'};
+const CAT_CLASS = {process:'process',tools:'tools',team:'team',client:'client',other:'other'};
+
+let people = [];
+let ideas = [];   // {id, text, cat, authorId, votes: Set<personId>, validated: bool, ts}
+let activeId = null;
+let selectedCat = 'process';
+let currentFilter = 'all';
+let currentSort = 'votes';
+let pendingPublishId = null;
+let isAdmin = false;
+
+let nextId = 1;
+
+/* ─── PARTICIPANTS ─── */
+function addParticipant() {
+  const inp = document.getElementById('newName');
+  const name = inp.value.trim();
+  if (!name) return;
+  if (people.find(p => p.name.toLowerCase() === name.toLowerCase())) { inp.value = ''; return; }
+  const color = COLORS[people.length % COLORS.length];
+  people.push({ id: nextId++, name, color });
+  inp.value = '';
+  renderChips();
+  renderLeft();
+}
+
+function selectParticipant(id) {
+  activeId = (activeId === id) ? null : id;
+  renderChips();
+  renderLeft();
+  renderBoard();
+}
+
+function renderChips() {
+  const wrap = document.getElementById('pchips');
+  wrap.innerHTML = people.map(p => {
+    const active = p.id === activeId ? 'active' : '';
+    const myCount = ideas.filter(i => i.authorId === p.id).length;
+    return `<div class="p-chip ${active}" onclick="selectParticipant(${p.id})" style="${active ? 'border-color:'+p.color+';' : ''}">
+      <div class="p-dot" style="background:${p.color};"></div>
+      ${p.name}
+      ${myCount > 0 ? `<span style="font-size:.68rem;font-weight:700;background:var(--teal);color:var(--navy);border-radius:6px;padding:1px 5px;margin-left:2px;">${myCount}</span>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function renderLeft() {
+  const noP = document.getElementById('noP');
+  const lbody = document.getElementById('lbody');
+  const lhDot = document.getElementById('lhDot');
+  const lhName = document.getElementById('lhName');
+  const p = people.find(x => x.id === activeId);
+  if (!p) {
+    noP.style.display = 'flex';
+    lbody.style.display = 'none';
+    lhDot.style.background = '#e2e8f0';
+    lhName.textContent = '— sélectionne ton prénom';
+    return;
+  }
+  noP.style.display = 'none';
+  lbody.style.display = 'flex';
+  lhDot.style.background = p.color;
+  lhName.textContent = p.name;
+  renderMyIdeas(p);
+}
+
+function renderMyIdeas(p) {
+  const mine = ideas.filter(i => i.authorId === p.id);
+  const sec = document.getElementById('myIdeasSection');
+  const list = document.getElementById('myIdeasList');
+  if (mine.length === 0) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+  list.innerHTML = mine.map(idea => {
+    const catClass = CAT_CLASS[idea.cat];
+    const catColor = getCatColor(idea.cat);
+    const statusLabel = idea.published ? (idea.validated ? 'Retenue' : 'Publiée') : 'Brouillon';
+    const statusClass = idea.published ? (idea.validated ? 'validated' : 'published') : 'pending';
+    return `<div class="my-idea-item" style="border-left-color:${catColor};">
+      <span class="idea-status ${statusClass}">${statusLabel}</span>
+      <div style="font-size:.78rem;color:#94a3b8;margin-bottom:3px;display:flex;align-items:center;gap:4px;">
+        <span class="idea-cat-dot" style="background:${catColor};"></span>${CAT_LABELS[idea.cat]}
+      </div>
+      <div style="font-size:.82rem;color:#374151;line-height:1.4;">${idea.text}</div>
+      ${!idea.published ? `<button onclick="openConfirmPublish(${idea.id})" style="margin-top:6px;align-self:flex-start;background:var(--navy);color:white;border:none;border-radius:7px;padding:4px 10px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:600;">
+        <svg width="9" height="9" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;margin-right:3px;"><path d="M8 2v9M4 7l4 4 4-4"/><path d="M2 14h12"/></svg>Publier
+      </button>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function getCatColor(cat) {
+  return {process:'#6366f1',tools:'#0ea5e9',team:'#ec4899',client:'#22c55e',other:'#94a3b8'}[cat] || '#94a3b8';
+}
+
+/* ─── CATEGORY PICKER ─── */
+document.getElementById('catRow').addEventListener('click', e => {
+  const btn = e.target.closest('.cat-btn');
+  if (!btn) return;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  selectedCat = btn.dataset.c;
+});
+
+/* ─── ADD IDEA ─── */
+function addIdea() {
+  if (!activeId) return;
+  const ta = document.getElementById('compText');
+  const text = ta.value.trim();
+  if (!text) return;
+  ideas.push({ id: nextId++, text, cat: selectedCat, authorId: activeId, votes: new Set(), validated: false, published: false, ts: Date.now() });
+  ta.value = '';
+  renderChips();
+  renderLeft();
+  renderBoard();
+  updateStats();
+}
+
+/* ─── PUBLISH ─── */
+function openConfirmPublish(id) {
+  pendingPublishId = id;
+  document.getElementById('confirmPublishOverlay').classList.add('show');
+}
+function closeConfirmPublish() {
+  pendingPublishId = null;
+  document.getElementById('confirmPublishOverlay').classList.remove('show');
+}
+function doPublish() {
+  const idea = ideas.find(i => i.id === pendingPublishId);
+  if (idea) { idea.published = true; }
+  closeConfirmPublish();
+  renderLeft();
+  renderBoard();
+  updateStats();
+}
+
+/* ─── VOTE ─── */
+function toggleVote(id) {
+  if (!activeId) return;
+  const idea = ideas.find(i => i.id === id);
+  if (!idea || !idea.published) return;
+  if (idea.authorId === activeId) return; // can't vote own idea
+  const wasVoted = idea.votes.has(activeId);
+  if (wasVoted) idea.votes.delete(activeId);
+  else idea.votes.add(activeId);
+  renderBoard();
+  renderLeft();
+  // Spawn burst after render (card now exists in DOM)
+  if (!wasVoted) spawnBulbBurst(id, idea.votes.size);
+}
+
+function svgBulb(size, color) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21h6M12 3a6 6 0 0 1 4.5 10.1c-.7.7-1.5 1.5-1.5 2.4V18H9v-2.5c0-.9-.8-1.7-1.5-2.4A6 6 0 0 1 12 3z"/><line x1="9.5" y1="15" x2="14.5" y2="15"/></svg>`;
+}
+
+function spawnBulbBurst(ideaId, voteCount) {
+  const card = document.getElementById('card-' + ideaId); if (!card) return;
+
+  if (voteCount > 2) {
+    // Big central burst — très visible
+    card.classList.remove('pop'); void card.offsetWidth; card.classList.add('pop');
+    setTimeout(() => card.classList.remove('pop'), 500);
+
+    const big = document.createElement('div');
+    big.className = 'bulb-burst big';
+    big.innerHTML = svgBulb(60, '#f59e0b');
+    card.appendChild(big);
+    setTimeout(() => big.remove(), 950);
+
+    // Satellites
+    for (let i = 0; i < 5; i++) {
+      const b = document.createElement('div');
+      b.className = 'bulb-burst';
+      b.innerHTML = svgBulb(12 + Math.random()*8, '#fbbf24');
+      b.style.left = (card.offsetWidth * (.1 + Math.random() * .8)) + 'px';
+      b.style.bottom = (card.offsetHeight * (.3 + Math.random() * .5)) + 'px';
+      b.style.animationDuration = (.45 + Math.random() * .35) + 's';
+      b.style.animationDelay = (i * 55) + 'ms';
+      card.appendChild(b);
+      setTimeout(() => b.remove(), 950);
+    }
+  } else {
+    // Simple single bulb
+    const b = document.createElement('div');
+    b.className = 'bulb-burst';
+    b.innerHTML = svgBulb(18, '#f59e0b');
+    b.style.left = (card.offsetWidth * .5 - 9) + 'px';
+    b.style.bottom = (card.offsetHeight - 8) + 'px';
+    card.appendChild(b);
+    setTimeout(() => b.remove(), 700);
+  }
+}
+
+/* ─── VALIDATE (admin) ─── */
+function toggleValidate(id) {
+  if (!isAdmin) return;
+  const idea = ideas.find(i => i.id === id);
+  if (!idea) return;
+  idea.validated = !idea.validated;
+  renderBoard();
+  renderLeft();
+  updateStats();
+}
+
+/* ─── FILTERS & SORT ─── */
+document.getElementById('filterBtns').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  currentFilter = btn.dataset.f;
+  renderBoard();
+});
+
+function setSort(s) {
+  currentSort = s;
+  document.getElementById('sortVotes').classList.toggle('on', s === 'votes');
+  document.getElementById('sortDate').classList.toggle('on', s === 'date');
+  renderBoard();
+}
+
+/* ─── BOARD RENDER ─── */
+function renderBoard() {
+  const grid = document.getElementById('cardsGrid');
+  const hint = document.getElementById('boardHint');
+  const colVal = document.getElementById('colValidated');
+  const valScroll = document.getElementById('colValScroll');
+  const valHint = document.getElementById('valHint');
+  const valCount = document.getElementById('valColCount');
+
+  // ── Pool (non-validated published ideas) ──
+  let pool = ideas.filter(i => i.published && !i.validated);
+  if (currentFilter !== 'all') pool = pool.filter(i => i.cat === currentFilter);
+  if (currentSort === 'votes') pool.sort((a, b) => b.votes.size - a.votes.size || b.ts - a.ts);
+  else pool.sort((a, b) => b.ts - a.ts);
+
+  const maxVotes = pool.length > 0 ? Math.max(...pool.map(i => i.votes.size)) : 0;
+
+  hint.style.display = pool.length === 0 ? 'flex' : 'none';
+  grid.style.display = pool.length === 0 ? 'none' : 'grid';
+
+  grid.innerHTML = pool.map(idea => {
+    const p = people.find(x => x.id === idea.authorId);
+    const voted = activeId && idea.votes.has(activeId);
+    const isTopVoted = maxVotes > 0 && idea.votes.size === maxVotes;
+    const canVote = activeId && idea.authorId !== activeId;
+    const catClass = CAT_CLASS[idea.cat];
+
+    return `<div class="idea-card ${isTopVoted ? 'top-voted' : ''}" id="card-${idea.id}">
+      ${isTopVoted ? '<div class="top-badge">★ Populaire</div>' : ''}
+      <div class="card-header">
+        <span class="card-cat-badge ${catClass}">${CAT_LABELS[idea.cat]}</span>
+        <span class="card-author" style="color:${p ? p.color : '#94a3b8'}">
+          <span class="card-author-dot" style="background:${p ? p.color : '#94a3b8'};"></span>
+          ${p ? p.name : '?'}
+        </span>
+      </div>
+      <div class="card-text">${idea.text}</div>
+      <div class="card-footer">
+        <button class="btn-heart ${voted ? 'voted' : ''}" onclick="toggleVote(${idea.id})" ${!canVote ? 'style="opacity:.4;cursor:not-allowed;" disabled' : ''}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="${voted ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span class="heart-count">${idea.votes.size}</span>
+        </button>
+        ${isAdmin ? `<button class="btn-validate" onclick="toggleValidate(${idea.id})">
+          <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,12 14,4"/></svg>
+          Retenir
+        </button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  // ── Validated column ──
+  const validated = ideas.filter(i => i.validated).sort((a, b) => b.ts - a.ts);
+  valCount.textContent = validated.length;
+
+  if (isAdmin) {
+    colVal.classList.add('open');
+  } else {
+    colVal.classList.remove('open');
+  }
+
+  valHint.style.display = validated.length === 0 ? 'flex' : 'none';
+
+  // Remove existing val-cards, keep hint
+  valScroll.querySelectorAll('.val-card').forEach(el => el.remove());
+
+  validated.forEach(idea => {
+    const p = people.find(x => x.id === idea.authorId);
+    const catColor = getCatColor(idea.cat);
+    const card = document.createElement('div');
+    card.className = 'val-card';
+    card.id = 'valcard-' + idea.id;
+    card.innerHTML = `
+      <span class="val-card-cat" style="background:${catColor};">${CAT_LABELS[idea.cat]}</span>
+      <div class="val-card-text">${idea.text}</div>
+      <div class="val-card-footer">
+        <span class="val-card-author" style="color:${p ? p.color : '#94a3b8'}">
+          <span style="width:7px;height:7px;border-radius:50%;background:${p ? p.color : '#94a3b8'};display:inline-block;margin-right:3px;flex-shrink:0;"></span>${p ? p.name : '?'}
+        </span>
+        <span class="val-card-votes">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          ${idea.votes.size}
+        </span>
+        <button class="btn-unvalidate" onclick="toggleValidate(${idea.id})">Retirer</button>
+      </div>`;
+    valScroll.appendChild(card);
+  });
+}
+
+/* ─── STATS BAR ─── */
+function updateStats() {
+  const published = ideas.filter(i => i.published).length;
+  const validated = ideas.filter(i => i.validated).length;
+  document.getElementById('statTotal').textContent = published;
+  document.getElementById('statValidated').textContent = validated;
+}
+
+/* ─── ADMIN TOGGLE ─── */
+document.getElementById('adminToggle').addEventListener('change', function() {
+  isAdmin = this.checked;
+  renderBoard();
+  renderLeft();
+});
+
+/* ─── SESSION MODAL ─── */
+function openSessionModal() {
+  const published = ideas.filter(i => i.published);
+  const validated = ideas.filter(i => i.validated);
+  const totalVotes = published.reduce((s, i) => s + i.votes.size, 0);
+  document.getElementById('sessionStats').innerHTML =
+    `<div class="stat"><div class="stat-n">${published.length}</div><div class="stat-l">Idées publiées</div></div>` +
+    `<div class="stat"><div class="stat-n">${totalVotes}</div><div class="stat-l">Votes exprimés</div></div>` +
+    `<div class="stat"><div class="stat-n">${validated.length}</div><div class="stat-l">Retenues</div></div>`;
+  const sec = document.getElementById('validatedSection');
+  const list = document.getElementById('validatedList');
+  if (validated.length > 0) {
+    sec.style.display = 'block';
+    list.innerHTML = validated.map(i => {
+      const p = people.find(x => x.id === i.authorId);
+      return `<div class="val-item"><div class="val-item-dot"></div><div><strong>${p ? p.name : '?'} :</strong> ${i.text} <span style="color:#d97706;font-size:.72rem;">(${i.votes.size} vote${i.votes.size > 1 ? 's' : ''})</span></div></div>`;
+    }).join('');
+  } else {
+    sec.style.display = 'none';
+  }
+  document.getElementById('sessionOverlay').classList.add('show');
+}
+function closeSessionModal() { document.getElementById('sessionOverlay').classList.remove('show'); }
+function confirmSession() {
+  closeSessionModal();
+  exportSession();
+}
+
+/* ─── EXPORT ─── */
+function exportSession() {
+  const validated = ideas.filter(i => i.validated);
+  const published = ideas.filter(i => i.published);
+  let txt = 'BOÎTE À IDÉES OSKAR — ' + new Date().toLocaleDateString('fr-FR') + '\n' + '='.repeat(44) + '\n\n';
+  if (validated.length > 0) {
+    txt += 'IDÉES RETENUES\n' + '-'.repeat(30) + '\n';
+    validated.forEach(i => {
+      const p = people.find(x => x.id === i.authorId);
+      txt += `- [${CAT_LABELS[i.cat]}] ${i.text}  (${i.votes.size} vote${i.votes.size>1?'s':''} — ${p?p.name:'?'})\n`;
+    });
+    txt += '\n';
+  }
+  txt += 'TOUTES LES IDÉES PUBLIÉES\n' + '-'.repeat(30) + '\n';
+  const sorted = [...published].sort((a,b) => b.votes.size - a.votes.size);
+  sorted.forEach(i => {
+    const p = people.find(x => x.id === i.authorId);
+    txt += `${i.validated?'[✓] ':'    '}[${CAT_LABELS[i.cat]}] ${i.text}  (${i.votes.size} vote${i.votes.size>1?'s':''} — ${p?p.name:'?'})\n`;
+  });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([txt], { type: 'text/plain;charset=utf-8' }));
+  a.download = 'boite-a-idees.txt'; a.click();
+}
+
+/* ─── KEYBOARD ─── */
+document.getElementById('compText').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) addIdea();
+});
+document.getElementById('newName').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addParticipant();
+});
+document.getElementById('btnAddP').addEventListener('click', addParticipant);
+document.getElementById('confirmPublishOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('confirmPublishOverlay')) closeConfirmPublish();
+});
+document.getElementById('sessionOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('sessionOverlay')) closeSessionModal();
+});
+
+/* ─── INIT ─── */
+['Alice','Bruno','Chloe'].forEach(n => { document.getElementById('newName').value = n; addParticipant(); });
+document.getElementById('newName').value = '';
+activeId = null; renderChips(); renderLeft(); renderBoard(); updateStats();
+</script>
+
+
+</body></html>

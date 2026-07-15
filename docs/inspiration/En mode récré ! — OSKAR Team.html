@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<!-- saved from url=(0035)https://hasenso.fr/oskar/recre.html -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>En mode récré ! — OSKAR Team</title>
+<link href="./En mode récré ! — OSKAR Team_files/css2" rel="stylesheet">
+<link rel="stylesheet" href="./En mode récré ! — OSKAR Team_files/oskar.css">
+<style>
+/* ── Header outil — harmonisé OSKAR ── */
+body { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+.tool-header {
+  height: 56px;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.tool-header-back {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.tool-header-back img {
+  height: 30px;
+  width: auto;
+  object-fit: contain;
+}
+.tool-header-sep {
+  color: var(--border);
+  font-size: 1.2rem;
+  font-weight: 300;
+  flex-shrink: 0;
+}
+.tool-header h1 {
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 600;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tool-header-pill {
+  margin-left: auto;
+  background: var(--team);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 3px 11px;
+  border-radius: 20px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.tool-header-back-link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 500;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: color 0.15s;
+  border-left: 1px solid var(--border);
+  padding-left: 14px;
+  margin-left: 4px;
+}
+.tool-header-back-link:hover { color: var(--navy); }
+
+* { box-sizing:border-box; margin:0; padding:0; }
+body{ color:var(--navy); height:100vh; display:flex; flex-direction:column; overflow:hidden}
+
+/* Header */
+
+
+
+
+
+
+/* Toolbar */
+.toolbar { background:var(--navy); border-bottom:none; padding:10px 24px; display:flex; flex-direction:column; align-items:stretch; gap:8px; flex-shrink:0; }
+.toolbar-row { display:flex; align-items:center; gap:12px; }
+.tb-label { font-size:.82rem; font-weight:600; color:rgba(255,255,255,.55); text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; }
+.p-chips { display:flex; gap:7px; flex-wrap:wrap; align-items:center; }
+.p-chip { display:flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px; border:2px solid transparent; cursor:pointer; font-family:'Outfit',sans-serif; font-size:.92rem; font-weight:500; background:#f1f5f9; color:#475569; transition:all .15s; }
+.p-chip.active { background:white; font-weight:600; }
+.p-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+.add-p { display:flex; gap:7px; }
+.add-p input { font-family:'Outfit',sans-serif; font-size:.92rem; border:1.5px solid #cbd5e1; border-radius:8px; padding:6px 12px; width:140px; color:var(--navy); outline:none; }
+.add-p input:focus { border-color:var(--teal); }
+.btn-teal { background:var(--teal); color:var(--navy); border:none; border-radius:8px; padding:6px 13px; cursor:pointer; font-family:'Outfit',sans-serif; font-weight:700; font-size:.92rem; }
+.vsep { width:1px; height:28px; background:rgba(255,255,255,.2); flex-shrink:0; }
+
+/* Thématique */
+.theme-input { font-family:'Outfit',sans-serif; font-size:.95rem; font-weight:600; color:var(--navy); border:1.5px solid #e2e8f0; border-radius:8px; padding:6px 12px; outline:none; width:220px; background:#f8fafc; }
+.theme-input:focus { border-color:var(--teal); background:white; }
+.theme-display { font-size:.95rem; font-weight:700; color:var(--navy); padding:5px 0; display:none; }
+
+/* Chrono */
+.chrono-wrap { display:flex; align-items:center; gap:9px; }
+.chrono-min { font-family:'Outfit',sans-serif; font-size:.92rem; font-weight:600; color:var(--navy); text-align:center; width:58px; border:1.5px solid #e2e8f0; border-radius:7px; padding:5px 7px; outline:none; background:#f8fafc; }
+.chrono-lbl { font-size:.88rem; color:#64748b; }
+.chrono-disp { font-family:'Outfit',monospace; font-size:1.15rem; font-weight:700; color:var(--navy); letter-spacing:2px; min-width:66px; text-align:center; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:7px; padding:5px 10px; }
+.chrono-disp.warn { color:#d97706; border-color:#fbbf24; background:#fffbeb; }
+.chrono-disp.danger { color:#dc2626; border-color:#fca5a5; background:#fef2f2; animation:blink .8s infinite; }
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.5;} }
+.btn-chrono { background:#f1f5f9; border:1.5px solid #e2e8f0; color:#475569; border-radius:7px; padding:5px 13px; cursor:pointer; font-family:'Outfit',sans-serif; font-size:.88rem; font-weight:600; display:flex; align-items:center; gap:5px; }
+.btn-chrono.run { background:var(--teal); border-color:var(--teal); color:var(--navy); }
+
+/* Phase buttons */
+.btn-phase { border:none; border-radius:8px; padding:7px 16px; cursor:pointer; font-family:'Outfit',sans-serif; font-weight:700; font-size:.92rem; display:flex; align-items:center; gap:6px; white-space:nowrap; transition:all .2s; }
+.btn-launch { background:var(--teal); color:var(--navy); }
+.btn-reveal-mode { background:var(--team); color:white; }
+.btn-next-photo { background:var(--navy); color:white; }
+.btn-phase:disabled { opacity:.35; cursor:not-allowed; }
+
+/* ── MAIN ── */
+.main { flex:1; display:flex; overflow:hidden; position:relative; }
+
+/* ── LEFT PANEL ── */
+.left { width:240px; flex-shrink:0; background:white; border-right:1px solid #e2e8f0; display:flex; flex-direction:column; overflow:hidden; }
+.lh { padding:12px 14px 10px; border-bottom:1px solid #f1f5f9; }
+.lh-title { font-size:.78rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:.5px; }
+.lh-name { margin-top:4px; font-size:.9rem; font-weight:600; display:flex; align-items:center; gap:6px; }
+.lh-dot { width:10px; height:10px; border-radius:50%; }
+.lbody{ flex:1; overflow-y:auto; padding:12px; display:flex; flex-direction:column; gap:10px}
+.no-p { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; color:#94a3b8; text-align:center; padding:20px; }
+.no-p p { font-size:.8rem; line-height:1.5; }
+
+/* Upload zone */
+.upload-zone { border:2px dashed #e2e8f0; border-radius:10px; padding:16px; text-align:center; cursor:pointer; transition:all .2s; }
+.upload-zone:hover { border-color:var(--teal); background:#f0fdf9; }
+.upload-zone input { display:none; }
+.upload-zone-icon { font-size:1.4rem; margin-bottom:6px; opacity:.4; }
+.upload-zone p { font-size:.78rem; color:#94a3b8; line-height:1.4; }
+.upload-zone strong { color:var(--navy); }
+
+/* Thumbnails privées */
+.thumb-list { display:flex; flex-direction:column; gap:6px; }
+.thumb-item { display:flex; align-items:center; gap:8px; background:#f8fafc; border-radius:8px; padding:6px 8px; }
+.thumb-img { width:40px; height:40px; object-fit:cover; border-radius:5px; flex-shrink:0; }
+.thumb-name { font-size:.75rem; color:#64748b; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.thumb-del { background:none; border:none; cursor:pointer; color:#cbd5e1; font-size:.8rem; transition:color .15s; }
+.thumb-del:hover { color:#ef4444; }
+
+/* Post btn */
+.btn-post { width:100%; background:var(--navy); color:white; border:none; border-radius:10px; padding:9px; cursor:pointer; font-family:'Outfit',sans-serif; font-weight:700; font-size:.85rem; display:flex; align-items:center; justify-content:center; gap:6px; transition:all .2s; margin-top:4px; }
+.btn-post:hover { background:#263594; }
+.btn-post:disabled { opacity:.3; cursor:not-allowed; }
+.posted-msg { text-align:center; font-size:.78rem; color:#22c55e; font-weight:600; padding:6px 0; display:none; }
+
+/* ── CANVAS BOARD ── */
+.canvas-wrap { flex:1; position:relative; overflow:hidden; background:var(--bg); }
+.canvas-bg { position:absolute; inset:0; }
+
+/* Polaroid */
+.polaroid { position:absolute; background:white; padding:8px 8px 28px; border-radius:2px; box-shadow:3px 4px 12px rgba(0,0,0,.15), 0 1px 3px rgba(0,0,0,.08); cursor:grab; user-select:none; transition:box-shadow .15s; min-width:100px; max-width:160px; }
+.polaroid:active { cursor:grabbing; box-shadow:6px 8px 24px rgba(0,0,0,.22); }
+.polaroid img { width:100%; display:block; border-radius:1px; aspect-ratio:1/1; object-fit:cover; }
+.polaroid-author { position:absolute; bottom:6px; left:0; right:0; text-align:center; font-size:.65rem; font-weight:700; color:#94a3b8; letter-spacing:.3px; }
+.polaroid-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:4px; vertical-align:middle; }
+/* masquer l'auteur en phase dépôt */
+.phase-deposit .polaroid-author { visibility:hidden; }
+
+/* Empty state canvas */
+.canvas-empty { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; pointer-events:none; }
+.canvas-empty svg { opacity:.15; }
+.canvas-empty p { font-size:.85rem; color:#94a3b8; font-weight:500; }
+
+/* ── REVEAL MODE overlay ── */
+.reveal-overlay { display:none; position:absolute; inset:0; background:rgba(15,20,50,.88); z-index:50; flex-direction:column; align-items:center; justify-content:center; gap:20px; }
+.reveal-overlay.show { display:flex; }
+.reveal-photo-wrap { position:relative; }
+.reveal-photo { max-width:380px; max-height:380px; width:auto; height:auto; border-radius:4px; box-shadow:0 20px 60px rgba(0,0,0,.5); border:10px solid white; display:block; }
+.reveal-counter { color:rgba(255,255,255,.5); font-size:.8rem; font-weight:600; letter-spacing:.5px; }
+.reveal-author { display:none; align-items:center; gap:10px; background:white; border-radius:12px; padding:10px 20px; animation:pop .3s cubic-bezier(.34,1.56,.64,1); }
+.reveal-author.show { display:flex; }
+@keyframes pop { from { transform:scale(.7); opacity:0; } }
+.reveal-author-dot { width:14px; height:14px; border-radius:50%; }
+.reveal-author-name { font-size:1rem; font-weight:700; color:var(--navy); }
+.reveal-btns { display:flex; gap:10px; }
+.btn-reveal-author { background:var(--teal); color:var(--navy); border:none; border-radius:8px; padding:8px 18px; cursor:pointer; font-family:'Outfit',sans-serif; font-weight:700; font-size:.85rem; }
+.btn-skip { background:rgba(255,255,255,.15); color:white; border:1.5px solid rgba(255,255,255,.3); border-radius:8px; padding:8px 18px; cursor:pointer; font-family:'Outfit',sans-serif; font-weight:600; font-size:.85rem; }
+.btn-skip:hover { background:rgba(255,255,255,.25); }
+.btn-close-reveal { position:absolute; top:16px; right:16px; background:rgba(255,255,255,.15); border:none; color:white; border-radius:8px; padding:6px 12px; cursor:pointer; font-family:'Outfit',sans-serif; font-size:.8rem; }
+
+/* Confettis */
+.confetti-wrap { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+.conf { position:absolute; width:8px; height:8px; border-radius:1px; animation:fall linear forwards; }
+@keyframes fall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1;} 100%{transform:translateY(110vh) rotate(720deg);opacity:0;} }
+
+/* Phases */
+.phase-reveal .left { opacity:.4; pointer-events:none; }
+
+/* ── Zoom modal ── */
+.zoom-modal { display:none; position:fixed; inset:0; background:rgba(10,14,40,.92); z-index:200; align-items:center; justify-content:center; cursor:zoom-out; }
+.zoom-modal.open { display:flex; }
+.zoom-modal img { max-width:88vw; max-height:85vh; object-fit:contain; border:10px solid white; border-radius:3px; box-shadow:0 30px 80px rgba(0,0,0,.6); animation:zoomIn .2s cubic-bezier(.34,1.3,.64,1); pointer-events:none; }
+@keyframes zoomIn { from { transform:scale(.8); opacity:0; } }
+.zoom-close { position:absolute; top:18px; right:20px; background:rgba(255,255,255,.18); border:none; color:white; border-radius:8px; padding:6px 14px; cursor:pointer; font-family:'Outfit',sans-serif; font-size:.82rem; font-weight:600; }
+.zoom-close:hover { background:rgba(255,255,255,.28); }
+
+/* ── Likes ── */
+.polaroid-likes { position:absolute; bottom:5px; right:6px; display:flex; align-items:center; gap:3px; }
+.btn-like { background:none; border:none; cursor:pointer; font-size:.85rem; line-height:1; padding:2px; transition:transform .15s; }
+.btn-like:hover { transform:scale(1.3); }
+.like-count { font-size:.65rem; font-weight:700; color:#94a3b8; min-width:10px; }
+.like-count.has-likes { color:#ec4899; }
+
+/* Like in reveal overlay */
+.reveal-like-row { display:flex; align-items:center; gap:8px; }
+.btn-like-reveal { background:rgba(255,255,255,.15); border:1.5px solid rgba(255,255,255,.3); color:white; border-radius:8px; padding:7px 16px; cursor:pointer; font-family:'Outfit',sans-serif; font-size:.9rem; font-weight:600; display:flex; align-items:center; gap:6px; transition:all .15s; }
+.btn-like-reveal:hover { background:rgba(236,72,153,.35); border-color:#ec4899; }
+.btn-like-reveal.liked { background:rgba(236,72,153,.4); border-color:#ec4899; color:#fce7f3; }
+.reveal-like-count { color:rgba(255,255,255,.6); font-size:.85rem; font-weight:600; }
+</style>
+<script src="chrome-extension://ajdpfmkffanmkhejnopjppegokpogffp/assets/prompt.js"></script></head>
+<body>
+
+<!-- ─── HEADER OSKAR ─── -->
+<header class="tool-header">
+  <a class="tool-header-back" href="https://hasenso.fr/oskar/boite-a-outils.html">
+    <img src="./En mode récré ! — OSKAR Team_files/logo-oskar.png" alt="OSKAR">
+  </a>
+  <span class="tool-header-sep">|</span>
+  <h1>En mode récré !</h1>
+  <span class="tool-header-pill">Team</span>
+  <a class="tool-header-back-link" href="https://hasenso.fr/oskar/boite-a-outils.html">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;flex-shrink:0;"><path d="M12 4L6 10l6 6"></path></svg>
+    Boîte à outils
+  </a>
+</header>
+
+<div class="toolbar">
+  <!-- Ligne 1 : Participants -->
+  <div class="toolbar-row">
+    <span class="tb-label">Participants</span>
+    <div class="p-chips" id="pchips"><button class="p-chip" style="border-color: transparent; color: rgb(245, 158, 11);"><span class="p-dot" style="background:#f59e0b"></span>Alice</button><button class="p-chip" style="border-color: transparent; color: rgb(59, 130, 246);"><span class="p-dot" style="background:#3b82f6"></span>Bruno</button><button class="p-chip" style="border-color: transparent; color: rgb(236, 72, 153);"><span class="p-dot" style="background:#ec4899"></span>Chloé</button></div>
+    <div class="add-p">
+      <input type="text" id="newName" placeholder="Prénom…" maxlength="16">
+      <button class="btn-teal" id="btnAddP">+ Ajouter</button>
+    </div>
+  </div>
+  <!-- Ligne 2 : Thème + Chrono + Actions -->
+  <div class="toolbar-row">
+    <span class="tb-label">Thème</span>
+    <input type="text" class="theme-input" id="themeInput" placeholder="Ex : vos vacances préférées ?">
+    <span class="theme-display" id="themeDisplay"></span>
+    <div class="vsep"></div>
+    <div class="chrono-wrap">
+      <input type="number" class="chrono-min" id="chronoMin" value="3" min="1" max="60">
+      <span class="chrono-lbl">min</span>
+      <div class="chrono-disp" id="chronoDisp">03:00</div>
+      <button class="btn-chrono" id="btnChronoGo" onclick="toggleChrono()">
+        <svg width="9" height="9" viewBox="0 0 16 16" fill="currentColor"><polygon points="3,1 13,8 3,15"></polygon></svg>
+      </button>
+      <button class="btn-chrono" onclick="resetChrono()">
+        <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8a6 6 0 1 1 1.5 4"></path><polyline points="1,5 2,8 5,7"></polyline></svg>
+      </button>
+    </div>
+    <div class="vsep"></div>
+    <button class="btn-phase btn-launch" id="btnLaunch" onclick="launchDeposit()">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3,1 13,8 3,15"></polygon></svg>
+      Lancer
+    </button>
+    <button class="btn-phase btn-reveal-mode" id="btnRevealMode" onclick="startRevealMode()" style="display:none" disabled="">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+      Mode révélation
+    </button>
+  </div>
+</div>
+
+<div class="main" id="mainArea">
+  <!-- Left panel -->
+  <div class="left" id="leftPanel">
+    <div class="lh">
+      <div class="lh-title">Mes photos</div>
+      <div class="lh-name">
+        <div class="lh-dot" id="lhDot" style="background: transparent;"></div>
+        <span id="lhName">— sélectionne ton prénom</span>
+      </div>
+    </div>
+    <div class="no-p" id="noP" style="display: flex;">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.3"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"></path></svg>
+      <p>Sélectionne ton prénom<br>pour ajouter des photos.</p>
+    </div>
+    <div class="lbody" id="lbody" style="display:none">
+      <!-- Upload zone -->
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById(&#39;fileInput&#39;).click()">
+        <input type="file" id="fileInput" accept="image/*" multiple="">
+        <div class="upload-zone-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21,15 16,10 5,21"></polyline></svg>
+        </div>
+        <p><strong>Cliquer pour ajouter</strong><br>une ou plusieurs photos</p>
+      </div>
+      <div class="thumb-list" id="thumbList"></div>
+      <button class="btn-post" id="btnPost" onclick="postPhotos()" disabled="">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22,2 15,22 11,13 2,9"></polygon></svg>
+        Envoyer sur le board
+      </button>
+      <div class="posted-msg" id="postedMsg">✓ Photos envoyées !</div>
+    </div>
+  </div>
+
+  <!-- Canvas -->
+  <div class="canvas-wrap phase-deposit" id="canvasWrap">
+    <div class="canvas-bg" id="canvasBg"></div>
+    <div class="canvas-empty" id="canvasEmpty">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21,15 16,10 5,21"></polyline></svg>
+      <p>Les photos apparaîtront ici</p>
+    </div>
+
+    <!-- Reveal overlay -->
+    <div class="reveal-overlay" id="revealOverlay">
+      <div class="confetti-wrap" id="confettiWrap"></div>
+      <span class="reveal-counter" id="revealCounter"></span>
+      <div class="reveal-photo-wrap">
+        <img class="reveal-photo" id="revealPhoto" src="https://hasenso.fr/oskar/recre.html" alt="">
+      </div>
+      <div class="reveal-author" id="revealAuthor">
+        <div class="reveal-author-dot" id="revealAuthorDot"></div>
+        <span class="reveal-author-name" id="revealAuthorName"></span>
+      </div>
+      <div class="reveal-like-row">
+        <button class="btn-like-reveal" id="btnLikeReveal" onclick="toggleLikeReveal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          J'aime
+        </button>
+        <span class="reveal-like-count" id="revealLikeCount"></span>
+      </div>
+      <div class="reveal-btns">
+        <button class="btn-reveal-author" onclick="showAuthor()">Révéler l'auteur</button>
+        <button class="btn-skip" id="btnNextPhoto" onclick="nextPhoto()">Photo suivante →</button>
+      </div>
+      <button class="btn-close-reveal" onclick="closeRevealMode()">✕ Fermer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Zoom modal -->
+<div class="zoom-modal" id="zoomModal" onclick="closeZoom()">
+  <button class="zoom-close" onclick="closeZoom()">✕ Fermer</button>
+  <img id="zoomImg" src="https://hasenso.fr/oskar/recre.html" alt="">
+</div>
+
+<script>
+const PAL = [
+  {c:'#f59e0b',l:'#fef9c3'},{c:'#3b82f6',l:'#dbeafe'},{c:'#ec4899',l:'#fce7f3'},
+  {c:'#8b5cf6',l:'#ede9fe'},{c:'#10b981',l:'#d1fae5'},{c:'#f97316',l:'#ffedd5'},{c:'#06b6d4',l:'#cffafe'}
+];
+
+let people = [], activeId = null;
+let photos = []; // {id, authorId, src, x, y, rot, posted}
+let pendingFiles = []; // fichiers sélectionnés pas encore envoyés
+let phase = 'setup'; // setup | deposit | reveal
+let revealQueue = [], revealIdx = 0, authorShown = false;
+
+// Chrono
+let cInit=180, cRemain=180, cElapsed=0, cRunning=false, cTimer=null, cFree=false;
+
+/* ── Participants ── */
+function addParticipant() {
+  const inp = document.getElementById('newName');
+  const name = inp.value.trim();
+  if (!name || people.find(p => p.name.toLowerCase() === name.toLowerCase())) { inp.value=''; return; }
+  const pal = PAL[people.length % PAL.length];
+  people.push({id: Date.now()+people.length, name, c: pal.c, l: pal.l});
+  inp.value='';
+  renderChips();
+}
+function renderChips() {
+  const el = document.getElementById('pchips'); el.innerHTML='';
+  people.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'p-chip' + (activeId===p.id ? ' active' : '');
+    btn.style.borderColor = activeId===p.id ? p.c : 'transparent';
+    btn.style.color = p.c;
+    btn.innerHTML = '<span class="p-dot" style="background:'+p.c+'"></span>'+p.name;
+    const pid = p.id;
+    btn.addEventListener('click', () => setActive(pid));
+    el.appendChild(btn);
+  });
+}
+function setActive(id) {
+  activeId = id; renderChips(); renderLeft();
+}
+
+/* ── Left panel ── */
+function renderLeft() {
+  const p = people.find(x => x.id===activeId);
+  const noP = document.getElementById('noP');
+  const lb = document.getElementById('lbody');
+  if (!p) { noP.style.display='flex'; lb.style.display='none'; document.getElementById('lhName').textContent='— sélectionne ton prénom'; document.getElementById('lhDot').style.background='transparent'; return; }
+  noP.style.display='none'; lb.style.display='flex';
+  document.getElementById('lhName').textContent = p.name;
+  document.getElementById('lhDot').style.background = p.c;
+  renderThumbs();
+}
+function renderThumbs() {
+  const list = document.getElementById('thumbList'); list.innerHTML='';
+  pendingFiles.forEach((f, i) => {
+    const item = document.createElement('div'); item.className='thumb-item';
+    const img = document.createElement('img'); img.className='thumb-img'; img.src=f.src;
+    const name = document.createElement('span'); name.className='thumb-name'; name.textContent=f.file.name;
+    const del = document.createElement('button'); del.className='thumb-del'; del.innerHTML='✕';
+    del.addEventListener('click', () => { pendingFiles.splice(i,1); renderThumbs(); updatePostBtn(); });
+    item.appendChild(img); item.appendChild(name); item.appendChild(del);
+    list.appendChild(item);
+  });
+  updatePostBtn();
+}
+function updatePostBtn() {
+  document.getElementById('btnPost').disabled = pendingFiles.length === 0;
+}
+
+/* ── File input ── */
+document.getElementById('fileInput').addEventListener('change', function(e) {
+  const files = Array.from(e.target.files);
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = ev => { pendingFiles.push({file, src: ev.target.result}); renderThumbs(); };
+    reader.readAsDataURL(file);
+  });
+  this.value='';
+});
+
+/* ── Post photos ── */
+function postPhotos() {
+  const p = people.find(x => x.id===activeId); if (!p || pendingFiles.length===0) return;
+  const canvas = document.getElementById('canvasBg');
+  const W = canvas.offsetWidth, H = canvas.offsetHeight;
+  pendingFiles.forEach(f => {
+    const x = 60 + Math.random() * Math.max(60, W - 200);
+    const y = 40 + Math.random() * Math.max(40, H - 220);
+    const rot = (Math.random()-0.5)*14;
+    const photo = {id: Date.now()+Math.random(), authorId: p.id, src: f.src, x, y, rot, posted:true, likes:0};
+    photos.push(photo);
+    addPolaroid(photo);
+  });
+  pendingFiles = [];
+  renderThumbs();
+  document.getElementById('canvasEmpty').style.display='none';
+  document.getElementById('postedMsg').style.display='block';
+  setTimeout(()=>document.getElementById('postedMsg').style.display='none', 2000);
+  checkRevealBtn();
+}
+
+/* ── Polaroid DOM ── */
+function addPolaroid(photo) {
+  const p = people.find(x => x.id===photo.authorId);
+  const div = document.createElement('div');
+  div.className='polaroid'; div.id='pol-'+photo.id;
+  div.style.left = photo.x+'px'; div.style.top = photo.y+'px';
+  div.style.transform = 'rotate('+photo.rot+'deg)';
+  div.style.zIndex = 10;
+  const img = document.createElement('img'); img.src=photo.src; img.draggable=false;
+
+  // Zoom on click (distinguish from drag)
+  let didDrag = false;
+  div.addEventListener('mousedown', () => { didDrag = false; });
+  div.addEventListener('mousemove', () => { didDrag = true; });
+  img.addEventListener('click', (e) => { if (!didDrag) { e.stopPropagation(); openZoom(photo.src); } });
+
+  const author = document.createElement('div'); author.className='polaroid-author';
+  if (p) author.innerHTML='<span class="polaroid-dot" style="background:'+p.c+'"></span>'+p.name;
+
+  // Like button
+  const likesWrap = document.createElement('div'); likesWrap.className='polaroid-likes';
+  const btnLike = document.createElement('button'); btnLike.className='btn-like'; btnLike.title='J\'aime'; btnLike.innerHTML=svgHeart(false);
+  const likeCount = document.createElement('span'); likeCount.className='like-count'; likeCount.id='likes-'+photo.id;
+  likeCount.textContent = photo.likes > 0 ? photo.likes : '';
+  btnLike.addEventListener('click', (e) => { e.stopPropagation(); addLike(photo.id); });
+  likesWrap.appendChild(btnLike); likesWrap.appendChild(likeCount);
+
+  div.appendChild(img); div.appendChild(author); div.appendChild(likesWrap);
+  makeDraggable(div, photo);
+  document.getElementById('canvasBg').appendChild(div);
+}
+
+function makeDraggable(el, photo) {
+  let ox=0, oy=0, mx=0, my=0;
+  el.addEventListener('mousedown', function(e) {
+    e.preventDefault();
+    el.style.zIndex=100;
+    ox = el.offsetLeft; oy = el.offsetTop;
+    mx = e.clientX; my = e.clientY;
+    function onMove(e) {
+      const dx=e.clientX-mx, dy=e.clientY-my;
+      el.style.left=(ox+dx)+'px'; el.style.top=(oy+dy)+'px';
+      photo.x=ox+dx; photo.y=oy+dy;
+    }
+    function onUp() {
+      el.style.zIndex=10;
+      document.removeEventListener('mousemove',onMove);
+      document.removeEventListener('mouseup',onUp);
+    }
+    document.addEventListener('mousemove',onMove);
+    document.addEventListener('mouseup',onUp);
+  });
+  // Touch
+  el.addEventListener('touchstart', function(e) {
+    const t=e.touches[0]; e.preventDefault();
+    ox=el.offsetLeft; oy=el.offsetTop; mx=t.clientX; my=t.clientY;
+    el.style.zIndex=100;
+    function onMove(e){const t=e.touches[0];const dx=t.clientX-mx,dy=t.clientY-my;el.style.left=(ox+dx)+'px';el.style.top=(oy+dy)+'px';photo.x=ox+dx;photo.y=oy+dy;}
+    function onEnd(){el.style.zIndex=10;document.removeEventListener('touchmove',onMove);document.removeEventListener('touchend',onEnd);}
+    document.addEventListener('touchmove',onMove,{passive:false});
+    document.addEventListener('touchend',onEnd);
+  },{passive:false});
+}
+
+/* ── SVG helpers ── */
+function svgHeart(filled) {
+  const fill = filled ? '#ec4899' : 'none';
+  const stroke = filled ? '#ec4899' : '#94a3b8';
+  return `<svg width="13" height="13" viewBox="0 0 24 24" fill="${fill}" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+}
+
+/* ── Zoom ── */
+function openZoom(src) {
+  document.getElementById('zoomImg').src = src;
+  document.getElementById('zoomModal').classList.add('open');
+}
+function closeZoom() {
+  document.getElementById('zoomModal').classList.remove('open');
+}
+document.addEventListener('keydown', e => { if (e.key==='Escape') closeZoom(); });
+
+/* ── Likes ── */
+function addLike(photoId) {
+  const photo = photos.find(p => p.id === photoId); if (!photo) return;
+  photo.likes++;
+  const el = document.getElementById('likes-'+photoId);
+  if (el) { el.textContent = photo.likes; el.classList.add('has-likes'); }
+  // Update btn heart
+  const pol = document.getElementById('pol-'+photoId);
+  if (pol) { const btn = pol.querySelector('.btn-like'); if(btn) btn.innerHTML=svgHeart(true); }
+  // Sync reveal if same photo
+  if (revealQueue[revealIdx] && revealQueue[revealIdx].id === photoId) updateRevealLike();
+}
+function updateRevealLike() {
+  const photo = revealQueue[revealIdx]; if (!photo) return;
+  const btn = document.getElementById('btnLikeReveal');
+  const cnt = document.getElementById('revealLikeCount');
+  cnt.textContent = photo.likes > 0 ? photo.likes + (photo.likes === 1 ? ' j\'aime' : ' j\'aimes') : '';
+}
+function toggleLikeReveal() {
+  const photo = revealQueue[revealIdx]; if (!photo) return;
+  addLike(photo.id);
+  const btn = document.getElementById('btnLikeReveal');
+  btn.classList.add('liked');
+  const svg = btn.querySelector('svg'); if(svg){ svg.setAttribute('fill','#ec4899'); svg.setAttribute('stroke','#ec4899'); }
+}
+
+/* ── Phase : Lancement ── */
+function launchDeposit() {
+  const theme = document.getElementById('themeInput').value.trim();
+  if (!theme) { document.getElementById('themeInput').focus(); return; }
+  phase='deposit';
+  document.getElementById('themeInput').style.display='none';
+  const td=document.getElementById('themeDisplay'); td.textContent='🎯 '+theme; td.style.display='block';
+  document.getElementById('btnLaunch').style.display='none';
+  document.getElementById('btnRevealMode').style.display='flex';
+  startChrono();
+}
+
+/* ── Phase : Mode révélation ── */
+function checkRevealBtn() {
+  document.getElementById('btnRevealMode').disabled = photos.filter(p=>p.posted).length===0;
+}
+function startRevealMode() {
+  if (photos.filter(p=>p.posted).length===0) return;
+  phase='reveal';
+  pauseChrono();
+  // Mélanger les photos
+  revealQueue = [...photos.filter(p=>p.posted)].sort(()=>Math.random()-.5);
+  revealIdx=0;
+  // Révéler auteurs sur le board
+  document.getElementById('canvasBg').classList && document.getElementById('canvasWrap').classList.remove('phase-deposit');
+  // Lancer l'overlay
+  showRevealOverlay();
+}
+function showRevealOverlay() {
+  const ov = document.getElementById('revealOverlay'); ov.classList.add('show');
+  document.getElementById('mainArea').classList.add('phase-reveal');
+  showRevealPhoto();
+}
+function showRevealPhoto() {
+  if (revealIdx >= revealQueue.length) { endReveal(); return; }
+  const photo = revealQueue[revealIdx];
+  authorShown=false;
+  document.getElementById('revealPhoto').src=photo.src;
+  document.getElementById('revealCounter').textContent=(revealIdx+1)+' / '+revealQueue.length;
+  document.getElementById('revealAuthor').classList.remove('show');
+  document.getElementById('confettiWrap').innerHTML='';
+  document.getElementById('btnNextPhoto').textContent=(revealIdx<revealQueue.length-1)?'Photo suivante →':'Terminer';
+  document.getElementById('btnLikeReveal').classList.remove('liked');
+  const likesvg = document.getElementById('btnLikeReveal').querySelector('svg');
+  if(likesvg){ likesvg.setAttribute('fill','none'); likesvg.setAttribute('stroke','currentColor'); }
+  updateRevealLike();
+}
+function showAuthor() {
+  if (authorShown) return;
+  authorShown=true;
+  const photo = revealQueue[revealIdx];
+  const p = people.find(x=>x.id===photo.authorId);
+  if (p) {
+    document.getElementById('revealAuthorDot').style.background=p.c;
+    document.getElementById('revealAuthorName').textContent=p.name;
+    document.getElementById('revealAuthor').classList.add('show');
+    spawnConfettis(p.c);
+  }
+}
+function nextPhoto() {
+  revealIdx++;
+  if (revealIdx >= revealQueue.length) { endReveal(); return; }
+  showRevealPhoto();
+}
+function closeRevealMode() {
+  document.getElementById('revealOverlay').classList.remove('show');
+  document.getElementById('mainArea').classList.remove('phase-reveal');
+  phase='deposit';
+}
+function endReveal() {
+  document.getElementById('revealOverlay').classList.remove('show');
+  document.getElementById('mainArea').classList.remove('phase-reveal');
+}
+
+/* ── Confettis ── */
+function spawnConfettis(baseColor) {
+  const wrap = document.getElementById('confettiWrap');
+  const colors = [baseColor,'#f59e0b','#ec4899','#00d4b4','#6366f1','#22c55e'];
+  for (let i=0; i<40; i++) {
+    const c = document.createElement('div'); c.className='conf';
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.left = (10+Math.random()*80)+'%';
+    c.style.animationDuration = (.8+Math.random()*.8)+'s';
+    c.style.animationDelay = (Math.random()*.3)+'s';
+    c.style.width = c.style.height = (6+Math.random()*6)+'px';
+    c.style.borderRadius = Math.random()>.5 ? '50%' : '1px';
+    wrap.appendChild(c);
+    setTimeout(()=>c.remove(), 1500);
+  }
+}
+
+/* ── Chrono ── */
+function toggleChrono() { cRunning ? pauseChrono() : startChrono(); }
+function startChrono() {
+  const v=parseInt(document.getElementById('chronoMin').value)||0; cFree=(v===0); cInit=v*60; if(!cFree)cRemain=cRemain||cInit;
+  cRunning=true;
+  const btn=document.getElementById('btnChronoGo'); btn.classList.add('run');
+  btn.innerHTML='<svg width="9" height="9" viewBox="0 0 16 16" fill="currentColor"><rect x="2" y="1" width="4" height="14"/><rect x="10" y="1" width="4" height="14"/></svg>';
+  cTimer=setInterval(()=>{
+    if(cFree){cElapsed++;}else{cRemain--;if(cRemain<=0){cRemain=0;updDisp();pauseChrono();document.getElementById('chronoDisp').classList.add('danger');return;}}
+    updDisp();
+  },1000);
+}
+function pauseChrono() {
+  cRunning=false; clearInterval(cTimer);
+  const btn=document.getElementById('btnChronoGo'); btn.classList.remove('run');
+  btn.innerHTML='<svg width="9" height="9" viewBox="0 0 16 16" fill="currentColor"><polygon points="3,1 13,8 3,15"/></svg>';
+}
+function resetChrono() {
+  clearInterval(cTimer); cRunning=false; cElapsed=0;
+  const v=parseInt(document.getElementById('chronoMin').value)||0; cFree=(v===0); cInit=v*60; cRemain=cInit;
+  const btn=document.getElementById('btnChronoGo'); btn.classList.remove('run');
+  btn.innerHTML='<svg width="9" height="9" viewBox="0 0 16 16" fill="currentColor"><polygon points="3,1 13,8 3,15"/></svg>';
+  document.getElementById('chronoDisp').classList.remove('warn','danger'); updDisp();
+}
+function updDisp() {
+  const d=document.getElementById('chronoDisp');
+  const s=cFree?cElapsed:cRemain; const m=Math.floor(s/60),sc=s%60;
+  d.textContent=String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0');
+  if(!cFree&&cInit>0){const r=cRemain/cInit;d.classList.toggle('warn',r<=.25&&r>.1);d.classList.toggle('danger',r<=.1);}
+}
+
+/* ── Init ── */
+document.getElementById('newName').addEventListener('keydown', e => { if(e.key==='Enter') addParticipant(); });
+document.getElementById('btnAddP').addEventListener('click', addParticipant);
+document.getElementById('chronoMin').addEventListener('change', () => { const v=parseInt(document.getElementById('chronoMin').value)||0; cFree=(v===0); cInit=v*60; cRemain=cInit; updDisp(); });
+
+// Démo participants
+['Alice','Bruno','Chloé'].forEach(n => { document.getElementById('newName').value=n; addParticipant(); });
+document.getElementById('newName').value='';
+activeId=null; renderChips(); renderLeft();
+updDisp();
+document.getElementById('btnRevealMode').disabled=true;
+</script>
+
+
+</body></html>
